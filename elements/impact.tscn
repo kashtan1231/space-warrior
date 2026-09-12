@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://4feimhgi3xrg"]
+
+[ext_resource type="Script" uid="uid://3tmo0kbct6vs" path="res://elements/impact.gd" id="1_impact"]
+[ext_resource type="Texture2D" uid="uid://cegorwkletrek" path="res://assets/weapons/Bullet projectile.png" id="1_v4qkc"]
+
+[node name="Impact" type="Sprite2D" unique_id=1092993237]
+texture = ExtResource("1_v4qkc")
+script = ExtResource("1_impact")

@@ -1,0 +1,64 @@
+[gd_scene format=3 uid="uid://cbjnmkavx3dck"]
+
+[ext_resource type="Script" uid="uid://d0vbq664rvu4r" path="res://elements/bullet.gd" id="1_0tiew"]
+[ext_resource type="Texture2D" uid="uid://cqlpcysmeban4" path="res://assets/weapons/Main ship weapon - Projectile - Auto cannon bullet.png" id="1_caopm"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0tiew"]
+atlas = ExtResource("1_caopm")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uayi2"]
+atlas = ExtResource("1_caopm")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8yflh"]
+atlas = ExtResource("1_caopm")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sv1fw"]
+atlas = ExtResource("1_caopm")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_1us10"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0tiew")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_uayi2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8yflh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sv1fw")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_rt8om"]
+radius = 6.0
+height = 14.0
+
+[node name="Bullet" type="Area2D" unique_id=607195113]
+scale = Vector2(0.5, 0.5)
+collision_layer = 0
+collision_mask = 4
+script = ExtResource("1_0tiew")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1977936743]
+sprite_frames = SubResource("SpriteFrames_1us10")
+autoplay = "default"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=756399023]
+position = Vector2(0, -2)
+shape = SubResource("CapsuleShape2D_rt8om")
+
+[node name="VisibleOnScreenEnabler2D" type="VisibleOnScreenEnabler2D" parent="." unique_id=902194011]
+position = Vector2(2, 0)
+rect = Rect2(-8, -10, 12, 16)
+
+[connection signal="screen_exited" from="VisibleOnScreenEnabler2D" to="." method="_on_visible_on_screen_enabler_2d_screen_exited"]

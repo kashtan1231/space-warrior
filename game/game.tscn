@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://css6vrho8gxgr"]
+
+[ext_resource type="Texture2D" uid="uid://cw2cxuouea88q" path="res://assets/Starry background  - Layer 01 - Void.png" id="1_l1rk1"]
+[ext_resource type="PackedScene" uid="uid://d17n1fvr7kgih" path="res://elements/spaceship.tscn" id="2_vasa2"]
+[ext_resource type="PackedScene" uid="uid://bk64tyxny4okm" path="res://elements/wall.tscn" id="3_h7iqs"]
+[ext_resource type="PackedScene" uid="uid://cl6djo10flm3t" path="res://elements/enemy/scout.tscn" id="4_4fuuu"]
+
+[node name="Game" type="Node2D" unique_id=1722043852]
+
+[node name="Bg" type="Sprite2D" parent="." unique_id=574545187]
+texture_repeat = 2
+texture = ExtResource("1_l1rk1")
+centered = false
+region_enabled = true
+region_rect = Rect2(0, 0, 1280, 720)
+
+[node name="Spaceship" parent="." unique_id=1286735498 instance=ExtResource("2_vasa2")]
+position = Vector2(636.00006, 536)
+
+[node name="Wall" parent="." unique_id=1304739988 instance=ExtResource("3_h7iqs")]
+
+[node name="Wall2" parent="." unique_id=1892776123 instance=ExtResource("3_h7iqs")]
+position = Vector2(1280, 0)
+
+[node name="Enemy" parent="." unique_id=925835412 instance=ExtResource("4_4fuuu")]
+position = Vector2(152, 136)
+
+[node name="Enemy6" parent="." unique_id=1007325119 instance=ExtResource("4_4fuuu")]
+position = Vector2(875, 143)
+
+[node name="Enemy7" parent="." unique_id=1707500083 instance=ExtResource("4_4fuuu")]
+position = Vector2(794, 142)
+
+[node name="Enemy8" parent="." unique_id=1871753282 instance=ExtResource("4_4fuuu")]
+position = Vector2(697, 143)
