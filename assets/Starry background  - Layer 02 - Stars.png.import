@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cdxilopu1xrll"
-path="res://.godot/imported/Main Ship - Engines - Base Engine - Spritesheet.png-816f48942eb28194917299bace6683c0.ctex"
+uid="uid://cdk6i1273ws05"
+path="res://.godot/imported/Starry background  - Layer 02 - Stars.png-164262264ea6403cd48b34d0f3fe63b8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/spaceship/Main Ship - Engines - Base Engine - Spritesheet.png"
-dest_files=["res://.godot/imported/Main Ship - Engines - Base Engine - Spritesheet.png-816f48942eb28194917299bace6683c0.ctex"]
+source_file="res://assets/Starry background  - Layer 02 - Stars.png"
+dest_files=["res://.godot/imported/Starry background  - Layer 02 - Stars.png-164262264ea6403cd48b34d0f3fe63b8.ctex"]
 
 [params]
 

@@ -44,7 +44,7 @@ radius = 6.0
 height = 14.0
 
 [node name="Bullet" type="Area2D" unique_id=607195113]
-scale = Vector2(0.5, 0.5)
+scale = Vector2(0.75, 0.75)
 collision_layer = 0
 collision_mask = 4
 script = ExtResource("1_0tiew")

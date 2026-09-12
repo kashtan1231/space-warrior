@@ -1,10 +1,82 @@
 [gd_scene format=3 uid="uid://css6vrho8gxgr"]
 
+[ext_resource type="Texture2D" uid="uid://cdk6i1273ws05" path="res://assets/Starry background  - Layer 02 - Stars.png" id="1_dakft"]
 [ext_resource type="Texture2D" uid="uid://cw2cxuouea88q" path="res://assets/Starry background  - Layer 01 - Void.png" id="1_l1rk1"]
 [ext_resource type="PackedScene" uid="uid://d17n1fvr7kgih" path="res://elements/spaceship.tscn" id="2_vasa2"]
 [ext_resource type="PackedScene" uid="uid://bk64tyxny4okm" path="res://elements/wall.tscn" id="3_h7iqs"]
 [ext_resource type="PackedScene" uid="uid://cl6djo10flm3t" path="res://elements/enemy/scout.tscn" id="4_4fuuu"]
 [ext_resource type="Script" uid="uid://rkv37ce8sr5x" path="res://elements/ui/health_bar.gd" id="5_dxrkv"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_u5opy"]
+atlas = ExtResource("1_dakft")
+region = Rect2(0, 0, 640, 360)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y36n6"]
+atlas = ExtResource("1_dakft")
+region = Rect2(640, 0, 640, 360)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_l8g03"]
+atlas = ExtResource("1_dakft")
+region = Rect2(1280, 0, 640, 360)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j8tme"]
+atlas = ExtResource("1_dakft")
+region = Rect2(1920, 0, 640, 360)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3vho3"]
+atlas = ExtResource("1_dakft")
+region = Rect2(2560, 0, 640, 360)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qf6n1"]
+atlas = ExtResource("1_dakft")
+region = Rect2(3200, 0, 640, 360)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vsp63"]
+atlas = ExtResource("1_dakft")
+region = Rect2(3840, 0, 640, 360)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b686c"]
+atlas = ExtResource("1_dakft")
+region = Rect2(4480, 0, 640, 360)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hb504"]
+atlas = ExtResource("1_dakft")
+region = Rect2(5120, 0, 640, 360)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_dxrkv"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_u5opy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y36n6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_l8g03")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_j8tme")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3vho3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qf6n1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vsp63")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b686c")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hb504")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 4.0
+}]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dxrkv"]
 bg_color = Color(0.101960786, 0.0627451, 0.078431375, 1)
@@ -22,11 +94,18 @@ anti_aliasing = false
 [node name="Game" type="Node2D" unique_id=1722043852]
 
 [node name="Bg" type="Sprite2D" parent="." unique_id=574545187]
+modulate = Color(0.24225745, 0.34524336, 0.5985955, 1)
 texture_repeat = 2
 texture = ExtResource("1_l1rk1")
 centered = false
 region_enabled = true
 region_rect = Rect2(0, 0, 1280, 720)
+
+[node name="Stars" type="AnimatedSprite2D" parent="." unique_id=192381513]
+position = Vector2(640, 360)
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_dxrkv")
+autoplay = "default"
 
 [node name="Spaceship" parent="." unique_id=1286735498 instance=ExtResource("2_vasa2")]
 position = Vector2(636.00006, 536)
