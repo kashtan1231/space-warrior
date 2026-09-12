@@ -3,7 +3,10 @@
 [ext_resource type="Texture2D" uid="uid://cnawck5i2ggtm" path="res://assets/spaceship/Main Ship - Base - Full health.png" id="1_fe5sw"]
 [ext_resource type="Script" uid="uid://dmnq1nmk08pj1" path="res://elements/spaceship.gd" id="1_vj48w"]
 [ext_resource type="Texture2D" uid="uid://c38mmms0qbtg1" path="res://assets/spaceship/Main Ship - Engines - Base Engine.png" id="3_tm10f"]
+[ext_resource type="Texture2D" uid="uid://cstum0gev2lqd" path="res://assets/spaceship/Main Ship - Base - Slight damage.png" id="3_w3dun"]
+[ext_resource type="Texture2D" uid="uid://de7u8vb8fmpdw" path="res://assets/spaceship/Main Ship - Base - Damaged.png" id="4_g6g06"]
 [ext_resource type="Texture2D" uid="uid://cdxilopu1xrll" path="res://assets/spaceship/Main Ship - Engines - Base Engine - Spritesheet.png" id="4_tsijj"]
+[ext_resource type="Texture2D" uid="uid://b24b0fyl38q5p" path="res://assets/spaceship/Main Ship - Base - Very damaged.png" id="5_oyroy"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_d2kl3"]
 atlas = ExtResource("4_tsijj")
@@ -81,6 +84,9 @@ collision_layer = 2
 collision_mask = 5
 motion_mode = 1
 script = ExtResource("1_vj48w")
+damage_textures = Array[Texture2D]([ExtResource("1_fe5sw"), ExtResource("3_w3dun"), ExtResource("4_g6g06"), ExtResource("5_oyroy")])
+invulnerability_duration = 2.0
+invulnerability_blink_period = 0.3
 
 [node name="Ship" type="Sprite2D" parent="." unique_id=74812759]
 texture = ExtResource("1_fe5sw")
