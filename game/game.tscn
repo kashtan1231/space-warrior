@@ -4,6 +4,20 @@
 [ext_resource type="PackedScene" uid="uid://d17n1fvr7kgih" path="res://elements/spaceship.tscn" id="2_vasa2"]
 [ext_resource type="PackedScene" uid="uid://bk64tyxny4okm" path="res://elements/wall.tscn" id="3_h7iqs"]
 [ext_resource type="PackedScene" uid="uid://cl6djo10flm3t" path="res://elements/enemy/scout.tscn" id="4_4fuuu"]
+[ext_resource type="Script" uid="uid://rkv37ce8sr5x" path="res://elements/ui/health_bar.gd" id="5_dxrkv"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dxrkv"]
+bg_color = Color(0.101960786, 0.0627451, 0.078431375, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.050980393, 0.039215688, 0.047058824, 1)
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dakft"]
+bg_color = Color(0.8392157, 0.15686275, 0.15686275, 1)
+anti_aliasing = false
 
 [node name="Game" type="Node2D" unique_id=1722043852]
 
@@ -33,3 +47,15 @@ position = Vector2(794, 142)
 
 [node name="Enemy8" parent="." unique_id=1871753282 instance=ExtResource("4_4fuuu")]
 position = Vector2(697, 143)
+
+[node name="UI" type="CanvasLayer" parent="." unique_id=169945949]
+
+[node name="HealthBar" type="ProgressBar" parent="UI" unique_id=1857671855]
+offset_left = 24.0
+offset_top = 24.0
+offset_right = 264.0
+offset_bottom = 44.0
+theme_override_styles/background = SubResource("StyleBoxFlat_dxrkv")
+theme_override_styles/fill = SubResource("StyleBoxFlat_dakft")
+show_percentage = false
+script = ExtResource("5_dxrkv")

@@ -1,0 +1,50 @@
+[gd_scene format=3 uid="uid://cmmux14qul4ki"]
+
+[ext_resource type="PackedScene" uid="uid://cbjnmkavx3dck" path="res://elements/bullet.tscn" id="1_hrghg"]
+
+[sub_resource type="Animation" id="Animation_hp7p7"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_hrghg"]
+resource_name = "blink"
+length = 0.3
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.15, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 0.33333334, 0.33333334, 1), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_hp7p7"]
+_data = {
+&"RESET": SubResource("Animation_hp7p7"),
+&"blink": SubResource("Animation_hrghg")
+}
+
+[node name="EnemyBullet" unique_id=607195113 instance=ExtResource("1_hrghg")]
+rotation = 3.1415927
+collision_mask = 2
+speed = 400.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="3" unique_id=1964991013]
+libraries/ = SubResource("AnimationLibrary_hp7p7")
+autoplay = &"blink"

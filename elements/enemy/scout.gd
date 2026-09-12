@@ -19,6 +19,18 @@ extends CharacterBody2D
 ## Отступ от левого и правого краёв экрана, чтобы враг не улетал под стены.
 @export var side_margin := 90.0
 
+@export_group("Weapon")
+## Сцена снаряда врага. Назначается в инспекторе.
+@export var bullet_scene: PackedScene
+## Сколько выстрелов в секунду делает враг, пока игрок на линии огня. 0 — враг не стреляет совсем.
+@export var fire_rate := 0.6
+## Разброс паузы между выстрелами, доля от базовой паузы. 0 — стрельба строго по таймеру,
+## 0.5 — пауза гуляет в полтора раза в обе стороны, и залпы соседних врагов не сливаются.
+@export_range(0.0, 1.0) var fire_jitter := 0.4
+## Насколько близко игрок должен оказаться под врагом по горизонтали, пикселей.
+## Больше — враг стреляет чаще, но чаще мажет; меньше — стреляет реже и точнее.
+@export var aim_tolerance := 28.0
+
 const MAX_AIMERS := 2
 const AIM_CHANCE := 0.5
 
@@ -27,16 +39,19 @@ static var _aimers := 0
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var explosion: AnimatedSprite2D = $Explosion
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
+@onready var muzzle: Marker2D = $Muzzle
+@onready var weapons: AnimatedSprite2D = $Weapons
 
 var health := 0
 var _base_texture: Texture2D
-var _flash_tween: Tween
+var _texture_tween: Tween
 var _dying := false
 
 var _player: Node2D
 var _target := Vector2.ZERO
 var _state_timer := 0.0
 var _aiming := false
+var _fire_cooldown := 0.0
 
 
 func _ready() -> void:
@@ -45,6 +60,9 @@ func _ready() -> void:
 	motion_mode = MOTION_MODE_FLOATING
 	_player = _find_player()
 	_pick_wander()
+	# Первая пауза случайная, иначе вся стая делает первый залп одним кадром.
+	_fire_cooldown = _next_cooldown() * randf()
+	weapons.animation_finished.connect(weapons.hide)
 
 
 func _physics_process(delta: float) -> void:
@@ -55,6 +73,10 @@ func _physics_process(delta: float) -> void:
 	_state_timer -= delta
 	if _state_timer <= 0.0:
 		_choose_state()
+
+	_fire_cooldown -= delta
+	if _can_fire():
+		_fire()
 
 	if _aiming and is_instance_valid(_player):
 		_target.x = _player.global_position.x
@@ -75,7 +97,7 @@ func take_damage(amount: int) -> void:
 	if health <= 0:
 		die()
 	else:
-		_flash()
+		_show_texture(hit_texture, hit_duration)
 
 
 func die() -> void:
@@ -83,10 +105,36 @@ func die() -> void:
 	_set_aiming(false)
 	collision_shape.set_deferred("disabled", true)
 	sprite.hide()
+	weapons.hide()
 	explosion.show()
 	explosion.play("destroy")
 	await explosion.animation_finished
 	queue_free()
+
+
+func _can_fire() -> bool:
+	if fire_rate <= 0.0 or _fire_cooldown > 0.0:
+		return false
+	if not is_instance_valid(_player):
+		return false
+	return absf(_player.global_position.x - global_position.x) <= aim_tolerance
+
+
+func _fire() -> void:
+	_fire_cooldown = _next_cooldown()
+	var bullet := bullet_scene.instantiate()
+	get_tree().current_scene.add_child(bullet)
+	bullet.global_position = muzzle.global_position
+	# stop() перед play() перематывает на первый кадр: без него повторный выстрел
+	# во время ещё играющей анимации не перезапустил бы её.
+	weapons.stop()
+	weapons.show()
+	weapons.play("fire")
+
+
+func _next_cooldown() -> float:
+	var base := 1.0 / fire_rate
+	return base * randf_range(1.0 - fire_jitter, 1.0 + fire_jitter)
 
 
 func _choose_state() -> void:
@@ -122,20 +170,17 @@ func _exit_tree() -> void:
 
 
 func _find_player() -> Node2D:
-	var found := get_tree().get_first_node_in_group("player")
-	if found == null and get_parent() != null:
-		found = get_parent().get_node_or_null("Spaceship")
-	return found as Node2D
+	return get_tree().get_first_node_in_group("player") as Node2D
 
 
-func _flash() -> void:
-	if hit_texture == null:
-		return
-	if _flash_tween != null and _flash_tween.is_running():
-		_flash_tween.kill()
-	sprite.texture = hit_texture
-	_flash_tween = create_tween()
-	_flash_tween.tween_callback(_restore_texture).set_delay(hit_duration)
+# Подменяет текстуру корпуса на время и возвращает обратно. Твин хранится в поле,
+# чтобы попадание во время ещё не погасшей вспышки перебивало её, а не наслаивалось.
+func _show_texture(texture: Texture2D, duration: float) -> void:
+	if _texture_tween != null and _texture_tween.is_running():
+		_texture_tween.kill()
+	sprite.texture = texture
+	_texture_tween = create_tween()
+	_texture_tween.tween_callback(_restore_texture).set_delay(duration)
 
 
 func _restore_texture() -> void:

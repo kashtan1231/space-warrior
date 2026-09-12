@@ -1,5 +1,11 @@
 extends CharacterBody2D
 
+## Летит при каждом изменении здоровья. На него подписан индикатор хп, чтобы корабль
+## ничего не знал про интерфейс и не лез в его узлы.
+signal health_changed(health: int, max_health: int)
+
+## Сколько попаданий вражеских пуль выдерживает корабль.
+@export var max_health := 5
 ## Предельная скорость корабля, пикселей в секунду.
 @export var max_speed := 400.0
 ## Насколько быстро корабль набирает скорость, пикселей в секунду за секунду.
@@ -13,7 +19,13 @@ extends CharacterBody2D
 
 const BULLET_SCENE = preload("res://elements/bullet.tscn")
 
+var health := 0
 var _fire_cooldown := 0.0
+
+
+func _ready() -> void:
+	health = max_health
+	health_changed.emit(health, max_health)
 
 
 func _physics_process(delta: float):
@@ -29,6 +41,12 @@ func _physics_process(delta: float):
 	else:
 		velocity.x = move_toward(velocity.x, 0.0, friction * delta)
 	move_and_slide()
+
+
+func take_damage(amount: int) -> void:
+	health -= amount
+	health_changed.emit(health, max_health)
+
 
 func fire():
 	var bullet := BULLET_SCENE.instantiate()
