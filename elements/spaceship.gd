@@ -284,6 +284,9 @@ func _update_ship_texture() -> void:
 
 func fire():
 	var bullet := BULLET_SCENE.instantiate()
+	# Группа выдаётся здесь, а не в сцене пули: вражеская пуля унаследована от той же
+	# сцены и получила бы группу тоже. От этих пуль уворачиваются враги, см. scout.gd.
+	bullet.add_to_group("player_bullets")
 	get_tree().current_scene.add_child(bullet)
 	bullet.global_position = muzzle.global_position
 	# Пуля летит туда, куда повёрнута (см. bullet.gd), поэтому наклон корпуса

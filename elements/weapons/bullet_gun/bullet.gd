@@ -1,4 +1,5 @@
 extends Area2D
+class_name Bullet
 
 const IMPACT_SCENE = preload("res://elements/weapons/bullet_gun/projectile.tscn")
 const HULL_IMPACT_SCENE = preload("res://elements/weapons/bullet_gun/impact.tscn")
@@ -17,7 +18,13 @@ func _physics_process(delta: float) -> void:
 	# Пуля летит туда, куда повёрнута: у пули игрока поворот 0 и она идёт вверх,
 	# у вражеской корень развёрнут на 180° и она идёт вниз. Отдельный параметр
 	# направления не нужен — хватает угла узла, выставленного в сцене.
-	position += Vector2.UP.rotated(rotation) * speed * delta
+	position += get_velocity() * delta
+
+
+## Скорость пули в пикселях в секунду вместе с направлением. По ней враги предсказывают,
+## где пройдёт пуля, чтобы увернуться заранее.
+func get_velocity() -> Vector2:
+	return Vector2.UP.rotated(rotation) * speed
 
 
 func _on_body_entered(body: Node2D) -> void:

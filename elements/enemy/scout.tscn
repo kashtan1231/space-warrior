@@ -219,6 +219,10 @@ band_bottom = 400.0
 separation_radius = 100.0
 separation_strength = 300.0
 target_spacing = 150.0
+dodge_chance = 0.6
+dodge_cooldown = 1.0
+dodge_speed = 150.0
+dodge_acceleration = 300.0
 bullet_scene = ExtResource("3_baseo")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=920840336]

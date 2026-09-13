@@ -37,6 +37,29 @@ class_name Scout
 ## separation_radius. Если на экране тесно и места нет, берётся самая свободная точка.
 @export var target_spacing := 100.0
 
+@export_group("Dodge")
+## Шанс, что враг заметит пулю, летящую в него, и увернётся. Бросается один раз на каждую
+## пулю. 0 — не уворачивается никогда, 1 — от каждой пули, если не на перезарядке.
+@export_range(0.0, 1.0, 0.05) var dodge_chance := 0.5
+## Пауза после уворота, секунд, в течение которой враг не замечает новых пуль.
+## Меньше — очередь почти не пробивает; больше — второй выстрел следом почти всегда попадает.
+@export var dodge_cooldown := 1.5
+## Сколько длится рывок в сторону, секунд. Вместе с dodge_speed задаёт, насколько далеко
+## враг уходит с линии огня.
+@export var dodge_duration := 0.3
+## Скорость рывка, пикселей в секунду. Выше обычной speed, иначе враг не успевает уйти.
+@export var dodge_speed := 260.0
+## Ускорение во время рывка, пикселей в секунду за секунду. Больше — рывок резче и
+## срабатывает даже против пули, выпущенной почти в упор.
+@export var dodge_acceleration := 1800.0
+## На сколько секунд вперёд враг просчитывает полёт пуль. Больше — замечает пули раньше,
+## ещё у самого корабля игрока; меньше — реагирует только на подлетевшие вплотную.
+@export var dodge_lookahead := 0.5
+## Насколько близко к центру врага должна пройти траектория пули, чтобы он счёл её
+## угрозой, пикселей. Примерно радиус корпуса с запасом: меньше — будет уворачиваться
+## только от выстрелов точно в центр, больше — шарахаться и от пуль, летящих мимо.
+@export var dodge_margin := 36.0
+
 @export_group("Weapon")
 ## Сцена снаряда врага. Назначается в инспекторе.
 @export var bullet_scene: PackedScene
@@ -73,6 +96,13 @@ var _state_timer := 0.0
 var _aiming := false
 var _fire_cooldown := 0.0
 
+var _dodge_left := 0.0
+var _dodge_cooldown_left := 0.0
+var _dodge_direction := Vector2.ZERO
+# Решения «заметил / не заметил» по каждой пуле, ключ — instance id пули. Без памяти
+# шанс перебрасывался бы каждый кадр подлёта, и уворот стал бы почти гарантированным.
+var _dodge_decisions: Dictionary[int, bool] = {}
+
 
 func _ready() -> void:
 	health = max_health
@@ -98,6 +128,8 @@ func _physics_process(delta: float) -> void:
 	if _can_fire():
 		_fire()
 
+	_update_dodge(delta)
+
 	if _aiming and is_instance_valid(_player):
 		_target.x = _player.global_position.x
 
@@ -106,10 +138,19 @@ func _physics_process(delta: float) -> void:
 	var desired := Vector2.ZERO
 	if distance > 1.0:
 		desired = to_target / distance * minf(speed, distance * 3.0)
+	var max_speed := speed
+	var max_acceleration := acceleration
+	# Во время рывка цель забыта, враг просто уходит вбок на повышенных скорости и
+	# ускорении. Состояния блуждания и прицеливания при этом не сбиваются: рывок кончится,
+	# и тяга к той же цели вернёт его обратно.
+	if _dodge_left > 0.0:
+		desired = _dodge_direction * dodge_speed
+		max_speed = dodge_speed
+		max_acceleration = dodge_acceleration
 	# Толчок от соседей просто складывается с тягой к цели. Резких рывков не будет:
 	# итог всё равно проходит через move_toward с ограниченным ускорением.
-	desired = (desired + _separation()).limit_length(speed)
-	velocity = velocity.move_toward(desired, acceleration * delta)
+	desired = (desired + _separation()).limit_length(max_speed)
+	velocity = velocity.move_toward(desired, max_acceleration * delta)
 	move_and_slide()
 	# У игрока направление приходит с кнопок и бывает только -1, 0 или 1, а скорость
 	# врага меняется плавно. Порог отсекает медленный дрейф, иначе враг, почти висящий
@@ -236,6 +277,77 @@ func _separation() -> Vector2:
 		var away := offset / distance if distance > 0.001 else Vector2.RIGHT.rotated(randf() * TAU)
 		push += away * (1.0 - distance / separation_radius)
 	return push * separation_strength
+
+
+# Перебирает пули игрока, решает, от какой уворачиваться, и запускает рывок.
+# Перезарядка начинает тикать только после окончания рывка.
+func _update_dodge(delta: float) -> void:
+	if _dodge_left > 0.0:
+		_dodge_left -= delta
+	elif _dodge_cooldown_left > 0.0:
+		_dodge_cooldown_left -= delta
+	var ready_to_dodge := _dodge_left <= 0.0 and _dodge_cooldown_left <= 0.0
+
+	# Словарь пересобирается каждый кадр из живых пуль, так что решения по улетевшим
+	# и удалённым пулям выбрасываются сами.
+	var decisions: Dictionary[int, bool] = {}
+	var escape := Vector2.ZERO
+	for node in get_tree().get_nodes_in_group("player_bullets"):
+		var bullet := node as Bullet
+		var id := bullet.get_instance_id()
+		if _dodge_decisions.has(id):
+			decisions[id] = _dodge_decisions[id]
+		var side := _escape_direction(bullet)
+		if side == Vector2.ZERO:
+			continue
+		# Во время рывка и перезарядки угрозы не замечаются, и кубик не бросается:
+		# шанс сыграет, когда враг снова будет готов, если пуля ещё летит в него.
+		if not ready_to_dodge:
+			continue
+		if not decisions.has(id):
+			decisions[id] = randf() < dodge_chance
+		if decisions[id] and escape == Vector2.ZERO:
+			escape = side
+	_dodge_decisions = decisions
+
+	if escape != Vector2.ZERO:
+		_start_dodge(escape)
+
+
+# Пуля летит по прямой, поэтому ближайшее сближение считается проекцией. Считается
+# по относительной скорости: враг сам движется, и пуля, пущенная туда, где он был,
+# может пройти мимо — на такую тратить уворот незачем.
+# Возвращает направление, куда уходить, или ZERO, если пуля не угрожает: уже пролетела,
+# долетит нескоро или пройдёт дальше dodge_margin от центра.
+func _escape_direction(bullet: Bullet) -> Vector2:
+	var bullet_velocity := bullet.get_velocity()
+	var relative := bullet_velocity - velocity
+	var to_self := global_position - bullet.global_position
+	var time := to_self.dot(relative) / relative.length_squared()
+	if time < 0.0 or time > dodge_lookahead:
+		return Vector2.ZERO
+	var miss := to_self - relative * time
+	if miss.length() > dodge_margin:
+		return Vector2.ZERO
+	# Уходим поперёк полёта пули, в ту сторону, где враг уже и так смещён от её линии:
+	# до безопасного края там ближе. Пуля точно в центр — сторона случайная.
+	var across := bullet_velocity.orthogonal().normalized()
+	var side := signf(miss.dot(across))
+	if side == 0.0:
+		side = 1.0 if randf() < 0.5 else -1.0
+	return across * side
+
+
+func _start_dodge(direction: Vector2) -> void:
+	# Если рывок вынес бы врага за боковой отступ, уходим в другую сторону. Это значит
+	# пересечь линию огня, зато враг не прилипнет к стене, куда его легко добить.
+	var width := get_viewport_rect().size.x
+	var landing_x := global_position.x + direction.x * dodge_speed * dodge_duration
+	if landing_x < side_margin or landing_x > width - side_margin:
+		direction = -direction
+	_dodge_direction = direction
+	_dodge_left = dodge_duration
+	_dodge_cooldown_left = dodge_cooldown
 
 
 func _set_aiming(value: bool) -> void:
