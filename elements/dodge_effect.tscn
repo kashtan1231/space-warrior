@@ -1,0 +1,78 @@
+[gd_scene format=3 uid="uid://w5nd5cydchfy"]
+
+[ext_resource type="Texture2D" uid="uid://c2lys4t67yhjd" path="res://assets/spaceship/dodge_spritesheet.png" id="1_fxa4u"]
+[ext_resource type="Script" uid="uid://dstvimh1uronu" path="res://elements/dodge_effect.gd" id="2_sjva2"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sjva2"]
+atlas = ExtResource("1_fxa4u")
+region = Rect2(0, 0, 100, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6i53n"]
+atlas = ExtResource("1_fxa4u")
+region = Rect2(100, 0, 100, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nrgo4"]
+atlas = ExtResource("1_fxa4u")
+region = Rect2(0, 48, 100, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s3n56"]
+atlas = ExtResource("1_fxa4u")
+region = Rect2(100, 48, 100, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v5dvb"]
+atlas = ExtResource("1_fxa4u")
+region = Rect2(0, 96, 100, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q4ny0"]
+atlas = ExtResource("1_fxa4u")
+region = Rect2(100, 96, 100, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_x7dcd"]
+atlas = ExtResource("1_fxa4u")
+region = Rect2(0, 144, 100, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5rjdg"]
+atlas = ExtResource("1_fxa4u")
+region = Rect2(100, 144, 100, 48)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_1us10"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sjva2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6i53n")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nrgo4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s3n56")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_v5dvb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_q4ny0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_x7dcd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5rjdg")
+}],
+"loop": 0,
+"name": &"default",
+"speed": 15.0
+}]
+
+[node name="DodgeEffect" type="AnimatedSprite2D" unique_id=1288633675]
+rotation = 1.5707964
+scale = Vector2(0.75, 0.75)
+sprite_frames = SubResource("SpriteFrames_1us10")
+autoplay = "default"
+frame = 7
+frame_progress = 1.0
+offset = Vector2(80, 0)
+script = ExtResource("2_sjva2")

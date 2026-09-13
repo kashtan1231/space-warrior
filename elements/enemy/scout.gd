@@ -18,6 +18,10 @@ extends CharacterBody2D
 @export var band_bottom := 240.0
 ## Отступ от левого и правого краёв экрана, чтобы враг не улетал под стены.
 @export var side_margin := 90.0
+## Доля от speed: быстрее этого враг летит вбок — и заваливается в наклон, медленнее — выпрямляется.
+## 0 — наклоняется от малейшего дрейфа, ближе к 1 — только на полной скорости вбок.
+## Сам угол и ступеньки настраиваются на дочернем узле Tilt.
+@export_range(0.0, 1.0, 0.05) var tilt_threshold := 0.25
 
 @export_group("Weapon")
 ## Сцена снаряда врага. Назначается в инспекторе.
@@ -41,6 +45,7 @@ static var _aimers := 0
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
 @onready var muzzle: Marker2D = $Muzzle
 @onready var weapons: AnimatedSprite2D = $Weapons
+@onready var tilt: Tilt = $Tilt
 
 var health := 0
 var _base_texture: Texture2D
@@ -88,6 +93,10 @@ func _physics_process(delta: float) -> void:
 		desired = to_target / distance * minf(speed, distance * 3.0)
 	velocity = velocity.move_toward(desired, acceleration * delta)
 	move_and_slide()
+	# У игрока направление приходит с кнопок и бывает только -1, 0 или 1, а скорость
+	# врага меняется плавно. Порог отсекает медленный дрейф, иначе враг, почти висящий
+	# на месте, заваливался бы от каждого сдвига на пиксель.
+	tilt.direction = velocity.x if absf(velocity.x) > speed * tilt_threshold else 0.0
 
 
 func take_damage(amount: int) -> void:

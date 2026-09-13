@@ -52,13 +52,7 @@ signal died
 @export_range(0.25, 4.0, 0.05) var dodge_step_falloff := 1.0
 
 @export_group("Tilt")
-## На сколько градусов корпус заваливается в сторону движения.
-@export_range(0.0, 45.0, 1.0) var tilt_angle := 10.0
-## На сколько ступенек разбит наклон в одну сторону. 2 — два промежуточных положения
-## вместо плавного заваливания, в духе покадровой анимации.
-@export_range(1, 6, 1) var tilt_steps := 2
-## Сколько секунд держится одна ступенька наклона.
-@export var tilt_step_time := 0.05
+## Сам наклон настраивается на дочернем узле Tilt, здесь — только его влияние на стрельбу.
 ## Насколько наклон корпуса уводит пулю в сторону. 0 — пули всегда летят строго вверх,
 ## 1 — точно вдоль носа, 0.5 — вполовину отложе наклона. Нужен потому, что угол, который
 ## хорошо смотрится на корпусе, для пули обычно уже слишком косой.
@@ -80,8 +74,10 @@ signal died
 @onready var engine_right: AnimatedSprite2D = $Ship/Engine/EngineRight
 @onready var explosion: AnimatedSprite2D = $Explosion
 @onready var hitbox: CollisionPolygon2D = $Hitbox
+@onready var tilt: Tilt = $Tilt
 
 const BULLET_SCENE = preload("res://elements/bullet.tscn")
+const DODGE_EFFECT_SCENE = preload("res://elements/dodge_effect.tscn")
 
 var health := 0
 var _fire_cooldown := 0.0
@@ -92,8 +88,6 @@ var _base_collision_layer := 0
 var _base_ship_scale := Vector2.ONE
 var _base_ship_position := Vector2.ZERO
 var _recoil_tween: Tween
-var _tilt_step := 0
-var _tilt_timer := 0.0
 var _dying := false
 var _base_ship_modulate := Color.WHITE
 
@@ -124,7 +118,7 @@ func _physics_process(delta: float):
 		_fire_cooldown = 1.0 / fire_rate
 	
 	var direction := Input.get_axis("move_left", "move_right")
-	_update_tilt(direction, delta)
+	tilt.direction = direction
 	_update_engines(direction)
 	if direction != 0.0:
 		velocity.x = move_toward(velocity.x, direction * max_speed, acceleration * delta)
@@ -186,6 +180,7 @@ func _update_dodge(delta: float) -> void:
 func _start_dodge() -> void:
 	_dodge_left = dodge_duration
 	_refresh_collision_layer()
+	_spawn_dodge_effect()
 
 	# Погружение и всплытие вписываются в длительность нырка, поэтому корабль всплывает
 	# ровно тем же кадром, каким кончается неуязвимость, а не через мгновение после.
@@ -205,6 +200,16 @@ func _start_dodge() -> void:
 	for step in range(dodge_steps - 1, -1, -1):
 		tween.tween_callback(_set_dodge_phase.bind(float(step) / dodge_steps))
 		tween.tween_interval(step_times[step])
+
+
+func _spawn_dodge_effect() -> void:
+	# Вспышка кладётся в корень уровня, как пуля: будь она дочерним узлом корабля,
+	# она сжималась бы вместе со спрайтом на дне нырка и мигала бы при неуязвимости.
+	# За позицией и наклоном корабля она следит сама, см. dodge_effect.gd.
+	var effect: DodgeEffect = DODGE_EFFECT_SCENE.instantiate()
+	effect.target = self
+	effect.tilt_source = ship
+	get_tree().current_scene.add_child(effect)
 
 
 # Раскладывает время перехода по шагам геометрической прогрессией со знаменателем
@@ -271,23 +276,6 @@ func _update_engines(direction: float) -> void:
 func _set_engine_animation(engine: AnimatedSprite2D, animation: StringName) -> void:
 	if engine.animation != animation or not engine.is_playing():
 		engine.play(animation)
-
-
-# Наклон не доезжает плавно, а переключается между целыми ступеньками не чаще,
-# чем раз в tilt_step_time. Промежуточных углов не существует — корпус щёлкает
-# из положения в положение, как нарисованные кадры разворота.
-func _update_tilt(direction: float, delta: float) -> void:
-	_tilt_timer -= delta
-	if _tilt_timer > 0.0:
-		return
-
-	var target_step := int(signf(direction)) * tilt_steps
-	if _tilt_step == target_step:
-		return
-
-	_tilt_step += signi(target_step - _tilt_step)
-	_tilt_timer = tilt_step_time
-	ship.rotation = deg_to_rad(tilt_angle) * _tilt_step / float(tilt_steps)
 
 
 func _recoil() -> void:

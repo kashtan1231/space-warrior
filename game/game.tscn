@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://d17n1fvr7kgih" path="res://elements/spaceship.tscn" id="2_vasa2"]
 [ext_resource type="PackedScene" uid="uid://bk64tyxny4okm" path="res://elements/wall.tscn" id="3_h7iqs"]
 [ext_resource type="PackedScene" uid="uid://cl6djo10flm3t" path="res://elements/enemy/scout.tscn" id="4_4fuuu"]
-[ext_resource type="Script" uid="uid://rkv37ce8sr5x" path="res://elements/ui/health_bar.gd" id="5_dxrkv"]
+[ext_resource type="Script" uid="uid://fn7g8ia1q0ey" path="res://elements/ui/hearts.gd" id="6_dakft"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_u5opy"]
 atlas = ExtResource("1_dakft")
@@ -78,19 +78,6 @@ animations = [{
 "speed": 4.0
 }]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dxrkv"]
-bg_color = Color(0.101960786, 0.0627451, 0.078431375, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.050980393, 0.039215688, 0.047058824, 1)
-anti_aliasing = false
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dakft"]
-bg_color = Color(0.8392157, 0.15686275, 0.15686275, 1)
-anti_aliasing = false
-
 [node name="Game" type="Node2D" unique_id=1722043852]
 
 [node name="Bg" type="Sprite2D" parent="." unique_id=574545187]
@@ -129,12 +116,10 @@ position = Vector2(697, 143)
 
 [node name="UI" type="CanvasLayer" parent="." unique_id=169945949]
 
-[node name="HealthBar" type="ProgressBar" parent="UI" unique_id=1857671855]
+[node name="Hearts" type="HBoxContainer" parent="UI" unique_id=2000922516]
 offset_left = 24.0
 offset_top = 24.0
-offset_right = 264.0
-offset_bottom = 44.0
-theme_override_styles/background = SubResource("StyleBoxFlat_dxrkv")
-theme_override_styles/fill = SubResource("StyleBoxFlat_dakft")
-show_percentage = false
-script = ExtResource("5_dxrkv")
+offset_right = 64.0
+offset_bottom = 64.0
+theme_override_constants/separation = 4
+script = ExtResource("6_dakft")

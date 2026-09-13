@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://37k8wdb1obyc" path="res://assets/enemy/scout/Kla'ed - Scout - Engine.png" id="2_j2ly8"]
 [ext_resource type="PackedScene" uid="uid://cmmux14qul4ki" path="res://elements/enemy/enemy_bullet.tscn" id="3_baseo"]
 [ext_resource type="Texture2D" uid="uid://dc6gmw3aw275p" path="res://assets/enemy/scout/Weapons.png" id="6_ax7if"]
+[ext_resource type="Script" uid="uid://300q85tg61um" path="res://elements/tilt.gd" id="7_cqau8"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_uayi2"]
 atlas = ExtResource("2_5g2rt")
@@ -221,10 +222,10 @@ flip_v = true
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Sprite2D" unique_id=2128071768]
 show_behind_parent = true
-position = Vector2(0, 0.5)
+position = Vector2(0, -0.5)
 sprite_frames = SubResource("SpriteFrames_1us10")
 autoplay = "default"
-frame_progress = 0.7197837
+frame_progress = 0.70218146
 flip_v = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=748297842]
@@ -248,3 +249,12 @@ position = Vector2(0, 4)
 sprite_frames = SubResource("SpriteFrames_rt8om")
 animation = &"fire"
 flip_v = true
+
+[node name="Tilt" type="Node" parent="." unique_id=1324075906 node_paths=PackedStringArray("targets")]
+script = ExtResource("7_cqau8")
+targets = [NodePath("../Sprite2D"), NodePath("../Weapons")]
+angle = 20.0
+steps = 3
+step_time = 0.12
+nose_down = true
+metadata/_custom_type_script = "uid://300q85tg61um"

@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://b24b0fyl38q5p" path="res://assets/spaceship/Main Ship - Base - Very damaged.png" id="5_oyroy"]
 [ext_resource type="Texture2D" uid="uid://dmnx0su25ajp1" path="res://assets/spaceship/engines.png" id="7_oyroy"]
 [ext_resource type="Texture2D" uid="uid://bmhq8m2g0iph1" path="res://assets/spaceship/die_explosion.png" id="8_g6g06"]
+[ext_resource type="Script" uid="uid://300q85tg61um" path="res://elements/tilt.gd" id="9_oyroy"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_gmjmk"]
 atlas = ExtResource("7_oyroy")
@@ -255,16 +256,18 @@ collision_layer = 2
 collision_mask = 5
 motion_mode = 1
 script = ExtResource("1_vj48w")
+max_health = 4
+friction = 2000.0
 fire_rate = 1.0
 damage_textures = Array[Texture2D]([ExtResource("1_fe5sw"), ExtResource("3_w3dun"), ExtResource("4_g6g06"), ExtResource("5_oyroy")])
 invulnerability_duration = 2.0
 invulnerability_blink_period = 0.3
 dodge_duration = 2.0
 dodge_scale = 0.75
+dodge_darkness = 0.5
 dodge_transition = 0.3
-tilt_angle = 20.0
-tilt_steps = 3
-tilt_step_time = 0.12
+dodge_steps = 3
+dodge_step_falloff = 0.25
 bullet_tilt_influence = 1.0
 recoil_hold_time = 0.3
 recoil_return_time = 0.6
@@ -307,3 +310,11 @@ sprite_frames = SubResource("SpriteFrames_rt8om")
 animation = &"destroy"
 frame = 9
 frame_progress = 1.0
+
+[node name="Tilt" type="Node" parent="." unique_id=581719391 node_paths=PackedStringArray("targets")]
+script = ExtResource("9_oyroy")
+targets = [NodePath("../Ship")]
+angle = 20.0
+steps = 3
+step_time = 0.12
+metadata/_custom_type_script = "uid://300q85tg61um"
