@@ -1,4 +1,5 @@
 extends CharacterBody2D
+class_name Scout
 
 ## Сколько попаданий выдерживает враг, прежде чем взорвётся.
 @export var max_health := 5
@@ -23,6 +24,19 @@ extends CharacterBody2D
 ## Сам угол и ступеньки настраиваются на дочернем узле Tilt.
 @export_range(0.0, 1.0, 0.05) var tilt_threshold := 0.25
 
+@export_group("Separation")
+## На каком расстоянии между центрами враги начинают расталкиваться, пикселей.
+## Больше — стая держится реже и расходится раньше; меньше — подпускают соседа почти вплотную.
+@export var separation_radius := 70.0
+## Скорость, с которой враг уходит от соседа, стоящего с ним в одной точке, пикселей в секунду.
+## На границе радиуса толчок падает до нуля. Больше — расходятся резче, но сильнее сбиваются
+## с курса к цели; меньше — плавнее, но могут ненадолго наехать друг на друга.
+@export var separation_strength := 120.0
+## Минимальное расстояние между точками, куда летят разные враги, пикселей. Не даёт двоим
+## выбрать одно место и топтаться там, отпихивая друг друга. Лучше держать не меньше
+## separation_radius. Если на экране тесно и места нет, берётся самая свободная точка.
+@export var target_spacing := 100.0
+
 @export_group("Weapon")
 ## Сцена снаряда врага. Назначается в инспекторе.
 @export var bullet_scene: PackedScene
@@ -37,6 +51,7 @@ extends CharacterBody2D
 
 const MAX_AIMERS := 2
 const AIM_CHANCE := 0.5
+const WANDER_ATTEMPTS := 8
 
 static var _aimers := 0
 
@@ -91,6 +106,9 @@ func _physics_process(delta: float) -> void:
 	var desired := Vector2.ZERO
 	if distance > 1.0:
 		desired = to_target / distance * minf(speed, distance * 3.0)
+	# Толчок от соседей просто складывается с тягой к цели. Резких рывков не будет:
+	# итог всё равно проходит через move_toward с ограниченным ускорением.
+	desired = (desired + _separation()).limit_length(speed)
 	velocity = velocity.move_toward(desired, acceleration * delta)
 	move_and_slide()
 	# У игрока направление приходит с кнопок и бывает только -1, 0 или 1, а скорость
@@ -111,6 +129,9 @@ func take_damage(amount: int) -> void:
 
 func die() -> void:
 	_dying = true
+	# Взрыв доигрывает на месте ещё какое-то время. Вне группы соседи его не видят:
+	# не шарахаются от обломков и не учитывают его точку при выборе своих.
+	remove_from_group("enemies")
 	_set_aiming(false)
 	collision_shape.set_deferred("disabled", true)
 	sprite.hide()
@@ -119,6 +140,11 @@ func die() -> void:
 	explosion.play("destroy")
 	await explosion.animation_finished
 	queue_free()
+
+
+## Точка, к которой враг сейчас летит. Нужна соседям, чтобы не выбирать место рядом.
+func get_target() -> Vector2:
+	return _target
 
 
 func _can_fire() -> bool:
@@ -158,13 +184,58 @@ func _choose_state() -> void:
 		_pick_wander()
 
 
+# Несколько случайных попыток найти точку, далёкую от целей соседей. Первая подходящая
+# берётся сразу; если все попытки легли в тесноту, остаётся самая свободная из них —
+# враг не должен зависать без цели только потому, что на экране людно.
 func _pick_wander() -> void:
 	var width := get_viewport_rect().size.x
-	_target = Vector2(
-		randf_range(side_margin, width - side_margin),
-		randf_range(band_top, band_bottom)
-	)
+	var best := Vector2.ZERO
+	var best_clearance := -1.0
+	for attempt in WANDER_ATTEMPTS:
+		var candidate := Vector2(
+			randf_range(side_margin, width - side_margin),
+			randf_range(band_top, band_bottom)
+		)
+		var clearance := _clearance_from_other_targets(candidate)
+		if clearance > best_clearance:
+			best = candidate
+			best_clearance = clearance
+		if clearance >= target_spacing:
+			break
+	_target = best
 	_state_timer = randf_range(0.8, 2.0)
+
+
+# Расстояние от точки до ближайшей цели другого врага. INF, если соседей нет.
+func _clearance_from_other_targets(point: Vector2) -> float:
+	var nearest := INF
+	for node in get_tree().get_nodes_in_group("enemies"):
+		# В группе могут оказаться враги других типов, у которых нет get_target().
+		var other := node as Scout
+		if other == null or other == self:
+			continue
+		nearest = minf(nearest, point.distance_to(other.get_target()))
+	return nearest
+
+
+# Сумма толчков от всех соседей ближе separation_radius. Каждый толчок направлен
+# от соседа и линейно слабеет от полной силы вплотную до нуля на границе радиуса,
+# поэтому враги не отскакивают, а мягко расползаются.
+func _separation() -> Vector2:
+	var push := Vector2.ZERO
+	for node in get_tree().get_nodes_in_group("enemies"):
+		var other := node as Node2D
+		if other == self:
+			continue
+		var offset := global_position - other.global_position
+		var distance := offset.length()
+		if distance >= separation_radius:
+			continue
+		# Два врага ровно в одной точке: направления «от соседа» нет, берём случайное,
+		# иначе они так и остались бы слипшимися.
+		var away := offset / distance if distance > 0.001 else Vector2.RIGHT.rotated(randf() * TAU)
+		push += away * (1.0 - distance / separation_radius)
+	return push * separation_strength
 
 
 func _set_aiming(value: bool) -> void:

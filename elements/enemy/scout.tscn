@@ -207,12 +207,18 @@ animations = [{
 "speed": 30.0
 }]
 
-[node name="Enemy" type="CharacterBody2D" unique_id=925835412]
+[node name="Enemy" type="CharacterBody2D" unique_id=925835412 groups=["enemies"]]
 scale = Vector2(2, 2)
 collision_layer = 4
 collision_mask = 3
 script = ExtResource("1_j2ly8")
 hit_texture = SubResource("AtlasTexture_uayi2")
+acceleration = 300.0
+band_top = 30.0
+band_bottom = 400.0
+separation_radius = 100.0
+separation_strength = 300.0
+target_spacing = 150.0
 bullet_scene = ExtResource("3_baseo")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=920840336]
