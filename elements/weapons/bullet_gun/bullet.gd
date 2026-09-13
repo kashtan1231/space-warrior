@@ -1,6 +1,7 @@
 extends Area2D
 
-const IMPACT_SCENE = preload("res://elements/impact.tscn")
+const IMPACT_SCENE = preload("res://elements/weapons/bullet_gun/projectile.tscn")
+const HULL_IMPACT_SCENE = preload("res://elements/weapons/bullet_gun/impact.tscn")
 
 ## Скорость полёта пули, пикселей в секунду. Должна быть заметно выше скорости корабля.
 @export var speed := 800.0
@@ -23,6 +24,7 @@ func _on_body_entered(body: Node2D) -> void:
 	if body.has_method("take_damage"):
 		body.take_damage(damage)
 	_spawn_impact()
+	_spawn_hull_impact(body)
 	queue_free()
 
 
@@ -33,6 +35,14 @@ func _spawn_impact() -> void:
 	# Брызги на спрайте нарисованы вверх, как и полёт пули при нулевом повороте.
 	# Разворот на 180° отправляет их навстречу стрелку, а основание — на корпус цели.
 	impact.global_rotation = global_rotation + PI
+
+
+# Пуля попадает только в корабли (маски пуль не включают стены), а у каждого корабля
+# есть компонент Tilt, по которому брызги доворачиваются вместе с корпусом.
+func _spawn_hull_impact(body: Node2D) -> void:
+	var impact: Impact = HULL_IMPACT_SCENE.instantiate()
+	impact.attach(body, body.tilt, global_position)
+	get_tree().current_scene.add_child(impact)
 
 
 func _on_visible_on_screen_enabler_2d_screen_exited() -> void:

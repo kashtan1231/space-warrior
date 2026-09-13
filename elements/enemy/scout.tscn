@@ -237,8 +237,6 @@ visible = false
 position = Vector2(0, 4)
 sprite_frames = SubResource("SpriteFrames_5g2rt")
 animation = &"destroy"
-frame = 7
-frame_progress = 1.0
 flip_v = true
 
 [node name="Muzzle" type="Marker2D" parent="." unique_id=444670208]

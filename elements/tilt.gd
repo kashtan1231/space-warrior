@@ -23,6 +23,9 @@ class_name Tilt
 ## Куда летит владелец: меньше нуля — влево, больше — вправо, 0 — корпус выпрямляется.
 ## Важен только знак, величина на угол не влияет.
 var direction := 0.0
+## Текущий угол наклона в радианах, уже со знаком nose_down. Только для чтения: по нему
+## эффекты, прилипшие к корпусу, доворачиваются вместе с ним.
+var current_angle := 0.0
 
 var _base_rotations: Array[float] = []
 var _step := 0
@@ -54,5 +57,6 @@ func _physics_process(delta: float) -> void:
 	var tilt := deg_to_rad(angle) * _step / float(steps)
 	if nose_down:
 		tilt = -tilt
+	current_angle = tilt
 	for i in targets.size():
 		targets[i].rotation = _base_rotations[i] + tilt

@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://b24b0fyl38q5p" path="res://assets/spaceship/Main Ship - Base - Very damaged.png" id="5_oyroy"]
 [ext_resource type="Texture2D" uid="uid://dmnx0su25ajp1" path="res://assets/spaceship/engines.png" id="7_oyroy"]
 [ext_resource type="Texture2D" uid="uid://bmhq8m2g0iph1" path="res://assets/spaceship/die_explosion.png" id="8_g6g06"]
+[ext_resource type="Texture2D" uid="uid://dum810udln45p" path="res://assets/spaceship/die_explosion_2.png" id="9_cex28"]
 [ext_resource type="Script" uid="uid://300q85tg61um" path="res://elements/tilt.gd" id="9_oyroy"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_gmjmk"]
@@ -250,6 +251,77 @@ animations = [{
 "speed": 10.0
 }]
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_sgk81"]
+atlas = ExtResource("9_cex28")
+region = Rect2(0, 0, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nokfh"]
+atlas = ExtResource("9_cex28")
+region = Rect2(96, 0, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wy5lv"]
+atlas = ExtResource("9_cex28")
+region = Rect2(192, 0, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_c1lru"]
+atlas = ExtResource("9_cex28")
+region = Rect2(288, 0, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_twn07"]
+atlas = ExtResource("9_cex28")
+region = Rect2(384, 0, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8hucf"]
+atlas = ExtResource("9_cex28")
+region = Rect2(480, 0, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wa5dl"]
+atlas = ExtResource("9_cex28")
+region = Rect2(576, 0, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_aau75"]
+atlas = ExtResource("9_cex28")
+region = Rect2(672, 0, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_08idb"]
+atlas = ExtResource("9_cex28")
+region = Rect2(768, 0, 96, 96)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_oyroy"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sgk81")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nokfh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wy5lv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_c1lru")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_twn07")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8hucf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wa5dl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_aau75")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_08idb")
+}],
+"loop": 0,
+"name": &"default",
+"speed": 5.0
+}]
+
 [node name="Spaceship" type="CharacterBody2D" unique_id=1286735498 groups=["player"]]
 scale = Vector2(2, 2)
 collision_layer = 2
@@ -272,6 +344,7 @@ dodge_step_falloff = 0.25
 bullet_tilt_influence = 1.0
 recoil_hold_time = 0.3
 recoil_return_time = 0.6
+blast_delay = 0.5
 
 [node name="Ship" type="Sprite2D" parent="." unique_id=74812759]
 texture = ExtResource("1_fe5sw")
@@ -310,6 +383,12 @@ visible = false
 sprite_frames = SubResource("SpriteFrames_rt8om")
 animation = &"destroy"
 frame = 9
+frame_progress = 1.0
+
+[node name="Blast" type="AnimatedSprite2D" parent="Explosion" unique_id=1074886300]
+show_behind_parent = true
+sprite_frames = SubResource("SpriteFrames_oyroy")
+frame = 8
 frame_progress = 1.0
 
 [node name="Tilt" type="Node" parent="." unique_id=581719391 node_paths=PackedStringArray("targets")]

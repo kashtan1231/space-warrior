@@ -1,26 +1,26 @@
-[gd_scene format=3 uid="uid://4feimhgi3xrg"]
+[gd_scene format=3 uid="uid://cfiq2r1ytpj03"]
 
-[ext_resource type="Script" uid="uid://3tmo0kbct6vs" path="res://elements/impact.gd" id="1_impact"]
-[ext_resource type="Texture2D" uid="uid://bfhqpcj3piawt" path="res://assets/weapons/bullet_impact_spritesheet.png" id="1_v4qkc"]
+[ext_resource type="Texture2D" uid="uid://bfhqpcj3piawt" path="res://assets/weapons/bullet_impact_spritesheet.png" id="1_nfufb"]
+[ext_resource type="Script" uid="uid://bs7uelyykn7cd" path="res://elements/weapons/bullet_gun/impact.gd" id="2_ige20"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pk473"]
-atlas = ExtResource("1_v4qkc")
+atlas = ExtResource("1_nfufb")
 region = Rect2(0, 0, 80, 80)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_diswd"]
-atlas = ExtResource("1_v4qkc")
+atlas = ExtResource("1_nfufb")
 region = Rect2(80, 0, 80, 80)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_baunr"]
-atlas = ExtResource("1_v4qkc")
+atlas = ExtResource("1_nfufb")
 region = Rect2(160, 0, 80, 80)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pn1ko"]
-atlas = ExtResource("1_v4qkc")
+atlas = ExtResource("1_nfufb")
 region = Rect2(240, 0, 80, 80)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_4q4t1"]
-atlas = ExtResource("1_v4qkc")
+atlas = ExtResource("1_nfufb")
 region = Rect2(320, 0, 80, 80)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_1us10"]
@@ -47,10 +47,10 @@ animations = [{
 }]
 
 [node name="Impact" type="AnimatedSprite2D" unique_id=1592519739]
-scale = Vector2(0.25, 0.25)
+scale = Vector2(0.4, 0.4)
 sprite_frames = SubResource("SpriteFrames_1us10")
 autoplay = "default"
 frame = 4
 frame_progress = 1.0
 offset = Vector2(0, -38)
-script = ExtResource("1_impact")
+script = ExtResource("2_ige20")

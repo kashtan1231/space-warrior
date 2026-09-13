@@ -97,13 +97,14 @@ repeat_size = Vector2(0, 720)
 autoscroll = Vector2(0, 3)
 
 [node name="Stars" type="AnimatedSprite2D" parent="StarsParallax" unique_id=192381513]
+self_modulate = Color(0.42, 0.42, 0.42, 1)
 position = Vector2(640, 360)
 scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_dxrkv")
 autoplay = "default"
 script = ExtResource("4_y36n6")
-min_frame_time = 6.0
-max_frame_time = 10.0
+min_frame_time = 3.0
+max_frame_time = 6.0
 
 [node name="Spaceship" parent="." unique_id=1286735498 instance=ExtResource("2_vasa2")]
 position = Vector2(640, 600)

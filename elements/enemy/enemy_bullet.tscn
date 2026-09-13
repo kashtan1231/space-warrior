@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cmmux14qul4ki"]
 
-[ext_resource type="PackedScene" uid="uid://cbjnmkavx3dck" path="res://elements/bullet.tscn" id="1_hrghg"]
+[ext_resource type="PackedScene" uid="uid://cbjnmkavx3dck" path="res://elements/weapons/bullet_gun/bullet.tscn" id="1_hrghg"]
 
 [sub_resource type="Animation" id="Animation_hp7p7"]
 length = 0.001

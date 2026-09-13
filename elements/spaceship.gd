@@ -68,15 +68,22 @@ signal died
 ## так что при большем recoil_distance ступеньки становятся чаще, а не длиннее.
 @export var recoil_return_time := 0.12
 
+@export_group("Death")
+## Через сколько секунд после начала основного взрыва стартует второй (узел Blast).
+## 0 — оба одновременно. Корабль удаляется, только когда доиграют оба, поэтому
+## большая задержка удлиняет гибель на столько же.
+@export var blast_delay := 0.3
+
 @onready var muzzle: Marker2D = $Muzzle
 @onready var ship: Sprite2D = $Ship
 @onready var engine_left: AnimatedSprite2D = $Ship/Engine/EngineLeft
 @onready var engine_right: AnimatedSprite2D = $Ship/Engine/EngineRight
 @onready var explosion: AnimatedSprite2D = $Explosion
+@onready var blast: AnimatedSprite2D = $Explosion/Blast
 @onready var hitbox: CollisionPolygon2D = $Hitbox
 @onready var tilt: Tilt = $Tilt
 
-const BULLET_SCENE = preload("res://elements/bullet.tscn")
+const BULLET_SCENE = preload("res://elements/weapons/bullet_gun/bullet.tscn")
 const DODGE_EFFECT_SCENE = preload("res://elements/dodge_effect.tscn")
 
 var health := 0
@@ -144,10 +151,30 @@ func die() -> void:
 	_dying = true
 	died.emit()
 	hitbox.set_deferred("disabled", true)
-	ship.hide()
+	# Корпус пока остаётся: основной взрыв стоит в дереве после Ship и рисуется поверх
+	# него, а сам корабль пропадает только вместе со стартом Blast, ниже.
 	explosion.show()
 	explosion.play("destroy")
-	await explosion.animation_finished
+	# Blast лежит внутри Explosion и становится видимым вместе с ним. stop() перематывает
+	# на первый кадр: без него анимация, уже доигранная раньше, не началась бы заново.
+	blast.stop()
+	# Пока идёт задержка, Blast спрятан: перемотанный на первый кадр, он висел бы
+	# на экране неподвижной картинкой.
+	blast.hide()
+	if blast_delay > 0.0:
+		# Одноразовый таймер дерева сцены: await на его сигнале timeout приостанавливает
+		# die(), а destroy тем временем продолжает играть сам по себе.
+		await get_tree().create_timer(blast_delay).timeout
+	ship.hide()
+	blast.show()
+	blast.play("default")
+	# Взрывы разной длины, а удалять корабль можно только после обоих: queue_free
+	# снёс бы и дочерние узлы, оборвав тот, что ещё играет. Проверка is_playing() нужна,
+	# потому что за время задержки destroy мог уже закончиться, и его сигнал не придёт.
+	if explosion.is_playing():
+		await explosion.animation_finished
+	if blast.is_playing():
+		await blast.animation_finished
 	queue_free()
 
 
