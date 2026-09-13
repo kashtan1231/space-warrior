@@ -1,10 +1,7 @@
-extends Sprite2D
-
-## Сколько секунд вспышка гаснет, после чего удаляет себя.
-@export var duration := 0.15
+extends AnimatedSprite2D
 
 
 func _ready() -> void:
-	var tween := create_tween()
-	tween.tween_property(self, "modulate:a", 0.0, duration)
-	tween.tween_callback(queue_free)
+	# Вспышка живёт ровно одну анимацию: длительность задаётся FPS в SpriteFrames.
+	# animation_finished приходит только у незацикленной анимации, поэтому Loop выключен.
+	animation_finished.connect(queue_free)

@@ -2,9 +2,11 @@
 
 [ext_resource type="Texture2D" uid="uid://cdk6i1273ws05" path="res://assets/Starry background  - Layer 02 - Stars.png" id="1_dakft"]
 [ext_resource type="Texture2D" uid="uid://cw2cxuouea88q" path="res://assets/Starry background  - Layer 01 - Void.png" id="1_l1rk1"]
+[ext_resource type="Script" uid="uid://cy1877gjrmmus" path="res://elements/scrolling_background.gd" id="2_u5opy"]
 [ext_resource type="PackedScene" uid="uid://d17n1fvr7kgih" path="res://elements/spaceship.tscn" id="2_vasa2"]
 [ext_resource type="PackedScene" uid="uid://bk64tyxny4okm" path="res://elements/wall.tscn" id="3_h7iqs"]
 [ext_resource type="PackedScene" uid="uid://cl6djo10flm3t" path="res://elements/enemy/scout.tscn" id="4_4fuuu"]
+[ext_resource type="Script" uid="uid://b04bvll4h2e41" path="res://elements/random_frame_timing.gd" id="4_y36n6"]
 [ext_resource type="Script" uid="uid://fn7g8ia1q0ey" path="res://elements/ui/hearts.gd" id="6_dakft"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_u5opy"]
@@ -73,9 +75,9 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_hb504")
 }],
-"loop": 1,
+"loop": 2,
 "name": &"default",
-"speed": 4.0
+"speed": 2.0
 }]
 
 [node name="Game" type="Node2D" unique_id=1722043852]
@@ -87,15 +89,24 @@ texture = ExtResource("1_l1rk1")
 centered = false
 region_enabled = true
 region_rect = Rect2(0, 0, 1280, 720)
+script = ExtResource("2_u5opy")
+speed = 100.0
 
-[node name="Stars" type="AnimatedSprite2D" parent="." unique_id=192381513]
+[node name="StarsParallax" type="Parallax2D" parent="." unique_id=1009437641]
+repeat_size = Vector2(0, 720)
+autoscroll = Vector2(0, 3)
+
+[node name="Stars" type="AnimatedSprite2D" parent="StarsParallax" unique_id=192381513]
 position = Vector2(640, 360)
 scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_dxrkv")
 autoplay = "default"
+script = ExtResource("4_y36n6")
+min_frame_time = 6.0
+max_frame_time = 10.0
 
 [node name="Spaceship" parent="." unique_id=1286735498 instance=ExtResource("2_vasa2")]
-position = Vector2(636.00006, 536)
+position = Vector2(640, 600)
 
 [node name="Wall" parent="." unique_id=1304739988 instance=ExtResource("3_h7iqs")]
 

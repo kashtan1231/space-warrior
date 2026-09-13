@@ -30,6 +30,9 @@ func _spawn_impact() -> void:
 	var impact := IMPACT_SCENE.instantiate()
 	get_tree().current_scene.add_child(impact)
 	impact.global_position = global_position
+	# Брызги на спрайте нарисованы вверх, как и полёт пули при нулевом повороте.
+	# Разворот на 180° отправляет их навстречу стрелку, а основание — на корпус цели.
+	impact.global_rotation = global_rotation + PI
 
 
 func _on_visible_on_screen_enabler_2d_screen_exited() -> void:
