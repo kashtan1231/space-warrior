@@ -134,8 +134,12 @@ offset_left = 24.0
 offset_top = 24.0
 offset_right = 64.0
 offset_bottom = 64.0
+scale = Vector2(2, 2)
 theme_override_constants/separation = 4
 script = ExtResource("6_dakft")
 
 [node name="DodgeBar" parent="UI" unique_id=781505682 instance=ExtResource("9_l8g03")]
-position = Vector2(24, 56)
+position = Vector2(24, 80)
+scale = Vector2(3, 3)
+middle_pills = 6
+drain_duration = 0.3
