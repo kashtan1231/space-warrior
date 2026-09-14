@@ -8,6 +8,11 @@ signal health_changed(health: int, max_health: int)
 ## экран поражения и счётчик жизней, когда появятся.
 signal died
 
+## Летит при каждом изменении заряда нырка: 0 — нырок идёт или перезарядка только
+## началась, 1 — нырок снова доступен. Во время перезарядки — каждый физический кадр.
+## На него подписана шкала перезарядки нырка.
+signal dodge_charge_changed(charge: float)
+
 ## Сколько попаданий вражеских пуль выдерживает корабль.
 @export var max_health := 5
 ## Предельная скорость корабля, пикселей в секунду.
@@ -37,6 +42,9 @@ signal died
 @export var dodge_duration := 1.0
 ## Пауза до следующего нырка, секунд. Отсчитывается с момента всплытия.
 @export var dodge_cooldown := 2.0
+## Сколько секунд корабль горит белым, когда перезарядка нырка закончилась.
+## Больше — сигнал заметнее, но дольше закрывает сам корабль.
+@export var dodge_ready_flash_duration := 0.1
 ## До какой доли размера сжимается корабль на дне нырка. 1 — не сжимается совсем.
 @export_range(0.1, 1.0) var dodge_scale := 0.6
 ## Насколько корабль темнеет на дне нырка. 1 — не темнеет, 0 — чёрный силуэт.
@@ -82,15 +90,21 @@ signal died
 @onready var blast: AnimatedSprite2D = $Explosion/Blast
 @onready var hitbox: CollisionPolygon2D = $Hitbox
 @onready var tilt: Tilt = $Tilt
+@onready var ship_material: ShaderMaterial = ship.material
 
 const BULLET_SCENE = preload("res://elements/weapons/bullet_gun/bullet.tscn")
 const DODGE_EFFECT_SCENE = preload("res://elements/dodge_effect.tscn")
+## Имя uniform-параметра в white_flash.gdshader.
+const FLASH_PARAM := &"flash"
 
 var health := 0
 var _fire_cooldown := 0.0
 var _invulnerability_left := 0.0
 var _dodge_left := 0.0
 var _dodge_cooldown_left := 0.0
+# Последний отправленный заряд нырка: по переходу через 1 ловится момент готовности.
+var _dodge_charge_sent := 1.0
+var _flash_tween: Tween
 var _base_collision_layer := 0
 var _base_ship_scale := Vector2.ONE
 var _base_ship_position := Vector2.ZERO
@@ -192,7 +206,9 @@ func _update_invulnerability(delta: float) -> void:
 
 func _update_dodge(delta: float) -> void:
 	if _dodge_cooldown_left > 0.0:
-		_dodge_cooldown_left -= delta
+		# Остаток не уходит в минус, чтобы последний сигнал принёс ровно 1, а не 1.02.
+		_dodge_cooldown_left = maxf(_dodge_cooldown_left - delta, 0.0)
+		_send_dodge_charge()
 
 	if _dodge_left > 0.0:
 		_dodge_left -= delta
@@ -200,6 +216,10 @@ func _update_dodge(delta: float) -> void:
 			_dodge_left = 0.0
 			_dodge_cooldown_left = dodge_cooldown
 			_refresh_collision_layer()
+			# Отдельный сигнал нужен на случай нулевой перезарядки: тогда ветка
+			# с отсчётом выше не сработает, и без него шкала осталась бы пустой,
+			# а корабль не мигнул бы.
+			_send_dodge_charge()
 	elif _dodge_cooldown_left <= 0.0 and Input.is_action_just_pressed("dodge"):
 		_start_dodge()
 
@@ -208,6 +228,7 @@ func _start_dodge() -> void:
 	_dodge_left = dodge_duration
 	_refresh_collision_layer()
 	_spawn_dodge_effect()
+	_send_dodge_charge()
 
 	# Погружение и всплытие вписываются в длительность нырка, поэтому корабль всплывает
 	# ровно тем же кадром, каким кончается неуязвимость, а не через мгновение после.
@@ -262,6 +283,41 @@ func _set_dodge_phase(phase: float) -> void:
 	ship.scale = _base_ship_scale.lerp(_base_ship_scale * dodge_scale, phase)
 	var dark := Color(dodge_darkness, dodge_darkness, dodge_darkness)
 	ship.modulate = _base_ship_modulate.lerp(dark, phase)
+
+
+func _send_dodge_charge() -> void:
+	var charge := _dodge_charge()
+	if charge >= 1.0 and _dodge_charge_sent < 1.0:
+		_flash_white()
+	elif charge < 1.0:
+		_stop_flash()
+	_dodge_charge_sent = charge
+	dodge_charge_changed.emit(charge)
+
+
+func _flash_white() -> void:
+	_stop_flash()
+	ship_material.set_shader_parameter(FLASH_PARAM, 1.0)
+	_flash_tween = create_tween()
+	_flash_tween.tween_interval(dodge_ready_flash_duration)
+	_flash_tween.tween_callback(ship_material.set_shader_parameter.bind(FLASH_PARAM, 0.0))
+
+
+# Нырок мог начаться прямо во время вспышки — тогда она гаснет сразу, иначе белый силуэт
+# перекрыл бы затемнение погружения.
+func _stop_flash() -> void:
+	if _flash_tween != null and _flash_tween.is_running():
+		_flash_tween.kill()
+	ship_material.set_shader_parameter(FLASH_PARAM, 0.0)
+
+
+# Доля набранного заряда нырка: 0 — нырок идёт или перезарядка только началась, 1 — готов.
+func _dodge_charge() -> float:
+	if _dodge_left > 0.0:
+		return 0.0
+	if dodge_cooldown <= 0.0:
+		return 1.0
+	return 1.0 - _dodge_cooldown_left / dodge_cooldown
 
 
 func _is_invulnerable() -> bool:

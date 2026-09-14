@@ -6,10 +6,15 @@
 [ext_resource type="Texture2D" uid="uid://cstum0gev2lqd" path="res://assets/spaceship/Main Ship - Base - Slight damage.png" id="3_w3dun"]
 [ext_resource type="Texture2D" uid="uid://de7u8vb8fmpdw" path="res://assets/spaceship/Main Ship - Base - Damaged.png" id="4_g6g06"]
 [ext_resource type="Texture2D" uid="uid://b24b0fyl38q5p" path="res://assets/spaceship/Main Ship - Base - Very damaged.png" id="5_oyroy"]
+[ext_resource type="Shader" uid="uid://cryekr1ylegvl" path="res://elements/white_flash.gdshader" id="6_m3yu5"]
 [ext_resource type="Texture2D" uid="uid://dmnx0su25ajp1" path="res://assets/spaceship/engines.png" id="7_oyroy"]
 [ext_resource type="Texture2D" uid="uid://bmhq8m2g0iph1" path="res://assets/spaceship/die_explosion.png" id="8_g6g06"]
 [ext_resource type="Texture2D" uid="uid://dum810udln45p" path="res://assets/spaceship/die_explosion_2.png" id="9_cex28"]
 [ext_resource type="Script" uid="uid://300q85tg61um" path="res://elements/tilt.gd" id="9_oyroy"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_cqau8"]
+shader = ExtResource("6_m3yu5")
+shader_parameter/flash = 0.0
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_gmjmk"]
 atlas = ExtResource("7_oyroy")
@@ -336,6 +341,7 @@ damage_textures = Array[Texture2D]([ExtResource("1_fe5sw"), ExtResource("3_w3dun
 invulnerability_duration = 2.0
 invulnerability_blink_period = 0.3
 dodge_duration = 2.0
+dodge_ready_flash_duration = 0.25
 dodge_scale = 0.75
 dodge_darkness = 0.5
 dodge_transition = 0.3
@@ -347,6 +353,7 @@ recoil_return_time = 0.6
 blast_delay = 0.5
 
 [node name="Ship" type="Sprite2D" parent="." unique_id=74812759]
+material = SubResource("ShaderMaterial_cqau8")
 texture = ExtResource("1_fe5sw")
 
 [node name="Engine" type="Sprite2D" parent="Ship" unique_id=1911067120]

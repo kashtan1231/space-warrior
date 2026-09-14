@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://cl6djo10flm3t" path="res://elements/enemy/scout.tscn" id="4_4fuuu"]
 [ext_resource type="Script" uid="uid://b04bvll4h2e41" path="res://elements/random_frame_timing.gd" id="4_y36n6"]
 [ext_resource type="Script" uid="uid://fn7g8ia1q0ey" path="res://elements/ui/hearts.gd" id="6_dakft"]
+[ext_resource type="PackedScene" uid="uid://b5l7hq41xbnit" path="res://elements/ui/dodge_bar.tscn" id="9_l8g03"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_u5opy"]
 atlas = ExtResource("1_dakft")
@@ -135,3 +136,6 @@ offset_right = 64.0
 offset_bottom = 64.0
 theme_override_constants/separation = 4
 script = ExtResource("6_dakft")
+
+[node name="DodgeBar" parent="UI" unique_id=781505682 instance=ExtResource("9_l8g03")]
+position = Vector2(24, 56)

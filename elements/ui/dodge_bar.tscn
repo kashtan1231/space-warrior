@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://b5l7hq41xbnit"]
+
+[ext_resource type="Script" uid="uid://bvajed6w765i8" path="res://elements/ui/dodge_bar.gd" id="1_fajbj"]
+[ext_resource type="Texture2D" uid="uid://0e22hjrsysct" path="res://assets/gui/bars_spritesheet_2.png" id="1_hcrcv"]
+
+[node name="DodgeBar" type="Sprite2D" unique_id=781505682]
+scale = Vector2(2, 2)
+texture = ExtResource("1_hcrcv")
+centered = false
+hframes = 6
+region_enabled = true
+region_rect = Rect2(0, 0, 192, 16)
+script = ExtResource("1_fajbj")
