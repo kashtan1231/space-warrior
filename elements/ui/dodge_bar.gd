@@ -32,7 +32,17 @@ class_name DodgeBar
 ## Меньше — мигание чаще.
 @export var dodge_blink_interval := 0.1
 
+@export_group("Ready Lamp")
+## Горящая лампочка готовности нырка.
+@export var ready_lamp_on: Texture2D
+## Погасшая лампочка готовности: нырок не готов.
+@export var ready_lamp_off: Texture2D
+## Сколько длится одна фаза мигания лампочки, пока нырок готов (горит или погашена),
+## секунд. Меньше — мигание чаще и тревожнее, больше — спокойнее.
+@export var ready_lamp_interval := 0.4
+
 @onready var fill: Sprite2D = $Fill
+@onready var ready_lamp: Sprite2D = $ReadyLamp
 
 # Полный регион заливки из инспектора; код меняет только его ширину.
 var _full_region := Rect2()
@@ -48,12 +58,15 @@ var _intro_done := false
 # Сколько секунд шкала мигает во время нырка. Сбрасывается, как только шкала снова
 # показывает заряд, чтобы каждое мигание начиналось с видимой заливки.
 var _blink_time := 0.0
+# Бесконечное мигание лампочки готовности. Живёт, пока шкала полная.
+var _ready_lamp_tween: Tween
 
 
 func _ready() -> void:
 	var player := get_tree().get_first_node_in_group("player")
 	player.dodge_charge_changed.connect(_on_player_dodge_charge_changed)
 	_full_region = fill.region_rect
+	ready_lamp.texture = ready_lamp_off
 	# Корабль стартует с полным зарядом, но шкала пустая, пока дашборд не запустит системы.
 	_set_shown(0.0)
 
@@ -92,9 +105,31 @@ func _on_player_dodge_charge_changed(charge: float) -> void:
 
 
 func _set_shown(value: float) -> void:
+	var was_full := _shown >= 1.0
 	_shown = value
 	_blink_time = 0.0
 	_set_fill_width(value, fill_step)
+	# Лампочка следит за нарисованной шкалой, а не за зарядом корабля: так она загорается
+	# ровно когда шкала дошла до конца — и после перезарядки, и в конце стартового заполнения.
+	var full := value >= 1.0
+	if full != was_full:
+		_set_ready_lamp_blinking(full)
+
+
+# Запускает бесконечное мигание лампочки готовности или гасит её. Мигание начинается
+# с горящей фазы, чтобы лампочка вспыхнула в тот же кадр, что шкала заполнилась.
+func _set_ready_lamp_blinking(blinking: bool) -> void:
+	if _ready_lamp_tween != null and _ready_lamp_tween.is_running():
+		_ready_lamp_tween.kill()
+	ready_lamp.texture = ready_lamp_on if blinking else ready_lamp_off
+	if not blinking:
+		return
+	# set_loops() без аргумента повторяет tween, пока его не убьют.
+	_ready_lamp_tween = create_tween().set_loops()
+	_ready_lamp_tween.tween_interval(ready_lamp_interval)
+	_ready_lamp_tween.tween_callback(func() -> void: ready_lamp.texture = ready_lamp_off)
+	_ready_lamp_tween.tween_interval(ready_lamp_interval)
+	_ready_lamp_tween.tween_callback(func() -> void: ready_lamp.texture = ready_lamp_on)
 
 
 # Мигает заливкой на dodge_blink_fill шкалы. Начинает с видимой фазы, поэтому мигание

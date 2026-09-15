@@ -333,7 +333,6 @@ collision_layer = 2
 collision_mask = 5
 motion_mode = 1
 script = ExtResource("1_vj48w")
-max_health = 4
 acceleration = 1000.0
 friction = 2000.0
 fire_rate = 1.0

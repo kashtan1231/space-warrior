@@ -8,10 +8,8 @@
 [ext_resource type="PackedScene" uid="uid://cl6djo10flm3t" path="res://elements/enemy/scout.tscn" id="4_4fuuu"]
 [ext_resource type="Script" uid="uid://b04bvll4h2e41" path="res://elements/random_frame_timing.gd" id="4_y36n6"]
 [ext_resource type="Script" uid="uid://fn7g8ia1q0ey" path="res://elements/ui/hearts.gd" id="6_dakft"]
-[ext_resource type="PackedScene" uid="uid://d03fot23hcmc0" path="res://elements/ui/health_bar.tscn" id="9_3vho3"]
 [ext_resource type="PackedScene" uid="uid://b5l7hq41xbnit" path="res://elements/ui/dodge_bar2.tscn" id="9_l8g03"]
 [ext_resource type="PackedScene" uid="uid://d2255362rrmrv" path="res://elements/ui/meter.tscn" id="10_j8tme"]
-[ext_resource type="PackedScene" uid="uid://nlc7duwatj1v" path="res://elements/ui/dodge_bar.tscn" id="11_qf6n1"]
 [ext_resource type="PackedScene" uid="uid://j8jry4aypusk" path="res://elements/ui/dashboard.tscn" id="13_vsp63"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_u5opy"]
@@ -113,6 +111,8 @@ max_frame_time = 6.0
 
 [node name="Spaceship" parent="." unique_id=1286735498 instance=ExtResource("2_vasa2")]
 position = Vector2(640, 600)
+max_health = 3
+god_mode = true
 
 [node name="Wall" parent="." unique_id=1304739988 instance=ExtResource("3_h7iqs")]
 visible = false
@@ -148,22 +148,12 @@ scale = Vector2(2, 2)
 theme_override_constants/separation = 4
 script = ExtResource("6_dakft")
 
-[node name="HealthBar" parent="UI" unique_id=1637415881 instance=ExtResource("9_3vho3")]
-visible = false
-position = Vector2(24, 24)
-scale = Vector2(5, 5)
-
 [node name="DodgeBar2" parent="UI" unique_id=781505682 instance=ExtResource("9_l8g03")]
 visible = false
 position = Vector2(24, 80)
 scale = Vector2(3, 3)
 middle_pills = 6
 drain_duration = 0.3
-
-[node name="DodgeBar" parent="UI" unique_id=1915146649 instance=ExtResource("11_qf6n1")]
-visible = false
-position = Vector2(24, 94)
-scale = Vector2(4, 4)
 
 [node name="Meter" parent="UI" unique_id=2074710217 instance=ExtResource("10_j8tme")]
 position = Vector2(12, 631)
@@ -174,3 +164,9 @@ max_interval = 0.1
 stiffness = 60.0
 jitter_angle = 10.0
 jitter_speed = 80.0
+
+[node name="Label" type="Label" parent="UI" unique_id=341142978]
+offset_top = -29.0
+offset_right = 137.0
+offset_bottom = -6.0
+text = "modulate - a3aeff"

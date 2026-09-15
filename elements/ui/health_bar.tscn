@@ -32,7 +32,7 @@ low_health_blink_interval = 0.5
 texture = ExtResource("2_irgl3")
 centered = false
 region_enabled = true
-region_rect = Rect2(143, 387, 10, 13)
+region_rect = Rect2(143, 420, 10, 13)
 
 [node name="Lamp" type="Sprite2D" parent="Start" unique_id=330650776]
 position = Vector2(3, 4)
@@ -43,7 +43,7 @@ centered = false
 texture = ExtResource("2_irgl3")
 centered = false
 region_enabled = true
-region_rect = Rect2(157, 387, 10, 13)
+region_rect = Rect2(157, 420, 10, 13)
 
 [node name="Lamp" type="Sprite2D" parent="Middle" unique_id=1945083974]
 position = Vector2(3, 4)
@@ -54,7 +54,7 @@ centered = false
 texture = ExtResource("2_irgl3")
 centered = false
 region_enabled = true
-region_rect = Rect2(171, 387, 12, 13)
+region_rect = Rect2(171, 420, 12, 13)
 
 [node name="Lamp" type="Sprite2D" parent="End" unique_id=1654453815]
 position = Vector2(3, 4)

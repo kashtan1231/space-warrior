@@ -4,9 +4,21 @@
 [ext_resource type="Texture2D" uid="uid://ch63bi85nc6gp" path="res://assets/gui/buttons_and_knobs.png" id="2_hcrcv"]
 [ext_resource type="Shader" uid="uid://cryekr1ylegvl" path="res://elements/white_flash.gdshader" id="3_626rt"]
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_626rt"]
+atlas = ExtResource("2_hcrcv")
+region = Rect2(295, 369, 9, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8yc3i"]
+atlas = ExtResource("2_hcrcv")
+region = Rect2(308, 369, 9, 8)
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_hcrcv"]
 shader = ExtResource("3_626rt")
 shader_parameter/flash = 0.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1us10"]
+atlas = ExtResource("2_hcrcv")
+region = Rect2(308, 369, 9, 8)
 
 [node name="DodgeBar" type="Node2D" unique_id=1915146649]
 script = ExtResource("1_fajbj")
@@ -14,12 +26,14 @@ fill_step = 4
 drain_duration = 0.25
 dodge_blink_fill = 0.21
 dodge_blink_interval = 0.21
+ready_lamp_on = SubResource("AtlasTexture_626rt")
+ready_lamp_off = SubResource("AtlasTexture_8yc3i")
 
 [node name="Frame" type="Sprite2D" parent="." unique_id=2080418962]
 texture = ExtResource("2_hcrcv")
 centered = false
 region_enabled = true
-region_rect = Rect2(199, 382, 42, 8)
+region_rect = Rect2(249, 382, 42, 8)
 
 [node name="Fill" type="Sprite2D" parent="." unique_id=710154593]
 material = SubResource("ShaderMaterial_hcrcv")
@@ -27,4 +41,9 @@ position = Vector2(1, 1)
 texture = ExtResource("2_hcrcv")
 centered = false
 region_enabled = true
-region_rect = Rect2(199, 395, 40, 6)
+region_rect = Rect2(249, 395, 40, 6)
+
+[node name="ReadyLamp" type="Sprite2D" parent="." unique_id=1946605685]
+position = Vector2(44, 0)
+texture = SubResource("AtlasTexture_1us10")
+centered = false

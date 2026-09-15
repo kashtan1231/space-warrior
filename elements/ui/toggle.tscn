@@ -5,23 +5,23 @@
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_1us10"]
 atlas = ExtResource("2_s86qi")
-region = Rect2(372, 181, 12, 21)
+region = Rect2(325, 377, 12, 21)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_rt8om"]
 atlas = ExtResource("2_s86qi")
-region = Rect2(388, 181, 12, 21)
+region = Rect2(341, 377, 12, 21)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3a6g7"]
 atlas = ExtResource("2_s86qi")
-region = Rect2(374, 174, 8, 6)
+region = Rect2(327, 368, 8, 6)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_j7t53"]
 atlas = ExtResource("2_s86qi")
-region = Rect2(372, 181, 12, 21)
+region = Rect2(325, 377, 12, 21)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_wnu1r"]
 atlas = ExtResource("2_s86qi")
-region = Rect2(372, 203, 12, 4)
+region = Rect2(325, 401, 12, 4)
 
 [node name="Toggle" type="Node2D" unique_id=642990129]
 script = ExtResource("1_v3lad")
