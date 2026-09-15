@@ -1,0 +1,44 @@
+[gd_scene format=3 uid="uid://byaacb1mf02d4"]
+
+[ext_resource type="Script" uid="uid://cidnwjcbcar6" path="res://elements/ui/toggle.gd" id="1_v3lad"]
+[ext_resource type="Texture2D" uid="uid://ch63bi85nc6gp" path="res://assets/gui/buttons_and_knobs.png" id="2_s86qi"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1us10"]
+atlas = ExtResource("2_s86qi")
+region = Rect2(372, 181, 12, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rt8om"]
+atlas = ExtResource("2_s86qi")
+region = Rect2(388, 181, 12, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3a6g7"]
+atlas = ExtResource("2_s86qi")
+region = Rect2(374, 174, 8, 6)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j7t53"]
+atlas = ExtResource("2_s86qi")
+region = Rect2(372, 181, 12, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wnu1r"]
+atlas = ExtResource("2_s86qi")
+region = Rect2(372, 203, 12, 4)
+
+[node name="Toggle" type="Node2D" unique_id=642990129]
+script = ExtResource("1_v3lad")
+lever_on = SubResource("AtlasTexture_1us10")
+lever_off = SubResource("AtlasTexture_rt8om")
+
+[node name="Lamp" type="Sprite2D" parent="." unique_id=1316011031]
+position = Vector2(2, 0)
+texture = SubResource("AtlasTexture_3a6g7")
+centered = false
+
+[node name="Lever" type="Sprite2D" parent="." unique_id=1135822659]
+position = Vector2(0, 8)
+texture = SubResource("AtlasTexture_j7t53")
+centered = false
+
+[node name="Caption" type="Sprite2D" parent="." unique_id=857181411]
+position = Vector2(0, 31)
+texture = SubResource("AtlasTexture_wnu1r")
+centered = false

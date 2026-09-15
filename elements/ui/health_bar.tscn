@@ -1,0 +1,62 @@
+[gd_scene format=3 uid="uid://d03fot23hcmc0"]
+
+[ext_resource type="Script" uid="uid://cqm24ks0wpnr" path="res://elements/ui/health_bar.gd" id="1_1dl18"]
+[ext_resource type="Texture2D" uid="uid://ch63bi85nc6gp" path="res://assets/gui/buttons_and_knobs.png" id="2_irgl3"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_irgl3"]
+atlas = ExtResource("2_irgl3")
+region = Rect2(169, 361, 7, 5)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qha8b"]
+atlas = ExtResource("2_irgl3")
+region = Rect2(160, 361, 7, 5)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5fvgt"]
+atlas = ExtResource("2_irgl3")
+region = Rect2(151, 361, 7, 5)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6wbv1"]
+atlas = ExtResource("2_irgl3")
+region = Rect2(142, 361, 7, 5)
+
+[node name="HealthBar" type="Node2D" unique_id=1637415881]
+script = ExtResource("1_1dl18")
+red_on = SubResource("AtlasTexture_irgl3")
+red_off = SubResource("AtlasTexture_qha8b")
+green_on = SubResource("AtlasTexture_5fvgt")
+green_off = SubResource("AtlasTexture_6wbv1")
+damage_blink_interval = 0.25
+low_health_blink_interval = 0.5
+
+[node name="Start" type="Sprite2D" parent="." unique_id=646467002]
+texture = ExtResource("2_irgl3")
+centered = false
+region_enabled = true
+region_rect = Rect2(143, 387, 10, 13)
+
+[node name="Lamp" type="Sprite2D" parent="Start" unique_id=330650776]
+position = Vector2(3, 4)
+texture = SubResource("AtlasTexture_5fvgt")
+centered = false
+
+[node name="Middle" type="Sprite2D" parent="." unique_id=970108171]
+texture = ExtResource("2_irgl3")
+centered = false
+region_enabled = true
+region_rect = Rect2(157, 387, 10, 13)
+
+[node name="Lamp" type="Sprite2D" parent="Middle" unique_id=1945083974]
+position = Vector2(3, 4)
+texture = SubResource("AtlasTexture_5fvgt")
+centered = false
+
+[node name="End" type="Sprite2D" parent="." unique_id=1465377663]
+texture = ExtResource("2_irgl3")
+centered = false
+region_enabled = true
+region_rect = Rect2(171, 387, 12, 13)
+
+[node name="Lamp" type="Sprite2D" parent="End" unique_id=1654453815]
+position = Vector2(3, 4)
+texture = SubResource("AtlasTexture_5fvgt")
+centered = false

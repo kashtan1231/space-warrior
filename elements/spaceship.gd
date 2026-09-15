@@ -28,6 +28,9 @@ signal dodge_charge_changed(charge: float)
 @export var damage_textures: Array[Texture2D]
 
 @export_group("Invulnerability")
+## Режим бога для тестов: пули по-прежнему попадают и взрываются на корпусе, но здоровье
+## не отнимается и корабль не мигает. Перед сборкой игры выключить.
+@export var god_mode := false
 ## Сколько секунд после попадания корабль не получает урон. Без этой паузы очередь в упор
 ## снимает всё здоровье за доли секунды, и игрок не успевает понять, что произошло.
 @export var invulnerability_duration := 1.2
@@ -149,7 +152,7 @@ func _physics_process(delta: float):
 
 
 func take_damage(amount: int) -> void:
-	if _dying or _is_invulnerable():
+	if _dying or _is_invulnerable() or god_mode:
 		return
 	health -= amount
 	health_changed.emit(health, max_health)

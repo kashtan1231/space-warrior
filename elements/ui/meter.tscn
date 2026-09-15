@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://d2255362rrmrv"]
+
+[ext_resource type="Script" uid="uid://bhopr6f654wkd" path="res://elements/ui/meter.gd" id="1_w48ms"]
+[ext_resource type="Texture2D" uid="uid://ch63bi85nc6gp" path="res://assets/gui/buttons_and_knobs.png" id="2_umlja"]
+
+[node name="Meter" type="Node2D" unique_id=2074710217]
+script = ExtResource("1_w48ms")
+color = Color(0.29411766, 0.28235295, 0.21568628, 1)
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1918783461]
+texture = ExtResource("2_umlja")
+centered = false
+region_enabled = true
+region_rect = Rect2(348, 326, 31, 25)
+
+[node name="Needle" type="Node2D" parent="." unique_id=1252003122]
+position = Vector2(16, 16)

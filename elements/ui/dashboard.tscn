@@ -1,0 +1,72 @@
+[gd_scene format=3 uid="uid://j8jry4aypusk"]
+
+[ext_resource type="Script" uid="uid://c5uanul6s3yeq" path="res://elements/ui/dashboard.gd" id="1_72h8m"]
+[ext_resource type="Texture2D" uid="uid://duxr462scwgdo" path="res://assets/gui/backplates.png" id="1_umww2"]
+[ext_resource type="PackedScene" uid="uid://d03fot23hcmc0" path="res://elements/ui/health_bar.tscn" id="2_72h8m"]
+[ext_resource type="PackedScene" uid="uid://nlc7duwatj1v" path="res://elements/ui/dodge_bar.tscn" id="3_qef67"]
+[ext_resource type="PackedScene" uid="uid://byaacb1mf02d4" path="res://elements/ui/toggle.tscn" id="5_qef67"]
+[ext_resource type="Texture2D" uid="uid://ch63bi85nc6gp" path="res://assets/gui/buttons_and_knobs.png" id="6_yn2ma"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mr4q7"]
+atlas = ExtResource("6_yn2ma")
+region = Rect2(372, 203, 12, 4)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yn2ma"]
+atlas = ExtResource("6_yn2ma")
+region = Rect2(402, 174, 8, 6)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_eun3m"]
+atlas = ExtResource("6_yn2ma")
+region = Rect2(414, 174, 8, 6)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ckqeo"]
+atlas = ExtResource("6_yn2ma")
+region = Rect2(388, 203, 12, 4)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ojd3q"]
+atlas = ExtResource("6_yn2ma")
+region = Rect2(374, 174, 8, 6)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sit0v"]
+atlas = ExtResource("6_yn2ma")
+region = Rect2(390, 174, 8, 6)
+
+[node name="Dashboard" type="Node2D" unique_id=1501201829]
+script = ExtResource("1_72h8m")
+left_on_delay = 1.0
+right_on_delay = 1.0
+left_off_delay = 2.5
+health_delay = 1.25
+dodge_delay = 1.5
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=606002172]
+texture = ExtResource("1_umww2")
+centered = false
+region_enabled = true
+region_rect = Rect2(11, 157, 106, 57)
+
+[node name="HealthBar" parent="." unique_id=1637415881 instance=ExtResource("2_72h8m")]
+position = Vector2(14, 12)
+intro_interval = 0.2
+
+[node name="DodgeBar" parent="." unique_id=1915146649 instance=ExtResource("3_qef67")]
+position = Vector2(14, 31)
+intro_duration = 1.25
+
+[node name="LeftToggle" parent="." unique_id=642990129 instance=ExtResource("5_qef67")]
+position = Vector2(64, 11)
+caption = SubResource("AtlasTexture_mr4q7")
+lamp_on = SubResource("AtlasTexture_yn2ma")
+lamp_off = SubResource("AtlasTexture_eun3m")
+flicker_count = 10
+flicker_min = 0.05
+flicker_max = 0.2
+
+[node name="RightToggle" parent="." unique_id=218860935 instance=ExtResource("5_qef67")]
+position = Vector2(80, 11)
+caption = SubResource("AtlasTexture_ckqeo")
+lamp_on = SubResource("AtlasTexture_ojd3q")
+lamp_off = SubResource("AtlasTexture_sit0v")
+flicker_count = 10
+flicker_min = 0.02
+flicker_max = 0.2

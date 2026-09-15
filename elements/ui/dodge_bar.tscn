@@ -1,68 +1,30 @@
-[gd_scene format=3 uid="uid://b5l7hq41xbnit"]
+[gd_scene format=3 uid="uid://nlc7duwatj1v"]
 
-[ext_resource type="Script" uid="uid://bvajed6w765i8" path="res://elements/ui/dodge_bar.gd" id="1_fajbj"]
-[ext_resource type="Texture2D" uid="uid://b4huc8bl7wqsc" path="res://assets/gui/hp_spritesheet.png" id="2_hcrcv"]
+[ext_resource type="Script" uid="uid://c77g2p875prmn" path="res://elements/ui/dodge_bar.gd" id="1_fajbj"]
+[ext_resource type="Texture2D" uid="uid://ch63bi85nc6gp" path="res://assets/gui/buttons_and_knobs.png" id="2_hcrcv"]
+[ext_resource type="Shader" uid="uid://cryekr1ylegvl" path="res://elements/white_flash.gdshader" id="3_626rt"]
 
-[node name="DodgeBar" type="Node2D" unique_id=1953737812]
-scale = Vector2(2, 2)
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hcrcv"]
+shader = ExtResource("3_626rt")
+shader_parameter/flash = 0.0
+
+[node name="DodgeBar" type="Node2D" unique_id=1915146649]
 script = ExtResource("1_fajbj")
+fill_step = 4
+drain_duration = 0.25
+dodge_blink_fill = 0.21
+dodge_blink_interval = 0.21
 
-[node name="Frame" type="Node2D" parent="." unique_id=339054394]
-
-[node name="Start" type="Sprite2D" parent="Frame" unique_id=1410280019]
+[node name="Frame" type="Sprite2D" parent="." unique_id=2080418962]
 texture = ExtResource("2_hcrcv")
 centered = false
 region_enabled = true
-region_rect = Rect2(4160, 572, 14, 10)
+region_rect = Rect2(199, 382, 42, 8)
 
-[node name="Middle" type="Sprite2D" parent="Frame" unique_id=1874067040]
+[node name="Fill" type="Sprite2D" parent="." unique_id=710154593]
+material = SubResource("ShaderMaterial_hcrcv")
+position = Vector2(1, 1)
 texture = ExtResource("2_hcrcv")
 centered = false
 region_enabled = true
-region_rect = Rect2(4182, 572, 7, 10)
-
-[node name="End" type="Sprite2D" parent="Frame" unique_id=1097728178]
-texture = ExtResource("2_hcrcv")
-centered = false
-region_enabled = true
-region_rect = Rect2(4211, 572, 13, 10)
-
-[node name="Fill" type="Node2D" parent="." unique_id=1852582688]
-
-[node name="Start" type="Sprite2D" parent="Fill" unique_id=1485289291]
-texture = ExtResource("2_hcrcv")
-centered = false
-region_enabled = true
-region_rect = Rect2(4416, 1244, 14, 10)
-
-[node name="Middle" type="Sprite2D" parent="Fill" unique_id=377056194]
-texture = ExtResource("2_hcrcv")
-centered = false
-region_enabled = true
-region_rect = Rect2(4416, 1244, 7, 10)
-
-[node name="End" type="Sprite2D" parent="Fill" unique_id=1865568511]
-texture = ExtResource("2_hcrcv")
-centered = false
-region_enabled = true
-region_rect = Rect2(4416, 1244, 13, 10)
-
-[node name="Flash" type="Node2D" parent="." unique_id=1938681229]
-
-[node name="Start" type="Sprite2D" parent="Flash" unique_id=2007221158]
-texture = ExtResource("2_hcrcv")
-centered = false
-region_enabled = true
-region_rect = Rect2(4288, 572, 14, 10)
-
-[node name="Middle" type="Sprite2D" parent="Flash" unique_id=542144876]
-texture = ExtResource("2_hcrcv")
-centered = false
-region_enabled = true
-region_rect = Rect2(4310, 572, 7, 10)
-
-[node name="End" type="Sprite2D" parent="Flash" unique_id=442804089]
-texture = ExtResource("2_hcrcv")
-centered = false
-region_enabled = true
-region_rect = Rect2(4339, 572, 13, 10)
+region_rect = Rect2(199, 395, 40, 6)
