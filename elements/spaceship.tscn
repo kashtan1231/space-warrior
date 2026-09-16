@@ -1,13 +1,13 @@
 [gd_scene format=3 uid="uid://d17n1fvr7kgih"]
 
-[ext_resource type="Texture2D" uid="uid://cnawck5i2ggtm" path="res://assets/spaceship/Main Ship - Base - Full health.png" id="1_fe5sw"]
+[ext_resource type="Texture2D" uid="uid://cnawck5i2ggtm" path="res://assets/spaceship/base_full.png" id="1_fe5sw"]
 [ext_resource type="Script" uid="uid://dmnq1nmk08pj1" path="res://elements/spaceship.gd" id="1_vj48w"]
-[ext_resource type="Texture2D" uid="uid://c38mmms0qbtg1" path="res://assets/spaceship/Main Ship - Engines - Base Engine.png" id="3_tm10f"]
-[ext_resource type="Texture2D" uid="uid://cstum0gev2lqd" path="res://assets/spaceship/Main Ship - Base - Slight damage.png" id="3_w3dun"]
-[ext_resource type="Texture2D" uid="uid://de7u8vb8fmpdw" path="res://assets/spaceship/Main Ship - Base - Damaged.png" id="4_g6g06"]
-[ext_resource type="Texture2D" uid="uid://b24b0fyl38q5p" path="res://assets/spaceship/Main Ship - Base - Very damaged.png" id="5_oyroy"]
+[ext_resource type="Texture2D" uid="uid://c38mmms0qbtg1" path="res://assets/spaceship/engine.png" id="3_tm10f"]
+[ext_resource type="Texture2D" uid="uid://cstum0gev2lqd" path="res://assets/spaceship/base_slight.png" id="3_w3dun"]
+[ext_resource type="Texture2D" uid="uid://de7u8vb8fmpdw" path="res://assets/spaceship/base_damaged.png" id="4_g6g06"]
+[ext_resource type="Texture2D" uid="uid://b24b0fyl38q5p" path="res://assets/spaceship/base_critical.png" id="5_oyroy"]
 [ext_resource type="Shader" uid="uid://cryekr1ylegvl" path="res://elements/white_flash.gdshader" id="6_m3yu5"]
-[ext_resource type="Texture2D" uid="uid://dmnx0su25ajp1" path="res://assets/spaceship/engines.png" id="7_oyroy"]
+[ext_resource type="Texture2D" uid="uid://dmnx0su25ajp1" path="res://assets/spaceship/engine_flames.png" id="7_oyroy"]
 [ext_resource type="Texture2D" uid="uid://bmhq8m2g0iph1" path="res://assets/spaceship/die_explosion.png" id="8_g6g06"]
 [ext_resource type="PackedScene" uid="uid://csidhapvatxb2" path="res://elements/rocket_launcher.tscn" id="9_4xcav"]
 [ext_resource type="Texture2D" uid="uid://daixjmyw18p2r" path="res://assets/weapons/rocket_launch.png" id="9_8y7vu"]
@@ -439,7 +439,7 @@ steps = 3
 step_time = 0.12
 metadata/_custom_type_script = "uid://300q85tg61um"
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1557849034]
+[node name="RocketsPlacement" type="Sprite2D" parent="." unique_id=1557849034]
 visible = false
 texture = SubResource("AtlasTexture_1us10")
 

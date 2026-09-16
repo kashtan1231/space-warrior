@@ -171,7 +171,7 @@ offset_right = 24.0
 offset_bottom = 24.0
 script = ExtResource("1_gjmtv")
 
-[node name="Sprite" type="AnimatedSprite2D" parent="." unique_id=941032016]
+[node name="Icon" type="AnimatedSprite2D" parent="." unique_id=941032016]
 position = Vector2(12, 12)
 sprite_frames = SubResource("SpriteFrames_1us10")
 animation = &"break"

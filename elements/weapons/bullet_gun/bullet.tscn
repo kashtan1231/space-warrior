@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://cbjnmkavx3dck"]
 
 [ext_resource type="Script" uid="uid://d0vbq664rvu4r" path="res://elements/weapons/bullet_gun/bullet.gd" id="1_pu7xf"]
-[ext_resource type="Texture2D" uid="uid://cqlpcysmeban4" path="res://assets/weapons/Main ship weapon - Projectile - Auto cannon bullet.png" id="2_ha132"]
-[ext_resource type="Texture2D" uid="uid://cegorwkletrek" path="res://assets/weapons/Bullet projectile.png" id="3_eysog"]
+[ext_resource type="Texture2D" uid="uid://cqlpcysmeban4" path="res://assets/weapons/bullet.png" id="2_ha132"]
+[ext_resource type="Texture2D" uid="uid://cegorwkletrek" path="res://assets/weapons/bullet_trail.png" id="3_eysog"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_0tiew"]
 atlas = ExtResource("2_ha132")
@@ -87,22 +87,20 @@ collision_mask = 4
 script = ExtResource("1_pu7xf")
 speed = 1200.0
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1977936743]
+[node name="Body" type="AnimatedSprite2D" parent="." unique_id=1977936743]
 sprite_frames = SubResource("SpriteFrames_1us10")
 autoplay = "default"
 frame_progress = 0.36686182
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="AnimatedSprite2D" unique_id=1493623000]
+[node name="Trail" type="AnimatedSprite2D" parent="Body" unique_id=1493623000]
 position = Vector2(0, 20)
 sprite_frames = SubResource("SpriteFrames_rt8om")
 autoplay = "default"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=756399023]
+[node name="Hitbox" type="CollisionShape2D" parent="." unique_id=756399023]
 position = Vector2(0, -2)
 shape = SubResource("CapsuleShape2D_rt8om")
 
-[node name="VisibleOnScreenEnabler2D" type="VisibleOnScreenEnabler2D" parent="." unique_id=902194011]
+[node name="ScreenExit" type="VisibleOnScreenEnabler2D" parent="." unique_id=902194011]
 position = Vector2(2, 0)
 rect = Rect2(-8, -10, 12, 16)
-
-[connection signal="screen_exited" from="VisibleOnScreenEnabler2D" to="." method="_on_visible_on_screen_enabler_2d_screen_exited"]

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cstum0gev2lqd"
-path="res://.godot/imported/Main Ship - Base - Slight damage.png-184f7a0404e2c0c8aee531c9059642d2.ctex"
+uid="uid://dn8mcrxqs7nqj"
+path="res://.godot/imported/destruction.png-8b33ecc4ef193bcf47b4185016850c11.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/spaceship/Main Ship - Base - Slight damage.png"
-dest_files=["res://.godot/imported/Main Ship - Base - Slight damage.png-184f7a0404e2c0c8aee531c9059642d2.ctex"]
+source_file="res://assets/enemy/scout/destruction.png"
+dest_files=["res://.godot/imported/destruction.png-8b33ecc4ef193bcf47b4185016850c11.ctex"]
 
 [params]
 

@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://css6vrho8gxgr"]
 
-[ext_resource type="Texture2D" uid="uid://cdk6i1273ws05" path="res://assets/Starry background  - Layer 02 - Stars.png" id="1_dakft"]
-[ext_resource type="Texture2D" uid="uid://cw2cxuouea88q" path="res://assets/Starry background  - Layer 01 - Void.png" id="1_l1rk1"]
+[ext_resource type="Texture2D" uid="uid://cdk6i1273ws05" path="res://assets/backgrounds/stars.png" id="1_dakft"]
+[ext_resource type="Texture2D" uid="uid://cw2cxuouea88q" path="res://assets/backgrounds/void.png" id="1_l1rk1"]
 [ext_resource type="Script" uid="uid://cy1877gjrmmus" path="res://elements/scrolling_background.gd" id="2_u5opy"]
 [ext_resource type="PackedScene" uid="uid://d17n1fvr7kgih" path="res://elements/spaceship.tscn" id="2_vasa2"]
 [ext_resource type="PackedScene" uid="uid://bk64tyxny4okm" path="res://elements/wall.tscn" id="3_h7iqs"]
@@ -123,15 +123,23 @@ visible = false
 position = Vector2(1280, 0)
 
 [node name="Enemy" parent="." unique_id=925835412 instance=ExtResource("4_4fuuu")]
+process_mode = 4
+visible = false
 position = Vector2(152, 136)
 
 [node name="Enemy6" parent="." unique_id=1007325119 instance=ExtResource("4_4fuuu")]
+process_mode = 4
+visible = false
 position = Vector2(875, 143)
 
 [node name="Enemy7" parent="." unique_id=1707500083 instance=ExtResource("4_4fuuu")]
+process_mode = 4
+visible = false
 position = Vector2(794, 142)
 
 [node name="Enemy8" parent="." unique_id=1871753282 instance=ExtResource("4_4fuuu")]
+process_mode = 4
+visible = false
 position = Vector2(697, 143)
 
 [node name="UI" type="CanvasLayer" parent="." unique_id=169945949]
@@ -167,7 +175,7 @@ stiffness = 60.0
 jitter_angle = 10.0
 jitter_speed = 80.0
 
-[node name="Label" type="Label" parent="UI" unique_id=341142978]
+[node name="Color" type="Label" parent="UI" unique_id=341142978]
 offset_top = -29.0
 offset_right = 137.0
 offset_bottom = -6.0

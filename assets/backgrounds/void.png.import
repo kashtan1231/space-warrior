@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://37k8wdb1obyc"
-path="res://.godot/imported/Kla'ed - Scout - Engine.png-a62f911703965af71e43d4328e425df7.ctex"
+uid="uid://cw2cxuouea88q"
+path="res://.godot/imported/void.png-157ee5bbefcdf15ae8bba4afc266d99f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/enemy/scout/Kla'ed - Scout - Engine.png"
-dest_files=["res://.godot/imported/Kla'ed - Scout - Engine.png-a62f911703965af71e43d4328e425df7.ctex"]
+source_file="res://assets/backgrounds/void.png"
+dest_files=["res://.godot/imported/void.png-157ee5bbefcdf15ae8bba4afc266d99f.ctex"]
 
 [params]
 

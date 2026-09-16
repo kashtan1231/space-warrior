@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cdk6i1273ws05"
-path="res://.godot/imported/Starry background  - Layer 02 - Stars.png-164262264ea6403cd48b34d0f3fe63b8.ctex"
+uid="uid://cegorwkletrek"
+path="res://.godot/imported/bullet_trail.png-1619c6d483485ff5f3d226861cfcc845.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Starry background  - Layer 02 - Stars.png"
-dest_files=["res://.godot/imported/Starry background  - Layer 02 - Stars.png-164262264ea6403cd48b34d0f3fe63b8.ctex"]
+source_file="res://assets/weapons/bullet_trail.png"
+dest_files=["res://.godot/imported/bullet_trail.png-1619c6d483485ff5f3d226861cfcc845.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c38mmms0qbtg1"
-path="res://.godot/imported/Main Ship - Engines - Base Engine.png-0e22f59de9bc0bedc5e1bd57a4769098.ctex"
+uid="uid://37k8wdb1obyc"
+path="res://.godot/imported/engine.png-8d31735ff3f8c4117454acab4a0d108c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/spaceship/Main Ship - Engines - Base Engine.png"
-dest_files=["res://.godot/imported/Main Ship - Engines - Base Engine.png-0e22f59de9bc0bedc5e1bd57a4769098.ctex"]
+source_file="res://assets/enemy/scout/engine.png"
+dest_files=["res://.godot/imported/engine.png-8d31735ff3f8c4117454acab4a0d108c.ctex"]
 
 [params]
 

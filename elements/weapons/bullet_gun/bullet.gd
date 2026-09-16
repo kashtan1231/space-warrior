@@ -12,6 +12,10 @@ const HULL_IMPACT_SCENE = preload("res://elements/weapons/bullet_gun/impact.tscn
 
 func _ready() -> void:
 	body_entered.connect(_on_body_entered)
+	# Обе подписки здесь, а не в сцене: имя обработчика тогда наше, а не склеенное
+	# редактором из имени узла. Наследник (ракета) получает их вместе с super._ready(),
+	# и узел ScreenExit обязан быть в его сцене тоже.
+	$ScreenExit.screen_exited.connect(_on_screen_exited)
 
 
 func _physics_process(delta: float) -> void:
@@ -52,5 +56,8 @@ func _spawn_hull_impact(body: Node2D) -> void:
 	get_tree().current_scene.add_child(impact)
 
 
-func _on_visible_on_screen_enabler_2d_screen_exited() -> void:
+# Снаряд ушёл за край экрана. Без этого промахи копились бы в дереве до конца уровня:
+# сами они не исчезают, а летят дальше в пустоту. Область слежения задаёт прямоугольник
+# rect у ScreenExit, а не спрайт, поэтому её размер правится в сцене.
+func _on_screen_exited() -> void:
 	queue_free()

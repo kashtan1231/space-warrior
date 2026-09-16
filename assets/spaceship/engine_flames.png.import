@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b24b0fyl38q5p"
-path="res://.godot/imported/Main Ship - Base - Very damaged.png-31de759550f461af2186005676430571.ctex"
+uid="uid://dmnx0su25ajp1"
+path="res://.godot/imported/engine_flames.png-666305b50a04452809e6494451371652.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/spaceship/Main Ship - Base - Very damaged.png"
-dest_files=["res://.godot/imported/Main Ship - Base - Very damaged.png-31de759550f461af2186005676430571.ctex"]
+source_file="res://assets/spaceship/engine_flames.png"
+dest_files=["res://.godot/imported/engine_flames.png-666305b50a04452809e6494451371652.ctex"]
 
 [params]
 

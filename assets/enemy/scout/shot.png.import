@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cegorwkletrek"
-path="res://.godot/imported/Bullet projectile.png-1ca5fa45034311adc85f919da36a44c9.ctex"
+uid="uid://dc6gmw3aw275p"
+path="res://.godot/imported/shot.png-aab1fd1ec569ac0665d6d04014b88a77.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/weapons/Bullet projectile.png"
-dest_files=["res://.godot/imported/Bullet projectile.png-1ca5fa45034311adc85f919da36a44c9.ctex"]
+source_file="res://assets/enemy/scout/shot.png"
+dest_files=["res://.godot/imported/shot.png-aab1fd1ec569ac0665d6d04014b88a77.ctex"]
 
 [params]
 

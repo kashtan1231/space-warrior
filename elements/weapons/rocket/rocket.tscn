@@ -35,7 +35,7 @@ animations = [{
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_1us10"]
 radius = 3.0
-height = 10.0
+height = 15.0
 
 [node name="Rocket" type="Area2D" unique_id=793047408]
 z_index = -1
@@ -55,15 +55,13 @@ fire_scene = ExtResource("2_61xsf")
 speed = 200.0
 damage = 3
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1599215795]
+[node name="Body" type="AnimatedSprite2D" parent="." unique_id=1599215795]
 sprite_frames = SubResource("SpriteFrames_1us10")
 autoplay = "default"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1862007274]
+[node name="Hitbox" type="CollisionShape2D" parent="." unique_id=1862007274]
 position = Vector2(-0.5, 1.5)
 shape = SubResource("CapsuleShape2D_1us10")
 
-[node name="VisibleOnScreenEnabler2D" type="VisibleOnScreenEnabler2D" parent="." unique_id=279648886]
+[node name="ScreenExit" type="VisibleOnScreenEnabler2D" parent="." unique_id=279648886]
 rect = Rect2(-3.5, -7, 6, 16)
-
-[connection signal="screen_exited" from="VisibleOnScreenEnabler2D" to="." method="_on_visible_on_screen_enabler_2d_screen_exited"]

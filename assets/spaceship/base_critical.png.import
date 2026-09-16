@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cqlpcysmeban4"
-path="res://.godot/imported/Main ship weapon - Projectile - Auto cannon bullet.png-d927754f28d2e654a7397354b9681e1d.ctex"
+uid="uid://b24b0fyl38q5p"
+path="res://.godot/imported/base_critical.png-5a98a5b858efe8137e1dce77d4194fb5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/weapons/Main ship weapon - Projectile - Auto cannon bullet.png"
-dest_files=["res://.godot/imported/Main ship weapon - Projectile - Auto cannon bullet.png-d927754f28d2e654a7397354b9681e1d.ctex"]
+source_file="res://assets/spaceship/base_critical.png"
+dest_files=["res://.godot/imported/base_critical.png-5a98a5b858efe8137e1dce77d4194fb5.ctex"]
 
 [params]
 

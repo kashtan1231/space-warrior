@@ -11,7 +11,7 @@ extends Control
 const APPEAR := &"appear"
 const BREAK := &"break"
 
-@onready var sprite: AnimatedSprite2D = $Sprite
+@onready var sprite: AnimatedSprite2D = $Icon
 
 var _filled := true
 var _appear_tween: Tween

@@ -1,11 +1,11 @@
 [gd_scene format=3 uid="uid://cl6djo10flm3t"]
 
 [ext_resource type="Script" uid="uid://c2u5uahxmvcyn" path="res://elements/enemy/scout.gd" id="1_j2ly8"]
-[ext_resource type="Texture2D" uid="uid://d3e0aftj84bd1" path="res://assets/enemy/scout/Kla'ed - Scout - Base.png" id="1_vmhmk"]
-[ext_resource type="Texture2D" uid="uid://dn8mcrxqs7nqj" path="res://assets/enemy/scout/Kla'ed - Scout - Destruction.png" id="2_5g2rt"]
-[ext_resource type="Texture2D" uid="uid://37k8wdb1obyc" path="res://assets/enemy/scout/Kla'ed - Scout - Engine.png" id="2_j2ly8"]
+[ext_resource type="Texture2D" uid="uid://d3e0aftj84bd1" path="res://assets/enemy/scout/base.png" id="1_vmhmk"]
+[ext_resource type="Texture2D" uid="uid://dn8mcrxqs7nqj" path="res://assets/enemy/scout/destruction.png" id="2_5g2rt"]
+[ext_resource type="Texture2D" uid="uid://37k8wdb1obyc" path="res://assets/enemy/scout/engine.png" id="2_j2ly8"]
 [ext_resource type="PackedScene" uid="uid://cmmux14qul4ki" path="res://elements/enemy/enemy_bullet.tscn" id="3_baseo"]
-[ext_resource type="Texture2D" uid="uid://dc6gmw3aw275p" path="res://assets/enemy/scout/Weapons.png" id="6_ax7if"]
+[ext_resource type="Texture2D" uid="uid://dc6gmw3aw275p" path="res://assets/enemy/scout/shot.png" id="6_ax7if"]
 [ext_resource type="Script" uid="uid://300q85tg61um" path="res://elements/tilt.gd" id="7_cqau8"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_uayi2"]
@@ -207,7 +207,7 @@ animations = [{
 "speed": 30.0
 }]
 
-[node name="Enemy" type="CharacterBody2D" unique_id=925835412 groups=["enemies"]]
+[node name="Scout" type="CharacterBody2D" unique_id=925835412 groups=["enemies"]]
 scale = Vector2(1.5, 1.5)
 collision_layer = 4
 collision_mask = 3
@@ -226,20 +226,20 @@ band_bottom = 400.0
 separation_radius = 100.0
 separation_strength = 300.0
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=920840336]
+[node name="Ship" type="Sprite2D" parent="." unique_id=920840336]
 position = Vector2(0, 4)
 texture = ExtResource("1_vmhmk")
 flip_v = true
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Sprite2D" unique_id=2128071768]
+[node name="Engine" type="AnimatedSprite2D" parent="Ship" unique_id=2128071768]
 show_behind_parent = true
 position = Vector2(0, -0.5)
 sprite_frames = SubResource("SpriteFrames_1us10")
 autoplay = "default"
-frame_progress = 0.09873664
+frame_progress = 0.9588963
 flip_v = true
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=748297842]
+[node name="Hull" type="CollisionShape2D" parent="." unique_id=748297842]
 position = Vector2(0, 2)
 shape = SubResource("CircleShape2D_1us10")
 
@@ -261,7 +261,7 @@ flip_v = true
 
 [node name="Tilt" type="Node" parent="." unique_id=1324075906 node_paths=PackedStringArray("targets")]
 script = ExtResource("7_cqau8")
-targets = [NodePath("../Sprite2D"), NodePath("../Weapons")]
+targets = [NodePath("../Ship"), NodePath("../Weapons")]
 angle = 20.0
 steps = 3
 step_time = 0.12

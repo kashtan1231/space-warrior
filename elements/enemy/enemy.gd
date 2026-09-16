@@ -5,10 +5,11 @@ class_name Enemy
 ## расталкивание соседей и полёт к выбранной точке. Наследник добавляет только своё —
 ## чем враг занят между кадрами (_update_behaviour) и как именно он движется (_move).
 ##
-## Сцена наследника обязана состоять в группе enemies и содержать узлы Sprite2D,
-## Explosion, CollisionShape2D и Tilt: по группе врага находят прицел ракет и соседи,
-## а узлы нужны гибели и наклону корпуса. Эффекты попадания лезут во врага снаружи
-## и требуют от него полей tilt и hull_radius, см. impact.gd и fire.gd.
+## Сцена наследника обязана состоять в группе enemies и содержать узлы Ship,
+## Explosion и Tilt: по группе врага находят прицел ракет и соседи, а узлы нужны гибели
+## и наклону корпуса. Форм корпуса может быть сколько угодно и называться они могут как
+## угодно — гибель гасит физику целиком, а не отдельный узел. Эффекты попадания лезут
+## во врага снаружи и требуют от него полей tilt и hull_radius, см. impact.gd и fire.gd.
 
 ## Сколько попаданий выдерживает враг, прежде чем взорвётся.
 @export var max_health := 5
@@ -57,9 +58,8 @@ const ENEMY_GROUP := &"enemies"
 # цели, иначе он проскакивал бы точку на полной скорости и возвращался к ней рывками.
 const ARRIVE_GAIN := 3.0
 
-@onready var sprite: Sprite2D = $Sprite2D
+@onready var sprite: Sprite2D = $Ship
 @onready var explosion: AnimatedSprite2D = $Explosion
-@onready var collision_shape: CollisionShape2D = $CollisionShape2D
 @onready var tilt: Tilt = $Tilt
 
 var health := 0
@@ -105,7 +105,11 @@ func die() -> void:
 	# Взрыв доигрывает на месте ещё какое-то время. Вне группы соседи его не видят:
 	# не шарахаются от обломков и не учитывают его точку при выборе своих.
 	remove_from_group(ENEMY_GROUP)
-	collision_shape.set_deferred("disabled", true)
+	# Обломки не ловят пули и не толкают живых. Гасится не одна форма, а слой и маска
+	# всего тела: корпус врага собирается из нескольких CollisionShape2D, и отключать
+	# их поимённо пришлось бы в каждом наследнике.
+	set_deferred("collision_layer", 0)
+	set_deferred("collision_mask", 0)
 	sprite.hide()
 	explosion.show()
 	explosion.play("destroy")
