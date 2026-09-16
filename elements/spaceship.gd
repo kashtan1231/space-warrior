@@ -80,9 +80,15 @@ signal dodge_charge_changed(charge: float)
 @export var recoil_return_time := 0.12
 
 @export_group("Rockets")
-## Ракетные шахты корабля. По кнопке пуска стреляет первая заряженная в порядке списка,
-## так что порядок задаёт очерёдность крыльев. Сколько шахт — столько ракет в запасе.
+## Ракетные шахты корабля — все, что есть на крыльях, независимо от прокачки. Порядок
+## списка задаёт и очерёдность пуска, и порядок открытия: сначала внутренняя пара
+## у корпуса, дальше по крылу наружу, внутри пары — левая, потом правая. Тогда одно
+## нажатие пускает одну ракету, а крылья разряжаются поочерёдно и корабль не перекашивает.
 @export var rocket_launchers: Array[RocketLauncher]
+## Сколько шахт заряжено. Шаг в две ракеты — по одной на каждое крыло, чтобы ёлочка
+## оставалась симметричной; лишние шахты спрятаны и не стреляют. Это же поле двигает
+## прокачка в рантайме: присвоение открывает новые шахты сразу с ракетами в них.
+@export_range(0, 6, 2) var rocket_capacity := 2: set = set_rocket_capacity
 
 @export_group("Death")
 ## Через сколько секунд после начала основного взрыва стартует второй (узел Blast).
@@ -130,6 +136,9 @@ func _ready() -> void:
 	health = max_health
 	health_changed.emit(health, max_health)
 	_update_ship_texture()
+	# Вместимость пришла из инспектора ещё до появления дочерних узлов, поэтому шахты
+	# разбираются только здесь, когда до них уже можно дотянуться.
+	_refresh_launchers()
 
 
 func _physics_process(delta: float):
@@ -208,6 +217,20 @@ func die() -> void:
 	if blast.is_playing():
 		await blast.animation_finished
 	queue_free()
+
+
+## Открывает первые count шахт, остальные закрывает. Значения больше числа шахт на крыльях
+## безвредны: лишние ракеты взять неоткуда, открываются все, что есть.
+func set_rocket_capacity(count: int) -> void:
+	rocket_capacity = count
+	# Сеттер срабатывает и при загрузке сцены, когда дочерних узлов ещё нет.
+	if is_node_ready():
+		_refresh_launchers()
+
+
+func _refresh_launchers() -> void:
+	for index in rocket_launchers.size():
+		rocket_launchers[index].set_open(index < rocket_capacity)
 
 
 func _update_invulnerability(delta: float) -> void:

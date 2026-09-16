@@ -1,0 +1,65 @@
+[gd_scene format=3 uid="uid://csidhapvatxb2"]
+
+[ext_resource type="Texture2D" uid="uid://daixjmyw18p2r" path="res://assets/weapons/rocket_launch.png" id="1_4a10y"]
+[ext_resource type="Script" uid="uid://hrmurx847rbv" path="res://elements/weapons/rocket/rocket_launcher.gd" id="2_ca3n7"]
+[ext_resource type="PackedScene" uid="uid://di552ro7x67ix" path="res://elements/weapons/rocket/rocket.tscn" id="3_ouiu6"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3mfga"]
+atlas = ExtResource("1_4a10y")
+region = Rect2(0, 96, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1rj72"]
+atlas = ExtResource("1_4a10y")
+region = Rect2(48, 96, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b380q"]
+atlas = ExtResource("1_4a10y")
+region = Rect2(96, 96, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rs1ap"]
+atlas = ExtResource("1_4a10y")
+region = Rect2(144, 96, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ehiu3"]
+atlas = ExtResource("1_4a10y")
+region = Rect2(192, 96, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sto5h"]
+atlas = ExtResource("1_4a10y")
+region = Rect2(240, 96, 48, 48)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_hj0go"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3mfga")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1rj72")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b380q")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rs1ap")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ehiu3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sto5h")
+}],
+"loop": 0,
+"name": &"launch",
+"speed": 5.0
+}]
+
+[node name="RocketLauncher" type="AnimatedSprite2D" unique_id=837675356]
+show_behind_parent = true
+sprite_frames = SubResource("SpriteFrames_hj0go")
+animation = &"launch"
+script = ExtResource("2_ca3n7")
+rocket_scene = ExtResource("3_ouiu6")
+
+[node name="Muzzle" type="Marker2D" parent="." unique_id=741022801]
+position = Vector2(-6, -2)

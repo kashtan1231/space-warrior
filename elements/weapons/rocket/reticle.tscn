@@ -32,29 +32,29 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_8u42q"]
+atlas = ExtResource("2_4dslw")
+region = Rect2(192, 176, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_n1qc0"]
+atlas = ExtResource("2_4dslw")
+region = Rect2(224, 176, 32, 32)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_so5ta"]
 atlas = ExtResource("2_4dslw")
-region = Rect2(0, 208, 32, 32)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_u7n2h"]
-atlas = ExtResource("2_4dslw")
-region = Rect2(32, 208, 32, 32)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_11ved"]
-atlas = ExtResource("2_4dslw")
-region = Rect2(64, 208, 32, 32)
+region = Rect2(256, 176, 32, 32)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_rt8om"]
 animations = [{
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_8u42q")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_n1qc0")
+}, {
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_so5ta")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_u7n2h")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_11ved")
 }],
 "loop": 0,
 "name": &"lock",
@@ -71,6 +71,5 @@ sprite_frames = SubResource("SpriteFrames_1us10")
 animation = &"lock"
 
 [node name="Lock" type="AnimatedSprite2D" parent="." unique_id=957388854]
-visible = false
 sprite_frames = SubResource("SpriteFrames_rt8om")
 animation = &"lock"

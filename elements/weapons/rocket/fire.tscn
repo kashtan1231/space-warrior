@@ -1,0 +1,49 @@
+[gd_scene format=3 uid="uid://c1pcxuxcj77iy"]
+
+[ext_resource type="Texture2D" uid="uid://tph3l7p5xequ" path="res://assets/weapons/fire.png" id="1_5ulbm"]
+[ext_resource type="Script" uid="uid://ctmvmgmk0exa7" path="res://elements/weapons/rocket/fire.gd" id="2_ns2pi"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ns2pi"]
+atlas = ExtResource("1_5ulbm")
+region = Rect2(192, 384, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5fqm0"]
+atlas = ExtResource("1_5ulbm")
+region = Rect2(224, 384, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tst35"]
+atlas = ExtResource("1_5ulbm")
+region = Rect2(256, 384, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_o2e1j"]
+atlas = ExtResource("1_5ulbm")
+region = Rect2(288, 384, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_l612k"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ns2pi")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5fqm0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tst35")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_o2e1j")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 10.0
+}]
+
+[node name="Fire" type="AnimatedSprite2D" unique_id=795243091]
+rotation = -0.62831855
+sprite_frames = SubResource("SpriteFrames_l612k")
+autoplay = "default"
+frame_progress = 0.6496746
+offset = Vector2(8, -16)
+script = ExtResource("2_ns2pi")
+burn_time = 0.0

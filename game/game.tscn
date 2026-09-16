@@ -87,6 +87,7 @@ animations = [{
 
 [node name="Bg" type="Sprite2D" parent="." unique_id=574545187]
 modulate = Color(0.24225745, 0.34524336, 0.5985955, 1)
+z_index = -20
 texture_repeat = 2
 texture = ExtResource("1_l1rk1")
 centered = false
@@ -101,6 +102,7 @@ autoscroll = Vector2(0, 3)
 
 [node name="Stars" type="AnimatedSprite2D" parent="StarsParallax" unique_id=192381513]
 self_modulate = Color(0.42, 0.42, 0.42, 1)
+z_index = -10
 position = Vector2(640, 360)
 scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_dxrkv")
