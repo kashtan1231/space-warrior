@@ -5,18 +5,25 @@ class_name Impact
 ## кадр переставляют себя в точку попадания на корабле и поворачиваются вдоль оси корпуса.
 ## Будь импакт дочерним узлом корабля, он унаследовал бы его масштаб и мигание неуязвимости,
 ## которое включается как раз в момент попадания.
-## Брызги на спрайте нарисованы вверх, основание — в точке узла (подогнано через Offset).
+## Куда смотрит рисунок на спрайте, знает только сцена: поворот, выставленный узлу
+## в редакторе, скрипт запоминает и прибавляет к своему. Так спрайт, нарисованный вбок,
+## доворачивается одним полем в инспекторе, а не правкой кода. Основание брызг ставится
+## в точку узла через Offset.
 ## Проигрывается один раз и удаляет себя сама.
 
 var _target: Node2D
 var _tilt: Tilt
 var _local_offset := Vector2.ZERO
 var _outward := 0.0
+var _base_rotation := 0.0
 
 
 func _ready() -> void:
 	# Анимация должна быть без Loop: у зацикленной сигнал окончания не приходит никогда.
 	animation_finished.connect(queue_free)
+	# Поворот из сцены снимается до первого доворота: дальше _follow_target каждый кадр
+	# пишет в global_rotation, и авторский угол иначе пропал бы в первом же кадре.
+	_base_rotation = rotation
 	_follow_target()
 
 
@@ -46,4 +53,4 @@ func _follow_target() -> void:
 		return
 	var angle := _tilt.current_angle
 	global_position = _target.global_position + _local_offset.rotated(angle)
-	global_rotation = _outward + angle
+	global_rotation = _base_rotation + _outward + angle

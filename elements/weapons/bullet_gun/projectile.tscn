@@ -131,7 +131,9 @@ animations = [{
 }]
 
 [node name="Projectile" type="AnimatedSprite2D" unique_id=1592519739]
-scale = Vector2(0.5, 0.5)
+scale = Vector2(0.25, 0.25)
 sprite_frames = SubResource("SpriteFrames_v4qkc")
 autoplay = "default"
+frame = 16
+frame_progress = 1.0
 script = ExtResource("2_5h53o")

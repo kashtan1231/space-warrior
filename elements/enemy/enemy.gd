@@ -105,6 +105,10 @@ func die() -> void:
 	set_deferred("collision_layer", 0)
 	set_deferred("collision_mask", 0)
 	sprite.hide()
+	# Взрыв не состоит в targets у Tilt и потому висит прямо, пока корпус накренён.
+	# Доворачивается он один раз, в момент гибели: дальше корабль уже никем не управляется,
+	# и обломки замирают под тем углом, на котором их застали, а не выпрямляются рывком.
+	explosion.rotation += tilt.current_angle
 	explosion.show()
 	explosion.play("destroy")
 	await explosion.animation_finished
