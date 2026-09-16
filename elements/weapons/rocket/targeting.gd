@@ -1,6 +1,18 @@
 extends Node
 class_name Targeting
 
+## Летит, когда режим прицеливания включился и цель выбрана. Если врагов не нашлось,
+## режим не включается и сигнала нет.
+signal activated
+
+## Летит, когда режим выключился: по кнопке, из-за кончившихся ракет или потому, что
+## сбивать больше некого.
+signal deactivated
+
+## Летит на каждое нажатие «следующая/предыдущая цель»: 1 — вперёд по очереди, -1 — назад.
+## Шлётся и когда цель одна и выбор фактически не изменился: нажатие всё равно было.
+signal target_cycled(step: int)
+
 ## Сцена прицела, который вешается на каждого врага.
 @export var reticle_scene: PackedScene
 ## Пауза между появлением соседних прицелов при входе в режим, секунд. Прицелы идут
@@ -38,21 +50,26 @@ func is_active() -> bool:
 ## Включает режим: вешает прицелы на всех врагов и выбирает ближайшего к origin_x
 ## по горизонтали. Если врагов нет, режим не включается.
 func activate(origin_x: float) -> void:
-	_active = true
 	_reveal_cooldown = 0.0
 	_add_new_targets()
+	# Флаг поднимается только после удачного поиска: иначе неудачный вход в режим
+	# отбивал бы deactivated, которому не предшествовал activated.
 	if _reticles.is_empty():
-		deactivate()
 		return
+	_active = true
 	_select(_nearest_by_x(origin_x))
+	activated.emit()
 
 
 func deactivate() -> void:
+	if not _active:
+		return
 	_active = false
 	for reticle in _reticles:
 		reticle.queue_free()
 	_reticles.clear()
 	_selected = null
+	deactivated.emit()
 
 
 ## Выбранный враг. Вызывать только при включённом режиме: тогда цель есть всегда.
@@ -109,6 +126,7 @@ func _update_reveal(delta: float) -> void:
 func _cycle(step: int) -> void:
 	var index := _reticles.find(_selected)
 	_select(_reticles[posmod(index + step, _reticles.size())])
+	target_cycled.emit(step)
 
 
 func _select(reticle: Reticle) -> void:

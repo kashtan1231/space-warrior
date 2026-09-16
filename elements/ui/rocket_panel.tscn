@@ -1,0 +1,114 @@
+[gd_scene format=3 uid="uid://cprk84usxe0jw"]
+
+[ext_resource type="Script" uid="uid://cenpns0i7j1pq" path="res://elements/ui/rocket_panel.gd" id="1_lq3r1"]
+[ext_resource type="Texture2D" uid="uid://duxr462scwgdo" path="res://assets/gui/backplates.png" id="2_pqmgi"]
+[ext_resource type="Texture2D" uid="uid://ch63bi85nc6gp" path="res://assets/gui/buttons_and_knobs.png" id="4_72lmy"]
+[ext_resource type="PackedScene" uid="uid://b201udhij40ko" path="res://elements/ui/rocket_switch.tscn" id="4_dtlti"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_72lmy"]
+atlas = ExtResource("4_72lmy")
+region = Rect2(271, 405, 10, 5)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dtlti"]
+atlas = ExtResource("4_72lmy")
+region = Rect2(285, 405, 10, 5)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_44u87"]
+atlas = ExtResource("4_72lmy")
+region = Rect2(271, 414, 10, 5)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2ko01"]
+atlas = ExtResource("4_72lmy")
+region = Rect2(285, 414, 10, 5)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_c5eak"]
+atlas = ExtResource("4_72lmy")
+region = Rect2(271, 423, 10, 5)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cvx0u"]
+atlas = ExtResource("4_72lmy")
+region = Rect2(285, 423, 10, 5)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vr1p1"]
+atlas = ExtResource("4_72lmy")
+region = Rect2(380, 227, 14, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xewtu"]
+atlas = ExtResource("4_72lmy")
+region = Rect2(380, 209, 14, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rj5it"]
+atlas = ExtResource("4_72lmy")
+region = Rect2(199, 405, 14, 17)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fpj44"]
+atlas = ExtResource("4_72lmy")
+region = Rect2(217, 405, 14, 17)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lhh7n"]
+atlas = ExtResource("4_72lmy")
+region = Rect2(235, 405, 14, 17)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q4st7"]
+atlas = ExtResource("4_72lmy")
+region = Rect2(253, 405, 14, 17)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nqv5h"]
+atlas = ExtResource("4_72lmy")
+region = Rect2(199, 426, 14, 17)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2ymo5"]
+atlas = ExtResource("4_72lmy")
+region = Rect2(217, 426, 14, 17)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hl3hp"]
+atlas = ExtResource("4_72lmy")
+region = Rect2(235, 426, 14, 17)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_47owd"]
+atlas = ExtResource("4_72lmy")
+region = Rect2(253, 426, 14, 17)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1us10"]
+atlas = ExtResource("2_pqmgi")
+region = Rect2(371, 155, 117, 59)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rt8om"]
+atlas = ExtResource("4_72lmy")
+region = Rect2(199, 405, 14, 17)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ynvpk"]
+atlas = ExtResource("4_72lmy")
+region = Rect2(380, 227, 14, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xqg5l"]
+atlas = ExtResource("4_72lmy")
+region = Rect2(126, 251, 10, 13)
+
+[node name="RocketPanel" type="Node2D" unique_id=632214291]
+script = ExtResource("1_lq3r1")
+switch_step = 12
+captions = Array[Texture2D]([SubResource("AtlasTexture_72lmy"), SubResource("AtlasTexture_dtlti"), SubResource("AtlasTexture_44u87"), SubResource("AtlasTexture_2ko01"), SubResource("AtlasTexture_c5eak"), SubResource("AtlasTexture_cvx0u")])
+button_released = SubResource("AtlasTexture_vr1p1")
+button_pressed = SubResource("AtlasTexture_xewtu")
+button_hold_time = 0.5
+lever_drop_delay = 0.5
+knob_frames = Array[Texture2D]([SubResource("AtlasTexture_rj5it"), SubResource("AtlasTexture_fpj44"), SubResource("AtlasTexture_lhh7n"), SubResource("AtlasTexture_q4st7"), SubResource("AtlasTexture_nqv5h"), SubResource("AtlasTexture_2ymo5"), SubResource("AtlasTexture_hl3hp"), SubResource("AtlasTexture_47owd")])
+intro_delay = 7.25
+intro_interval = 0.25
+
+[node name="Backplate" type="Sprite2D" parent="." unique_id=1637713001]
+texture = SubResource("AtlasTexture_1us10")
+centered = false
+
+[node name="Knob" type="Sprite2D" parent="." unique_id=881127686]
+position = Vector2(96, 21)
+texture = SubResource("AtlasTexture_rt8om")
+
+[node name="Button" type="Sprite2D" parent="." unique_id=1202418729]
+position = Vector2(96, 40)
+texture = SubResource("AtlasTexture_ynvpk")
+
+[node name="Switch" parent="." unique_id=514955741 instance=ExtResource("4_dtlti")]
+position = Vector2(14, 11)
+lever_on = SubResource("AtlasTexture_xqg5l")

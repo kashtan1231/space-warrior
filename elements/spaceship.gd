@@ -13,6 +13,20 @@ signal died
 ## На него подписана шкала перезарядки нырка.
 signal dodge_charge_changed(charge: float)
 
+## Летит при входе в режим прицеливания и при выходе из него. На него подписана ракетная
+## панель: по нему она взводит рычаг следующей ракеты и опускает его обратно.
+signal aiming_changed(active: bool)
+
+## Летит на каждое нажатие «следующая/предыдущая цель»: 1 — вперёд, -1 — назад.
+signal target_cycled(step: int)
+
+## Летит в кадр пуска ракеты. index — номер шахты в rocket_launchers.
+signal rocket_launched(index: int)
+
+## Летит при любом изменении боезапаса: пуск ракеты, прокачка вместимости. Массив идёт
+## по заряженным шахтам в порядке rocket_launchers: true — ракета на месте.
+signal rockets_changed(loaded: Array[bool])
+
 ## Сколько попаданий вражеских пуль выдерживает корабль.
 @export var max_health := 5
 ## Предельная скорость корабля, пикселей в секунду.
@@ -136,6 +150,11 @@ func _ready() -> void:
 	health = max_health
 	health_changed.emit(health, max_health)
 	_update_ship_texture()
+	# Режим прицеливания выключается и сам — когда врагов не осталось или кончились
+	# ракеты, — поэтому о входе и выходе рассказывает он, а не тот, кто его включил.
+	targeting.activated.connect(aiming_changed.emit.bind(true))
+	targeting.deactivated.connect(aiming_changed.emit.bind(false))
+	targeting.target_cycled.connect(target_cycled.emit)
 	# Вместимость пришла из инспектора ещё до появления дочерних узлов, поэтому шахты
 	# разбираются только здесь, когда до них уже можно дотянуться.
 	_refresh_launchers()
@@ -228,9 +247,20 @@ func set_rocket_capacity(count: int) -> void:
 		_refresh_launchers()
 
 
+## Боезапас по заряженным шахтам в порядке rocket_launchers: true — ракета на месте.
+## Закрытые прокачкой шахты в список не попадают: на панели приборов их ещё нет.
+## Нужен интерфейсу, который строится позже корабля и не застаёт стартовый сигнал.
+func get_rocket_states() -> Array[bool]:
+	var states: Array[bool] = []
+	for index in mini(rocket_capacity, rocket_launchers.size()):
+		states.append(rocket_launchers[index].is_loaded())
+	return states
+
+
 func _refresh_launchers() -> void:
 	for index in rocket_launchers.size():
 		rocket_launchers[index].set_open(index < rocket_capacity)
+	rockets_changed.emit(get_rocket_states())
 
 
 func _update_invulnerability(delta: float) -> void:
@@ -401,9 +431,12 @@ func _toggle_targeting() -> void:
 
 
 func _launch_rocket() -> void:
-	for launcher in rocket_launchers:
+	for index in rocket_launchers.size():
+		var launcher := rocket_launchers[index]
 		if launcher.is_loaded():
 			launcher.launch(targeting.get_target())
+			rocket_launched.emit(index)
+			rockets_changed.emit(get_rocket_states())
 			break
 	# Режим прицеливания нужен только для пуска: без ракет в нём нечего делать.
 	if not _has_rockets():

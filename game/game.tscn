@@ -10,6 +10,7 @@
 [ext_resource type="Script" uid="uid://fn7g8ia1q0ey" path="res://elements/ui/hearts.gd" id="6_dakft"]
 [ext_resource type="PackedScene" uid="uid://b5l7hq41xbnit" path="res://elements/ui/dodge_bar2.tscn" id="9_l8g03"]
 [ext_resource type="PackedScene" uid="uid://d2255362rrmrv" path="res://elements/ui/meter.tscn" id="10_j8tme"]
+[ext_resource type="PackedScene" uid="uid://cprk84usxe0jw" path="res://elements/ui/rocket_panel.tscn" id="12_qf6n1"]
 [ext_resource type="PackedScene" uid="uid://j8jry4aypusk" path="res://elements/ui/dashboard.tscn" id="13_vsp63"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_u5opy"]
@@ -116,9 +117,9 @@ position = Vector2(640, 600)
 god_mode = true
 
 [node name="Wall" parent="." unique_id=1304739988 instance=ExtResource("3_h7iqs")]
-visible = false
 
 [node name="Wall2" parent="." unique_id=1892776123 instance=ExtResource("3_h7iqs")]
+visible = false
 position = Vector2(1280, 0)
 
 [node name="Enemy" parent="." unique_id=925835412 instance=ExtResource("4_4fuuu")]
@@ -171,3 +172,7 @@ offset_top = -29.0
 offset_right = 137.0
 offset_bottom = -6.0
 text = "modulate - a3aeff"
+
+[node name="RocketPanel" parent="UI" unique_id=632214291 instance=ExtResource("12_qf6n1")]
+position = Vector2(1034, 12)
+scale = Vector2(2, 2)

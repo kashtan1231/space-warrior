@@ -1,0 +1,55 @@
+[gd_scene format=3 uid="uid://b201udhij40ko"]
+
+[ext_resource type="Texture2D" uid="uid://ch63bi85nc6gp" path="res://assets/gui/buttons_and_knobs.png" id="1_8maf4"]
+[ext_resource type="Script" uid="uid://d23ofiwjc2ue1" path="res://elements/ui/rocket_switch.gd" id="1_qbg4w"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pkaio"]
+atlas = ExtResource("1_8maf4")
+region = Rect2(126, 251, 10, 13)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v3ixr"]
+atlas = ExtResource("1_8maf4")
+region = Rect2(110, 253, 10, 14)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wnu1r"]
+atlas = ExtResource("1_8maf4")
+region = Rect2(297, 381, 4, 5)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ps6y0"]
+atlas = ExtResource("1_8maf4")
+region = Rect2(304, 381, 4, 5)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1us10"]
+atlas = ExtResource("1_8maf4")
+region = Rect2(297, 381, 4, 5)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8maf4"]
+atlas = ExtResource("1_8maf4")
+region = Rect2(126, 251, 10, 13)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8m7fp"]
+atlas = ExtResource("1_8maf4")
+region = Rect2(271, 405, 10, 5)
+
+[node name="RocketSwitch" type="Node2D" unique_id=514955741]
+script = ExtResource("1_qbg4w")
+lever_on = SubResource("AtlasTexture_pkaio")
+lever_off = SubResource("AtlasTexture_v3ixr")
+lamp_on = SubResource("AtlasTexture_wnu1r")
+lamp_off = SubResource("AtlasTexture_ps6y0")
+flicker_count = 4
+
+[node name="Lamp" type="Sprite2D" parent="." unique_id=1076331748]
+position = Vector2(3, 0)
+texture = SubResource("AtlasTexture_1us10")
+centered = false
+
+[node name="Lever" type="Sprite2D" parent="." unique_id=1213580290]
+position = Vector2(0, 6)
+texture = SubResource("AtlasTexture_8maf4")
+centered = false
+
+[node name="Caption" type="Sprite2D" parent="." unique_id=196123067]
+position = Vector2(0, 25)
+texture = SubResource("AtlasTexture_8m7fp")
+centered = false
