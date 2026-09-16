@@ -5,6 +5,8 @@
 [ext_resource type="Texture2D" uid="uid://btetqcfs3hws4" path="res://assets/enemy/torpedo_bomber/engine.png" id="3_tjakn"]
 [ext_resource type="Texture2D" uid="uid://bxl6qpps2t0r7" path="res://assets/enemy/torpedo_bomber/destruction.png" id="4_f63ur"]
 [ext_resource type="Script" uid="uid://300q85tg61um" path="res://elements/tilt.gd" id="5_qsmqy"]
+[ext_resource type="Script" uid="uid://bbst7i3dgceq6" path="res://elements/flammable.gd" id="6_plrx7"]
+[ext_resource type="PackedScene" uid="uid://c1pcxuxcj77iy" path="res://elements/weapons/fire.tscn" id="7_oflkl"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_mpiyb"]
 atlas = ExtResource("4_f63ur")
@@ -171,7 +173,6 @@ collision_mask = 6
 script = ExtResource("1_hgqbp")
 max_health = 10
 hit_texture = SubResource("AtlasTexture_mpiyb")
-hull_radius = 20.0
 speed = 70.0
 acceleration = 90.0
 band_top = 40.0
@@ -190,7 +191,7 @@ show_behind_parent = true
 position = Vector2(0, -0.66666675)
 sprite_frames = SubResource("SpriteFrames_tjakn")
 autoplay = "default"
-frame_progress = 0.83813787
+frame_progress = 0.9713573
 flip_v = true
 
 [node name="Beam" type="CollisionShape2D" parent="." unique_id=1898284051]
@@ -221,3 +222,8 @@ targets = [NodePath("../Ship")]
 angle = 12.0
 step_time = 0.2
 nose_down = true
+
+[node name="Flammable" type="Node" parent="." unique_id=53674793 node_paths=PackedStringArray("hull")]
+script = ExtResource("6_plrx7")
+fire_scene = ExtResource("7_oflkl")
+hull = NodePath("../Ship")

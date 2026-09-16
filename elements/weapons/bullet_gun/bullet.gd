@@ -9,9 +9,16 @@ const HULL_IMPACT_SCENE = preload("res://elements/weapons/bullet_gun/impact.tscn
 ## Сколько здоровья снимает одно попадание.
 @export var damage := 1
 
+# Хитбокс корабля собран из нескольких форм, и снаряд входит сразу в две, когда они
+# перекрываются: сигнал приходит по каждой, а queue_free снимает узел только в конце кадра.
+# Без флага одно попадание засчиталось бы дважды.
+var _spent := false
+
 
 func _ready() -> void:
-	body_entered.connect(_on_body_entered)
+	# body_shape_entered, а не body_entered: сигнал приносит ещё и номер формы, в которую
+	# вошёл снаряд, — по нему ракета находит место для пламени, см. flammable.gd.
+	body_shape_entered.connect(_on_body_shape_entered)
 	# Обе подписки здесь, а не в сцене: имя обработчика тогда наше, а не склеенное
 	# редактором из имени узла. Наследник (ракета) получает их вместе с super._ready(),
 	# и узел ScreenExit обязан быть в его сцене тоже.
@@ -31,7 +38,23 @@ func get_velocity() -> Vector2:
 	return Vector2.UP.rotated(rotation) * speed
 
 
-func _on_body_entered(body: Node2D) -> void:
+# Физика сообщает номер формы внутри тела, а не сам узел. Разворачиваем его здесь, чтобы
+# наследникам попадание досталось в готовом виде. У корабля игрока корпус собран из
+# CollisionPolygon2D, и там выйдет null: вражеским пулям форма не нужна, а ракеты,
+# которым она нужна, летают только по врагам.
+func _on_body_shape_entered(_body_rid: RID, body: Node2D, body_shape_index: int,
+		_local_shape_index: int) -> void:
+	if _spent:
+		return
+	_spent = true
+	var target := body as CollisionObject2D
+	var owner_id := target.shape_find_owner(body_shape_index)
+	_on_hit(body, target.shape_owner_get_owner(owner_id) as CollisionShape2D)
+
+
+# Что снаряд делает с тем, во что попал. Наследник добавляет своё до super(), потому что
+# в конце снаряд удаляет себя.
+func _on_hit(body: Node2D, _shape: CollisionShape2D) -> void:
 	if body.has_method("take_damage"):
 		body.take_damage(damage)
 	_spawn_impact()

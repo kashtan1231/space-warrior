@@ -43,11 +43,6 @@ class_name Rocket
 ## на второй заход.
 @export_range(30.0, 180.0, 5.0) var lose_angle := 90.0
 
-@export_group("Fire")
-## Сцена пламени, которое остаётся гореть на обшивке в точке попадания. Сколько оно горит
-## и как гаснет, настраивается в самой сцене огня, см. fire.gd.
-@export var fire_scene: PackedScene
-
 const ENEMY_GROUP := &"enemies"
 # По этой группе враги находят летящие ракеты, чтобы уворачиваться от них.
 const ROCKET_GROUP := &"player_rockets"
@@ -92,20 +87,12 @@ func _physics_process(delta: float) -> void:
 	super(delta)
 
 
-# Пламя ставит только ракета, поэтому пуск огня живёт здесь, а не в bullet.gd: пуль в бою
+# Поджигает только ракета, поэтому вызов живёт здесь, а не в bullet.gd: пуль в бою
 # на порядок больше, и огонь от каждой превратил бы попадания в сплошной костёр.
-# Родительский _on_body_entered в конце вызывает queue_free, так что поджигать нужно до него.
-func _on_body_entered(body: Node2D) -> void:
-	_spawn_fire(body)
-	super(body)
-
-
-# Огонь цепляется к обшивке так же, как брызги попадания, см. impact.gd: у каждого корабля
-# есть компонент Tilt, по которому точка горения доворачивается вместе с корпусом.
-func _spawn_fire(body: Node2D) -> void:
-	var fire: Fire = fire_scene.instantiate()
-	fire.attach(body, body.tilt, global_position)
-	get_tree().current_scene.add_child(fire)
+# Где именно загорится обшивка, решает сам корабль, см. flammable.gd.
+func _on_hit(body: Node2D, shape: CollisionShape2D) -> void:
+	body.flammable.ignite(shape, global_position)
+	super(body, shape)
 
 
 func _start_drop() -> void:

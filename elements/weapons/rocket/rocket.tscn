@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" uid="uid://ddb7okx3k5143" path="res://elements/weapons/rocket/rocket.gd" id="1_07kdo"]
 [ext_resource type="Texture2D" uid="uid://d1moho0o0w71v" path="res://assets/weapons/rocket_projectile.png" id="2_07kdo"]
-[ext_resource type="PackedScene" uid="uid://c1pcxuxcj77iy" path="res://elements/weapons/rocket/fire.tscn" id="2_61xsf"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_61xsf"]
 atlas = ExtResource("2_07kdo")
@@ -51,7 +50,6 @@ turn_rate = 75.0
 lead = 0.2
 homing_delay = 1.0
 homing_ramp = 3.0
-fire_scene = ExtResource("2_61xsf")
 speed = 200.0
 damage = 3
 

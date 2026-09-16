@@ -7,6 +7,8 @@
 [ext_resource type="PackedScene" uid="uid://cmmux14qul4ki" path="res://elements/enemy/enemy_bullet.tscn" id="3_baseo"]
 [ext_resource type="Texture2D" uid="uid://dc6gmw3aw275p" path="res://assets/enemy/scout/shot.png" id="6_ax7if"]
 [ext_resource type="Script" uid="uid://300q85tg61um" path="res://elements/tilt.gd" id="7_cqau8"]
+[ext_resource type="Script" uid="uid://bbst7i3dgceq6" path="res://elements/flammable.gd" id="8_3igwr"]
+[ext_resource type="PackedScene" uid="uid://c1pcxuxcj77iy" path="res://elements/weapons/fire.tscn" id="9_bmrhp"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_uayi2"]
 atlas = ExtResource("2_5g2rt")
@@ -267,3 +269,8 @@ steps = 3
 step_time = 0.12
 nose_down = true
 metadata/_custom_type_script = "uid://300q85tg61um"
+
+[node name="Flammable" type="Node" parent="." unique_id=1920752401 node_paths=PackedStringArray("hull")]
+script = ExtResource("8_3igwr")
+fire_scene = ExtResource("9_bmrhp")
+hull = NodePath("../Ship")
