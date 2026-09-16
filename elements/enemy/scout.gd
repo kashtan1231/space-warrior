@@ -59,6 +59,15 @@ class_name Scout
 ## угрозой, пикселей. Примерно радиус корпуса с запасом: меньше — будет уворачиваться
 ## только от выстрелов точно в центр, больше — шарахаться и от пуль, летящих мимо.
 @export var dodge_margin := 36.0
+## Шанс, что враг заметит идущую в него ракету и увернётся. Бросается один раз на каждую
+## ракету. Даже удачный рывок спасает не всегда: ракета наводится и доворачивает следом.
+@export_range(0.0, 1.0, 0.05) var rocket_dodge_chance := 0.5
+## За сколько секунд до попадания враг дёргается от ракеты. Слишком поздний рывок не
+## успевает ничего изменить: на 0.35 с враг сдвигается на десяток пикселей и получает
+## попадание при любой поворотливости ракеты. Слишком раннее окно ракета отрабатывает
+## доворотом и всё равно догоняет. Уворот спасает только от ракеты с невысоким turn_rate,
+## и настраивать баланс лучше им, а не этим окном.
+@export var rocket_dodge_lookahead := 0.6
 
 @export_group("Weapon")
 ## Сцена снаряда врага. Назначается в инспекторе.
@@ -279,7 +288,7 @@ func _separation() -> Vector2:
 	return push * separation_strength
 
 
-# Перебирает пули игрока, решает, от какой уворачиваться, и запускает рывок.
+# Перебирает пули и ракеты игрока, решает, от чего уворачиваться, и запускает рывок.
 # Перезарядка начинает тикать только после окончания рывка.
 func _update_dodge(delta: float) -> void:
 	if _dodge_left > 0.0:
@@ -288,43 +297,66 @@ func _update_dodge(delta: float) -> void:
 		_dodge_cooldown_left -= delta
 	var ready_to_dodge := _dodge_left <= 0.0 and _dodge_cooldown_left <= 0.0
 
-	# Словарь пересобирается каждый кадр из живых пуль, так что решения по улетевшим
-	# и удалённым пулям выбрасываются сами.
+	# Словарь пересобирается каждый кадр из живых снарядов, так что решения по улетевшим
+	# и удалённым выбрасываются сами.
 	var decisions: Dictionary[int, bool] = {}
-	var escape := Vector2.ZERO
-	for node in get_tree().get_nodes_in_group("player_bullets"):
-		var bullet := node as Bullet
-		var id := bullet.get_instance_id()
-		if _dodge_decisions.has(id):
-			decisions[id] = _dodge_decisions[id]
-		var side := _escape_direction(bullet)
-		if side == Vector2.ZERO:
-			continue
-		# Во время рывка и перезарядки угрозы не замечаются, и кубик не бросается:
-		# шанс сыграет, когда враг снова будет готов, если пуля ещё летит в него.
-		if not ready_to_dodge:
-			continue
-		if not decisions.has(id):
-			decisions[id] = randf() < dodge_chance
-		if decisions[id] and escape == Vector2.ZERO:
-			escape = side
+	var escape := _consider_threats(
+		&"player_bullets", dodge_lookahead, dodge_chance, decisions, ready_to_dodge)
+	# Ракеты перебираются, даже когда уход от пули уже выбран: их решения тоже должны
+	# попасть в словарь, иначе кубик по той же ракете бросался бы заново каждый кадр.
+	var from_rocket := _consider_threats(
+		&"player_rockets", rocket_dodge_lookahead, rocket_dodge_chance, decisions, ready_to_dodge)
+	if escape == Vector2.ZERO:
+		escape = from_rocket
 	_dodge_decisions = decisions
 
 	if escape != Vector2.ZERO:
 		_start_dodge(escape)
 
 
-# Пуля летит по прямой, поэтому ближайшее сближение считается проекцией. Считается
-# по относительной скорости: враг сам движется, и пуля, пущенная туда, где он был,
-# может пройти мимо — на такую тратить уворот незачем.
-# Возвращает направление, куда уходить, или ZERO, если пуля не угрожает: уже пролетела,
+# Перебор угроз одной группы: переносит решения по уже замеченным снарядам, бросает кубик
+# по новым и возвращает сторону ухода от первого, от которого враг решил уворачиваться.
+# Ракета наводится, а не летит по прямой, но у самого попадания её курс уже почти прямой,
+# и на коротком окне прогноз сходится.
+func _consider_threats(group: StringName, lookahead: float, chance: float,
+		decisions: Dictionary[int, bool], ready_to_dodge: bool) -> Vector2:
+	var escape := Vector2.ZERO
+	for node in get_tree().get_nodes_in_group(group):
+		var bullet := node as Bullet
+		var id := bullet.get_instance_id()
+		if _dodge_decisions.has(id):
+			decisions[id] = _dodge_decisions[id]
+		var side := _escape_direction(bullet, lookahead)
+		if side == Vector2.ZERO:
+			continue
+		# Во время рывка и перезарядки угрозы не замечаются, и кубик не бросается:
+		# шанс сыграет, когда враг снова будет готов, если снаряд ещё летит в него.
+		if not ready_to_dodge:
+			continue
+		if not decisions.has(id):
+			decisions[id] = randf() < chance
+		if decisions[id] and escape == Vector2.ZERO:
+			escape = side
+	return escape
+
+
+# Снаряд считается летящим по прямой, поэтому ближайшее сближение находится проекцией.
+# Счёт идёт по относительной скорости: враг сам движется, и пуля, пущенная туда, где он
+# был, может пройти мимо — на такую тратить уворот незачем.
+# Возвращает направление, куда уходить, или ZERO, если снаряд не угрожает: уже пролетел,
 # долетит нескоро или пройдёт дальше dodge_margin от центра.
-func _escape_direction(bullet: Bullet) -> Vector2:
+func _escape_direction(bullet: Bullet, lookahead: float) -> Vector2:
 	var bullet_velocity := bullet.get_velocity()
 	var relative := bullet_velocity - velocity
+	# Ракета на разгоне ползёт медленно и какое-то время идёт с врагом почти вровень.
+	# Без этой отсечки деление на нулевую относительную скорость дало бы nan: сравнения
+	# с ним всегда ложны, проверки ниже пропустили бы его дальше, и врага унесло бы
+	# в никуда с нечисловой скоростью.
+	if relative.length_squared() < 1.0:
+		return Vector2.ZERO
 	var to_self := global_position - bullet.global_position
 	var time := to_self.dot(relative) / relative.length_squared()
-	if time < 0.0 or time > dodge_lookahead:
+	if time < 0.0 or time > lookahead:
 		return Vector2.ZERO
 	var miss := to_self - relative * time
 	if miss.length() > dodge_margin:

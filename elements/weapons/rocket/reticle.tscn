@@ -1,0 +1,76 @@
+[gd_scene format=3 uid="uid://dqhb7b62o4nqb"]
+
+[ext_resource type="Script" uid="uid://cflhxdbip0occ" path="res://elements/weapons/rocket/reticle.gd" id="1_tk0w4"]
+[ext_resource type="Texture2D" uid="uid://b2pawnfli2ut6" path="res://assets/gui/crosshairs.png" id="2_4dslw"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4dslw"]
+atlas = ExtResource("2_4dslw")
+region = Rect2(96, 176, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xis04"]
+atlas = ExtResource("2_4dslw")
+region = Rect2(128, 176, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0wr45"]
+atlas = ExtResource("2_4dslw")
+region = Rect2(160, 176, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_1us10"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4dslw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xis04")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0wr45")
+}],
+"loop": 0,
+"name": &"lock",
+"speed": 5.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_so5ta"]
+atlas = ExtResource("2_4dslw")
+region = Rect2(0, 208, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_u7n2h"]
+atlas = ExtResource("2_4dslw")
+region = Rect2(32, 208, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_11ved"]
+atlas = ExtResource("2_4dslw")
+region = Rect2(64, 208, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_rt8om"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_so5ta")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_u7n2h")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_11ved")
+}],
+"loop": 0,
+"name": &"lock",
+"speed": 5.0
+}]
+
+[node name="Reticle" type="Node2D" unique_id=606725711]
+z_index = 10
+scale = Vector2(2, 2)
+script = ExtResource("1_tk0w4")
+
+[node name="Mark" type="AnimatedSprite2D" parent="." unique_id=553754973]
+sprite_frames = SubResource("SpriteFrames_1us10")
+animation = &"lock"
+
+[node name="Lock" type="AnimatedSprite2D" parent="." unique_id=957388854]
+visible = false
+sprite_frames = SubResource("SpriteFrames_rt8om")
+animation = &"lock"

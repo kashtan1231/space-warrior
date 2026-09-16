@@ -9,8 +9,13 @@
 [ext_resource type="Shader" uid="uid://cryekr1ylegvl" path="res://elements/white_flash.gdshader" id="6_m3yu5"]
 [ext_resource type="Texture2D" uid="uid://dmnx0su25ajp1" path="res://assets/spaceship/engines.png" id="7_oyroy"]
 [ext_resource type="Texture2D" uid="uid://bmhq8m2g0iph1" path="res://assets/spaceship/die_explosion.png" id="8_g6g06"]
+[ext_resource type="Texture2D" uid="uid://daixjmyw18p2r" path="res://assets/weapons/rocket_launch.png" id="9_8y7vu"]
 [ext_resource type="Texture2D" uid="uid://dum810udln45p" path="res://assets/spaceship/die_explosion_2.png" id="9_cex28"]
+[ext_resource type="Script" uid="uid://hrmurx847rbv" path="res://elements/weapons/rocket/rocket_launcher.gd" id="9_hj0go"]
 [ext_resource type="Script" uid="uid://300q85tg61um" path="res://elements/tilt.gd" id="9_oyroy"]
+[ext_resource type="PackedScene" uid="uid://di552ro7x67ix" path="res://elements/weapons/rocket/rocket.tscn" id="11_xbna8"]
+[ext_resource type="Script" uid="uid://23b6e4h7t2ub" path="res://elements/weapons/rocket/targeting.gd" id="15_pkaio"]
+[ext_resource type="PackedScene" uid="uid://dqhb7b62o4nqb" path="res://elements/weapons/rocket/reticle.tscn" id="16_cbrmp"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_cqau8"]
 shader = ExtResource("6_m3yu5")
@@ -137,6 +142,56 @@ animations = [{
 }],
 "loop": 1,
 "name": &"idle",
+"speed": 5.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3mfga"]
+atlas = ExtResource("9_8y7vu")
+region = Rect2(0, 96, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1rj72"]
+atlas = ExtResource("9_8y7vu")
+region = Rect2(48, 96, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b380q"]
+atlas = ExtResource("9_8y7vu")
+region = Rect2(96, 96, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rs1ap"]
+atlas = ExtResource("9_8y7vu")
+region = Rect2(144, 96, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ehiu3"]
+atlas = ExtResource("9_8y7vu")
+region = Rect2(192, 96, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sto5h"]
+atlas = ExtResource("9_8y7vu")
+region = Rect2(240, 96, 48, 48)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_hj0go"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3mfga")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1rj72")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b380q")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rs1ap")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ehiu3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sto5h")
+}],
+"loop": 0,
+"name": &"launch",
 "speed": 5.0
 }]
 
@@ -327,12 +382,17 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="Spaceship" type="CharacterBody2D" unique_id=1286735498 groups=["player"]]
+[sub_resource type="AtlasTexture" id="AtlasTexture_1us10"]
+atlas = ExtResource("9_8y7vu")
+region = Rect2(0, 0, 48, 48)
+
+[node name="Spaceship" type="CharacterBody2D" unique_id=1286735498 node_paths=PackedStringArray("rocket_launchers") groups=["player"]]
 scale = Vector2(2, 2)
 collision_layer = 2
 collision_mask = 5
 motion_mode = 1
 script = ExtResource("1_vj48w")
+max_health = 4
 acceleration = 1000.0
 friction = 2000.0
 fire_rate = 1.0
@@ -349,6 +409,7 @@ dodge_step_falloff = 0.25
 bullet_tilt_influence = 1.0
 recoil_hold_time = 0.3
 recoil_return_time = 0.6
+rocket_launchers = [NodePath("Ship/LauncherLeft"), NodePath("Ship/LauncherRight")]
 blast_delay = 0.5
 
 [node name="Ship" type="Sprite2D" parent="." unique_id=74812759]
@@ -373,6 +434,29 @@ position = Vector2(3, 12)
 sprite_frames = SubResource("SpriteFrames_j7t53")
 animation = &"idle"
 autoplay = "idle"
+
+[node name="LauncherLeft" type="AnimatedSprite2D" parent="Ship" unique_id=1554863585]
+show_behind_parent = true
+position = Vector2(0, 1)
+sprite_frames = SubResource("SpriteFrames_hj0go")
+animation = &"launch"
+script = ExtResource("9_hj0go")
+rocket_scene = ExtResource("11_xbna8")
+
+[node name="Muzzle" type="Marker2D" parent="Ship/LauncherLeft" unique_id=313242811]
+position = Vector2(-6, -2)
+
+[node name="LauncherRight" type="AnimatedSprite2D" parent="Ship" unique_id=626538871]
+show_behind_parent = true
+position = Vector2(0, 1)
+sprite_frames = SubResource("SpriteFrames_hj0go")
+animation = &"launch"
+flip_h = true
+script = ExtResource("9_hj0go")
+rocket_scene = ExtResource("11_xbna8")
+
+[node name="Muzzle" type="Marker2D" parent="Ship/LauncherRight" unique_id=707667247]
+position = Vector2(6, -2)
 
 [node name="Hitbox" type="CollisionPolygon2D" parent="." unique_id=374901702]
 polygon = PackedVector2Array(0, -12, 4, -4, 14, 6, 14, 9, -14, 9, -14, 6, -4, -4)
@@ -404,3 +488,12 @@ angle = 20.0
 steps = 3
 step_time = 0.12
 metadata/_custom_type_script = "uid://300q85tg61um"
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1557849034]
+visible = false
+texture = SubResource("AtlasTexture_1us10")
+
+[node name="Targeting" type="Node" parent="." unique_id=1588131684]
+script = ExtResource("15_pkaio")
+reticle_scene = ExtResource("16_cbrmp")
+reveal_interval = 0.25

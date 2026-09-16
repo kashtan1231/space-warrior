@@ -111,7 +111,6 @@ max_frame_time = 6.0
 
 [node name="Spaceship" parent="." unique_id=1286735498 instance=ExtResource("2_vasa2")]
 position = Vector2(640, 600)
-max_health = 3
 god_mode = true
 
 [node name="Wall" parent="." unique_id=1304739988 instance=ExtResource("3_h7iqs")]

@@ -208,12 +208,12 @@ animations = [{
 }]
 
 [node name="Enemy" type="CharacterBody2D" unique_id=925835412 groups=["enemies"]]
-scale = Vector2(2, 2)
+scale = Vector2(1.5, 1.5)
 collision_layer = 4
 collision_mask = 3
 script = ExtResource("1_j2ly8")
 hit_texture = SubResource("AtlasTexture_uayi2")
-acceleration = 300.0
+acceleration = 200.0
 band_top = 30.0
 band_bottom = 400.0
 separation_radius = 100.0
@@ -223,6 +223,7 @@ dodge_chance = 0.6
 dodge_cooldown = 1.0
 dodge_speed = 150.0
 dodge_acceleration = 300.0
+rocket_dodge_chance = 1.0
 bullet_scene = ExtResource("3_baseo")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=920840336]

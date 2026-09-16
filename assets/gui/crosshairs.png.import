@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bfg4py8y5megf"
-path="res://.godot/imported/Main ship weapon - Projectile - Rocket.png-59b304fc36fdb40b03f0451d15561af3.ctex"
+uid="uid://b2pawnfli2ut6"
+path="res://.godot/imported/crosshairs.png-a78056b722fd21b6c81f21934e31de72.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/weapons/Main ship weapon - Projectile - Rocket.png"
-dest_files=["res://.godot/imported/Main ship weapon - Projectile - Rocket.png-59b304fc36fdb40b03f0451d15561af3.ctex"]
+source_file="res://assets/gui/crosshairs.png"
+dest_files=["res://.godot/imported/crosshairs.png-a78056b722fd21b6c81f21934e31de72.ctex"]
 
 [params]
 

@@ -79,6 +79,11 @@ signal dodge_charge_changed(charge: float)
 ## так что при большем recoil_distance ступеньки становятся чаще, а не длиннее.
 @export var recoil_return_time := 0.12
 
+@export_group("Rockets")
+## Ракетные шахты корабля. По кнопке пуска стреляет первая заряженная в порядке списка,
+## так что порядок задаёт очерёдность крыльев. Сколько шахт — столько ракет в запасе.
+@export var rocket_launchers: Array[RocketLauncher]
+
 @export_group("Death")
 ## Через сколько секунд после начала основного взрыва стартует второй (узел Blast).
 ## 0 — оба одновременно. Корабль удаляется, только когда доиграют оба, поэтому
@@ -94,6 +99,7 @@ signal dodge_charge_changed(charge: float)
 @onready var hitbox: CollisionPolygon2D = $Hitbox
 @onready var tilt: Tilt = $Tilt
 @onready var ship_material: ShaderMaterial = ship.material
+@onready var targeting: Targeting = $Targeting
 
 const BULLET_SCENE = preload("res://elements/weapons/bullet_gun/bullet.tscn")
 const DODGE_EFFECT_SCENE = preload("res://elements/dodge_effect.tscn")
@@ -140,7 +146,15 @@ func _physics_process(delta: float):
 	if Input.is_action_pressed("fire") and _fire_cooldown <= 0.0 and _dodge_left <= 0.0: 
 		fire()
 		_fire_cooldown = 1.0 / fire_rate
-	
+
+	if Input.is_action_just_pressed("enable_aiming"):
+		_toggle_targeting()
+
+	# just_pressed, а не pressed: одно нажатие — одна ракета, зажатая кнопка не
+	# высыпает весь запас подряд. Ракеты пускаются только по выбранной цели.
+	if Input.is_action_just_pressed("fire_rocket") and targeting.is_active() and _dodge_left <= 0.0:
+		_launch_rocket()
+
 	var direction := Input.get_axis("move_left", "move_right")
 	tilt.direction = direction
 	_update_engines(direction)
@@ -167,6 +181,7 @@ func take_damage(amount: int) -> void:
 func die() -> void:
 	_dying = true
 	died.emit()
+	targeting.deactivate()
 	hitbox.set_deferred("disabled", true)
 	# Корпус пока остаётся: основной взрыв стоит в дереве после Ship и рисуется поверх
 	# него, а сам корабль пропадает только вместе со стартом Blast, ниже.
@@ -353,6 +368,30 @@ func fire():
 	# направлений выстрела получается дискретным, без промежуточных значений.
 	bullet.rotation = ship.rotation * bullet_tilt_influence
 	_recoil()
+
+
+func _toggle_targeting() -> void:
+	if targeting.is_active():
+		targeting.deactivate()
+	elif _has_rockets():
+		targeting.activate(global_position.x)
+
+
+func _launch_rocket() -> void:
+	for launcher in rocket_launchers:
+		if launcher.is_loaded():
+			launcher.launch(targeting.get_target())
+			break
+	# Режим прицеливания нужен только для пуска: без ракет в нём нечего делать.
+	if not _has_rockets():
+		targeting.deactivate()
+
+
+func _has_rockets() -> bool:
+	for launcher in rocket_launchers:
+		if launcher.is_loaded():
+			return true
+	return false
 
 
 # Разгоняется двигатель с той стороны, от которой корабль уходит: уводя машину влево,
