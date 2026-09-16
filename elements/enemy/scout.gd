@@ -1,45 +1,11 @@
-extends CharacterBody2D
+extends Enemy
 class_name Scout
 
-## Сколько попаданий выдерживает враг, прежде чем взорвётся.
-@export var max_health := 5
-## Текстура, на которую враг подменяется в момент попадания. Обычно кадр из листа разрушения.
-@export var hit_texture: Texture2D
-## Сколько секунд держится текстура попадания, прежде чем вернётся обычная.
-@export var hit_duration := 0.08
-## Радиус корпуса для эффектов попадания, пиксели мира. На таком расстоянии от центра врага
-## садится пламя от ракеты: точку касания движок не сообщает, поэтому от попадания берётся
-## только сторона, с которой оно пришло, а глубина — отсюда. Больше — очаг уезжает к кромке
-## обшивки и дальше в пустоту, меньше — сползает к середине. 0 — ровно центр.
-## У скаута рисунок корпуса сидит на 9 px ниже начала координат, поэтому при попадании
-## снизу 9 ставит огонь в середину корабля. Число в пикселях мира, так что при смене
-## масштаба узла его придётся менять вместе с ним.
-@export var hull_radius := 9.0
+## Лёгкий вражеский истребитель: блуждает по своей полосе, иногда выходит на линию огня
+## и стреляет по игроку, уворачивается от пуль и ракет. Здоровье, гибель, расталкивание
+## соседей и сам полёт к выбранной точке живут в базовом классе, см. enemy.gd.
 
-@export_group("Movement")
-## Максимальная скорость полёта, пикселей в секунду.
-@export var speed := 110.0
-## Насколько резко враг разгоняется и меняет направление, пикселей в секунду за секунду.
-@export var acceleration := 400.0
-## Верхняя граница полосы, в которой враг летает. Меньше значение — выше граница.
-@export var band_top := 60.0
-## Нижняя граница полосы. Чем больше, тем ближе враги подлетают к игроку.
-@export var band_bottom := 240.0
-## Отступ от левого и правого краёв экрана, чтобы враг не улетал под стены.
-@export var side_margin := 90.0
-## Доля от speed: быстрее этого враг летит вбок — и заваливается в наклон, медленнее — выпрямляется.
-## 0 — наклоняется от малейшего дрейфа, ближе к 1 — только на полной скорости вбок.
-## Сам угол и ступеньки настраиваются на дочернем узле Tilt.
-@export_range(0.0, 1.0, 0.05) var tilt_threshold := 0.25
-
-@export_group("Separation")
-## На каком расстоянии между центрами враги начинают расталкиваться, пикселей.
-## Больше — стая держится реже и расходится раньше; меньше — подпускают соседа почти вплотную.
-@export var separation_radius := 70.0
-## Скорость, с которой враг уходит от соседа, стоящего с ним в одной точке, пикселей в секунду.
-## На границе радиуса толчок падает до нуля. Больше — расходятся резче, но сильнее сбиваются
-## с курса к цели; меньше — плавнее, но могут ненадолго наехать друг на друга.
-@export var separation_strength := 120.0
+@export_group("Wander")
 ## Минимальное расстояние между точками, куда летят разные враги, пикселей. Не даёт двоим
 ## выбрать одно место и топтаться там, отпихивая друг друга. Лучше держать не меньше
 ## separation_radius. Если на экране тесно и места нет, берётся самая свободная точка.
@@ -95,20 +61,9 @@ const WANDER_ATTEMPTS := 8
 
 static var _aimers := 0
 
-@onready var sprite: Sprite2D = $Sprite2D
-@onready var explosion: AnimatedSprite2D = $Explosion
-@onready var collision_shape: CollisionShape2D = $CollisionShape2D
 @onready var muzzle: Marker2D = $Muzzle
 @onready var weapons: AnimatedSprite2D = $Weapons
-@onready var tilt: Tilt = $Tilt
 
-var health := 0
-var _base_texture: Texture2D
-var _texture_tween: Tween
-var _dying := false
-
-var _player: Node2D
-var _target := Vector2.ZERO
 var _state_timer := 0.0
 var _aiming := false
 var _fire_cooldown := 0.0
@@ -122,21 +77,20 @@ var _dodge_decisions: Dictionary[int, bool] = {}
 
 
 func _ready() -> void:
-	health = max_health
-	_base_texture = sprite.texture
-	motion_mode = MOTION_MODE_FLOATING
-	_player = _find_player()
+	super()
 	_pick_wander()
 	# Первая пауза случайная, иначе вся стая делает первый залп одним кадром.
 	_fire_cooldown = _next_cooldown() * randf()
 	weapons.animation_finished.connect(weapons.hide)
 
 
-func _physics_process(delta: float) -> void:
-	if _dying:
-		velocity = Vector2.ZERO
-		return
+func die() -> void:
+	_set_aiming(false)
+	weapons.hide()
+	super()
 
+
+func _update_behaviour(delta: float) -> void:
 	_state_timer -= delta
 	if _state_timer <= 0.0:
 		_choose_state()
@@ -150,59 +104,15 @@ func _physics_process(delta: float) -> void:
 	if _aiming and is_instance_valid(_player):
 		_target.x = _player.global_position.x
 
-	var to_target := _target - global_position
-	var distance := to_target.length()
-	var desired := Vector2.ZERO
-	if distance > 1.0:
-		desired = to_target / distance * minf(speed, distance * 3.0)
-	var max_speed := speed
-	var max_acceleration := acceleration
-	# Во время рывка цель забыта, враг просто уходит вбок на повышенных скорости и
-	# ускорении. Состояния блуждания и прицеливания при этом не сбиваются: рывок кончится,
-	# и тяга к той же цели вернёт его обратно.
-	if _dodge_left > 0.0:
-		desired = _dodge_direction * dodge_speed
-		max_speed = dodge_speed
-		max_acceleration = dodge_acceleration
-	# Толчок от соседей просто складывается с тягой к цели. Резких рывков не будет:
-	# итог всё равно проходит через move_toward с ограниченным ускорением.
-	desired = (desired + _separation()).limit_length(max_speed)
-	velocity = velocity.move_toward(desired, max_acceleration * delta)
-	move_and_slide()
-	# У игрока направление приходит с кнопок и бывает только -1, 0 или 1, а скорость
-	# врага меняется плавно. Порог отсекает медленный дрейф, иначе враг, почти висящий
-	# на месте, заваливался бы от каждого сдвига на пиксель.
-	tilt.direction = velocity.x if absf(velocity.x) > speed * tilt_threshold else 0.0
 
-
-func take_damage(amount: int) -> void:
-	if _dying:
+# Во время рывка цель забыта, враг просто уходит вбок на повышенных скорости и ускорении.
+# Состояния блуждания и прицеливания при этом не сбиваются: рывок кончится, и тяга
+# к той же цели вернёт его обратно.
+func _move(delta: float) -> void:
+	if _dodge_left <= 0.0:
+		super(delta)
 		return
-	health -= amount
-	if health <= 0:
-		die()
-	else:
-		_show_texture(hit_texture, hit_duration)
-
-
-func die() -> void:
-	_dying = true
-	# Взрыв доигрывает на месте ещё какое-то время. Вне группы соседи его не видят:
-	# не шарахаются от обломков и не учитывают его точку при выборе своих.
-	remove_from_group("enemies")
-	_set_aiming(false)
-	collision_shape.set_deferred("disabled", true)
-	sprite.hide()
-	weapons.hide()
-	explosion.show()
-	explosion.play("destroy")
-	await explosion.animation_finished
-	queue_free()
-
-
-## Точка, к которой враг сейчас летит. Нужна соседям, чтобы не выбирать место рядом.
-func get_target() -> Vector2:
-	return _target
+	_apply_movement(delta, _dodge_direction * dodge_speed, dodge_speed, dodge_acceleration)
 
 
 func _can_fire() -> bool:
@@ -267,33 +177,12 @@ func _pick_wander() -> void:
 # Расстояние от точки до ближайшей цели другого врага. INF, если соседей нет.
 func _clearance_from_other_targets(point: Vector2) -> float:
 	var nearest := INF
-	for node in get_tree().get_nodes_in_group("enemies"):
-		# В группе могут оказаться враги других типов, у которых нет get_target().
-		var other := node as Scout
-		if other == null or other == self:
+	for node in get_tree().get_nodes_in_group(ENEMY_GROUP):
+		var other := node as Enemy
+		if other == self:
 			continue
 		nearest = minf(nearest, point.distance_to(other.get_target()))
 	return nearest
-
-
-# Сумма толчков от всех соседей ближе separation_radius. Каждый толчок направлен
-# от соседа и линейно слабеет от полной силы вплотную до нуля на границе радиуса,
-# поэтому враги не отскакивают, а мягко расползаются.
-func _separation() -> Vector2:
-	var push := Vector2.ZERO
-	for node in get_tree().get_nodes_in_group("enemies"):
-		var other := node as Node2D
-		if other == self:
-			continue
-		var offset := global_position - other.global_position
-		var distance := offset.length()
-		if distance >= separation_radius:
-			continue
-		# Два врага ровно в одной точке: направления «от соседа» нет, берём случайное,
-		# иначе они так и остались бы слипшимися.
-		var away := offset / distance if distance > 0.001 else Vector2.RIGHT.rotated(randf() * TAU)
-		push += away * (1.0 - distance / separation_radius)
-	return push * separation_strength
 
 
 # Перебирает пули и ракеты игрока, решает, от чего уворачиваться, и запускает рывок.
@@ -399,21 +288,3 @@ func _set_aiming(value: bool) -> void:
 
 func _exit_tree() -> void:
 	_set_aiming(false)
-
-
-func _find_player() -> Node2D:
-	return get_tree().get_first_node_in_group("player") as Node2D
-
-
-# Подменяет текстуру корпуса на время и возвращает обратно. Твин хранится в поле,
-# чтобы попадание во время ещё не погасшей вспышки перебивало её, а не наслаивалось.
-func _show_texture(texture: Texture2D, duration: float) -> void:
-	if _texture_tween != null and _texture_tween.is_running():
-		_texture_tween.kill()
-	sprite.texture = texture
-	_texture_tween = create_tween()
-	_texture_tween.tween_callback(_restore_texture).set_delay(duration)
-
-
-func _restore_texture() -> void:
-	sprite.texture = _base_texture

@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://b5l7hq41xbnit" path="res://elements/ui/dodge_bar2.tscn" id="9_l8g03"]
 [ext_resource type="PackedScene" uid="uid://d2255362rrmrv" path="res://elements/ui/meter.tscn" id="10_j8tme"]
 [ext_resource type="PackedScene" uid="uid://cprk84usxe0jw" path="res://elements/ui/rocket_panel.tscn" id="12_qf6n1"]
+[ext_resource type="PackedScene" uid="uid://bwwevqpwnhiix" path="res://elements/enemy/torpedo_bomber.tscn" id="13_b686c"]
 [ext_resource type="PackedScene" uid="uid://j8jry4aypusk" path="res://elements/ui/dashboard.tscn" id="13_vsp63"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_u5opy"]
@@ -114,7 +115,6 @@ max_frame_time = 6.0
 
 [node name="Spaceship" parent="." unique_id=1286735498 instance=ExtResource("2_vasa2")]
 position = Vector2(640, 600)
-god_mode = true
 
 [node name="Wall" parent="." unique_id=1304739988 instance=ExtResource("3_h7iqs")]
 
@@ -176,3 +176,9 @@ text = "modulate - a3aeff"
 [node name="RocketPanel" parent="UI" unique_id=632214291 instance=ExtResource("12_qf6n1")]
 position = Vector2(1034, 12)
 scale = Vector2(2, 2)
+
+[node name="TorpedoBomber" parent="." unique_id=820988915 instance=ExtResource("13_b686c")]
+position = Vector2(875, 56)
+
+[node name="TorpedoBomber2" parent="." unique_id=1662898149 instance=ExtResource("13_b686c")]
+position = Vector2(323, 52)

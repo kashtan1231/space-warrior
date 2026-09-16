@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b738yri3w0xv4"
-path="res://.godot/imported/Kla'ed - Torpedo Ship - Base.png-4e6568cf0440daca5242cbf2ba9aed8e.ctex"
+uid="uid://btetqcfs3hws4"
+path="res://.godot/imported/engine.png-565e89890deb29ae8cbc1fe2979c53c6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/enemy/Kla'ed - Torpedo Ship - Base.png"
-dest_files=["res://.godot/imported/Kla'ed - Torpedo Ship - Base.png-4e6568cf0440daca5242cbf2ba9aed8e.ctex"]
+source_file="res://assets/enemy/torpedo_bomber/engine.png"
+dest_files=["res://.godot/imported/engine.png-565e89890deb29ae8cbc1fe2979c53c6.ctex"]
 
 [params]
 

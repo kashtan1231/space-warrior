@@ -360,6 +360,7 @@ bullet_tilt_influence = 1.0
 recoil_hold_time = 0.3
 recoil_return_time = 0.6
 rocket_launchers = [NodePath("Ship/LauncherInnerLeft"), NodePath("Ship/LauncherInnerRight"), NodePath("Ship/LauncherMidLeft"), NodePath("Ship/LauncherMidRight"), NodePath("Ship/LauncherOuterLeft"), NodePath("Ship/LauncherOuterRight")]
+rocket_capacity = 6
 rocket_cooldown = 1.0
 blast_delay = 0.5
 
