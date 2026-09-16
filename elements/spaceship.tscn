@@ -346,6 +346,7 @@ acceleration = 1000.0
 friction = 2000.0
 fire_rate = 1.0
 damage_textures = Array[Texture2D]([ExtResource("1_fe5sw"), ExtResource("3_w3dun"), ExtResource("4_g6g06"), ExtResource("5_oyroy")])
+god_mode = true
 invulnerability_duration = 2.0
 invulnerability_blink_period = 0.3
 dodge_duration = 2.0
@@ -359,7 +360,7 @@ bullet_tilt_influence = 1.0
 recoil_hold_time = 0.3
 recoil_return_time = 0.6
 rocket_launchers = [NodePath("Ship/LauncherInnerLeft"), NodePath("Ship/LauncherInnerRight"), NodePath("Ship/LauncherMidLeft"), NodePath("Ship/LauncherMidRight"), NodePath("Ship/LauncherOuterLeft"), NodePath("Ship/LauncherOuterRight")]
-rocket_capacity = 6
+rocket_cooldown = 1.0
 blast_delay = 0.5
 
 [node name="Ship" type="Sprite2D" parent="." unique_id=74812759]

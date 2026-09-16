@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://duxr462scwgdo" path="res://assets/gui/backplates.png" id="2_pqmgi"]
 [ext_resource type="Texture2D" uid="uid://ch63bi85nc6gp" path="res://assets/gui/buttons_and_knobs.png" id="4_72lmy"]
 [ext_resource type="PackedScene" uid="uid://b201udhij40ko" path="res://elements/ui/rocket_switch.tscn" id="4_dtlti"]
+[ext_resource type="PackedScene" uid="uid://cf1hjrkd6wubv" path="res://elements/ui/rocket_cooldown_bar.tscn" id="5_dtlti"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_72lmy"]
 atlas = ExtResource("4_72lmy")
@@ -31,11 +32,11 @@ region = Rect2(285, 423, 10, 5)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_vr1p1"]
 atlas = ExtResource("4_72lmy")
-region = Rect2(380, 227, 14, 16)
+region = Rect2(299, 459, 14, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_xewtu"]
 atlas = ExtResource("4_72lmy")
-region = Rect2(380, 209, 14, 16)
+region = Rect2(299, 441, 14, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_rj5it"]
 atlas = ExtResource("4_72lmy")
@@ -79,11 +80,11 @@ region = Rect2(199, 405, 14, 17)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ynvpk"]
 atlas = ExtResource("4_72lmy")
-region = Rect2(380, 227, 14, 16)
+region = Rect2(299, 459, 14, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_xqg5l"]
 atlas = ExtResource("4_72lmy")
-region = Rect2(126, 251, 10, 13)
+region = Rect2(337, 442, 10, 13)
 
 [node name="RocketPanel" type="Node2D" unique_id=632214291]
 script = ExtResource("1_lq3r1")
@@ -110,5 +111,10 @@ position = Vector2(96, 40)
 texture = SubResource("AtlasTexture_ynvpk")
 
 [node name="Switch" parent="." unique_id=514955741 instance=ExtResource("4_dtlti")]
-position = Vector2(14, 11)
+position = Vector2(14, 12)
 lever_on = SubResource("AtlasTexture_xqg5l")
+
+[node name="RocketCooldownBar" parent="." unique_id=1781258355 instance=ExtResource("5_dtlti")]
+position = Vector2(14, 43)
+segment_step = 4
+fill_step = 3

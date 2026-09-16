@@ -103,11 +103,15 @@ func _on_player_rockets_changed(loaded: Array[bool]) -> void:
 
 # Пуск: кнопка утапливается, лампочка отстрелянной ракеты гаснет сама по rockets_changed
 # в этот же кадр. Рычаг пока остаётся поднятым — им займётся отжатие кнопки.
-func _on_player_rocket_launched(_index: int) -> void:
+#
+# Номер шахты уезжает в отложенный вызов вместе с ним: при частой стрельбе следующий пуск
+# успевает случиться раньше, чем отожмётся кнопка от предыдущего, и к тому моменту _armed
+# указывает уже на другую шахту.
+func _on_player_rocket_launched(index: int) -> void:
 	button.texture = button_pressed
 	var tween := create_tween()
 	tween.tween_interval(button_hold_time)
-	tween.tween_callback(_release_button)
+	tween.tween_callback(_release_button.bind(index))
 
 
 func _on_player_aiming_changed(active: bool) -> void:
@@ -124,17 +128,18 @@ func _on_player_target_cycled(step: int) -> void:
 
 
 # Кнопка отжимается, следом поднимается рычаг следующей ракеты, и только потом опускается
-# рычаг отстрелянной.
-func _release_button() -> void:
+# рычаг отстрелянной. fired — шахта того пуска, который эту кнопку и утопил.
+func _release_button(fired: int) -> void:
 	button.texture = button_released
+	# Взведённой отстрелянная шахта остаётся только у самого свежего пуска. У предыдущих
+	# рычаг уже перевели на следующую ракету — её трогать нельзя, иначе она останется
+	# с опущенным рычагом, хотя уйдёт следующей.
+	if _armed == fired:
+		_armed = -1
+		if _aiming:
+			_arm_next()
 	# Пока кнопка была утоплена, режим прицеливания мог выключиться — тогда рычаг уже
-	# опущен, и опускать нечего.
-	var fired := _armed
-	_armed = -1
-	if _aiming:
-		_arm_next()
-	if fired < 0:
-		return
+	# опущен, и опускать нечего. Лишний set_on(false) безвреден, но тайминг заводится зря.
 	var switch := _switches[fired]
 	var tween := create_tween()
 	tween.tween_interval(lever_drop_delay)

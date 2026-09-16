@@ -5,27 +5,27 @@
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pkaio"]
 atlas = ExtResource("1_8maf4")
-region = Rect2(126, 251, 10, 13)
+region = Rect2(337, 442, 10, 13)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_v3ixr"]
 atlas = ExtResource("1_8maf4")
-region = Rect2(110, 253, 10, 14)
+region = Rect2(321, 444, 10, 14)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_wnu1r"]
 atlas = ExtResource("1_8maf4")
-region = Rect2(297, 381, 4, 5)
+region = Rect2(355, 448, 4, 5)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ps6y0"]
 atlas = ExtResource("1_8maf4")
-region = Rect2(304, 381, 4, 5)
+region = Rect2(363, 448, 4, 5)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_1us10"]
 atlas = ExtResource("1_8maf4")
-region = Rect2(297, 381, 4, 5)
+region = Rect2(355, 448, 4, 5)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_8maf4"]
 atlas = ExtResource("1_8maf4")
-region = Rect2(126, 251, 10, 13)
+region = Rect2(337, 442, 10, 13)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_8m7fp"]
 atlas = ExtResource("1_8maf4")
@@ -50,6 +50,6 @@ texture = SubResource("AtlasTexture_8maf4")
 centered = false
 
 [node name="Caption" type="Sprite2D" parent="." unique_id=196123067]
-position = Vector2(0, 25)
+position = Vector2(0, 24)
 texture = SubResource("AtlasTexture_8m7fp")
 centered = false

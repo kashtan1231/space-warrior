@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://cf1hjrkd6wubv"]
+
+[ext_resource type="Script" uid="uid://beju1agynnxfo" path="res://elements/ui/rocket_cooldown_bar.gd" id="1_p3ee2"]
+[ext_resource type="Texture2D" uid="uid://ch63bi85nc6gp" path="res://assets/gui/buttons_and_knobs.png" id="2_7u2kj"]
+
+[node name="RocketCooldownBar" type="Node2D" unique_id=1781258355]
+script = ExtResource("1_p3ee2")
+
+[node name="Frame" type="Sprite2D" parent="." unique_id=913829371]
+texture = ExtResource("2_7u2kj")
+centered = false
+region_enabled = true
+region_rect = Rect2(299, 409, 71, 5)
+
+[node name="Fill" type="Sprite2D" parent="." unique_id=1825530723]
+position = Vector2(1, 1)
+texture = ExtResource("2_7u2kj")
+centered = false
+region_enabled = true
+region_rect = Rect2(299, 418, 68, 3)

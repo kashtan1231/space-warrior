@@ -27,6 +27,11 @@ signal rocket_launched(index: int)
 ## по заряженным шахтам в порядке rocket_launchers: true — ракета на месте.
 signal rockets_changed(loaded: Array[bool])
 
+## Летит при каждом изменении готовности ракетной системы: 0 — ракета только что ушла,
+## 1 — можно пускать снова. Во время задержки — каждый физический кадр. На него подписана
+## шкала кулдауна на ракетной панели.
+signal rocket_charge_changed(charge: float)
+
 ## Сколько попаданий вражеских пуль выдерживает корабль.
 @export var max_health := 5
 ## Предельная скорость корабля, пикселей в секунду.
@@ -103,6 +108,10 @@ signal rockets_changed(loaded: Array[bool])
 ## оставалась симметричной; лишние шахты спрятаны и не стреляют. Это же поле двигает
 ## прокачка в рантайме: присвоение открывает новые шахты сразу с ракетами в них.
 @export_range(0, 6, 2) var rocket_capacity := 2: set = set_rocket_capacity
+## Сколько секунд после пуска ракетная система не принимает следующий пуск. Нажатия
+## в это время пропадают: очередь ракет задаёт корабль, а не то, как быстро игрок долбит
+## кнопку. 0 — весь боезапас уходит залпом за столько нажатий, сколько успеет игрок.
+@export var rocket_cooldown := 0.5
 
 @export_group("Death")
 ## Через сколько секунд после начала основного взрыва стартует второй (узел Blast).
@@ -128,6 +137,7 @@ const FLASH_PARAM := &"flash"
 
 var health := 0
 var _fire_cooldown := 0.0
+var _rocket_cooldown := 0.0
 var _invulnerability_left := 0.0
 var _dodge_left := 0.0
 var _dodge_cooldown_left := 0.0
@@ -178,9 +188,15 @@ func _physics_process(delta: float):
 	if Input.is_action_just_pressed("enable_aiming"):
 		_toggle_targeting()
 
+	if _rocket_cooldown > 0.0:
+		# Остаток не уходит в минус, чтобы последний сигнал принёс ровно 1, а не 1.02.
+		_rocket_cooldown = maxf(_rocket_cooldown - delta, 0.0)
+		_send_rocket_charge()
+
 	# just_pressed, а не pressed: одно нажатие — одна ракета, зажатая кнопка не
 	# высыпает весь запас подряд. Ракеты пускаются только по выбранной цели.
-	if Input.is_action_just_pressed("fire_rocket") and targeting.is_active() and _dodge_left <= 0.0:
+	if Input.is_action_just_pressed("fire_rocket") and targeting.is_active() \
+			and _rocket_cooldown <= 0.0 and _dodge_left <= 0.0:
 		_launch_rocket()
 
 	var direction := Input.get_axis("move_left", "move_right")
@@ -356,6 +372,18 @@ func _set_dodge_phase(phase: float) -> void:
 	ship.modulate = _base_ship_modulate.lerp(dark, phase)
 
 
+func _send_rocket_charge() -> void:
+	rocket_charge_changed.emit(_rocket_charge())
+
+
+# Готовность ракетной системы от 0 сразу после пуска до 1, когда можно пускать снова.
+# Нулевая задержка означает, что система готова всегда.
+func _rocket_charge() -> float:
+	if rocket_cooldown <= 0.0:
+		return 1.0
+	return clampf(1.0 - _rocket_cooldown / rocket_cooldown, 0.0, 1.0)
+
+
 func _send_dodge_charge() -> void:
 	var charge := _dodge_charge()
 	if charge >= 1.0 and _dodge_charge_sent < 1.0:
@@ -435,6 +463,12 @@ func _launch_rocket() -> void:
 		var launcher := rocket_launchers[index]
 		if launcher.is_loaded():
 			launcher.launch(targeting.get_target())
+			# Отсчёт взводится только на ушедшей ракете: нажатие по пустым шахтам ничего
+			# не пускает, поэтому и придерживать после него нечего.
+			_rocket_cooldown = rocket_cooldown
+			# Шкала обнуляется в кадр пуска. Без этого при нулевой задержке ветка
+			# с отсчётом не сработала бы ни разу, и шкала так и стояла бы полной.
+			_send_rocket_charge()
 			rocket_launched.emit(index)
 			rockets_changed.emit(get_rocket_states())
 			break
