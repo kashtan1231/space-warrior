@@ -9,12 +9,14 @@
 [ext_resource type="Shader" uid="uid://cryekr1ylegvl" path="res://elements/white_flash.gdshader" id="6_m3yu5"]
 [ext_resource type="Texture2D" uid="uid://dmnx0su25ajp1" path="res://assets/spaceship/engine_flames.png" id="7_oyroy"]
 [ext_resource type="Texture2D" uid="uid://bmhq8m2g0iph1" path="res://assets/spaceship/die_explosion.png" id="8_g6g06"]
-[ext_resource type="PackedScene" uid="uid://csidhapvatxb2" path="res://elements/rocket_launcher.tscn" id="9_4xcav"]
+[ext_resource type="PackedScene" uid="uid://csidhapvatxb2" path="res://elements/weapons/rocket/rocket_launcher.tscn" id="9_4xcav"]
 [ext_resource type="Texture2D" uid="uid://daixjmyw18p2r" path="res://assets/weapons/rocket_launch.png" id="9_8y7vu"]
 [ext_resource type="Texture2D" uid="uid://dum810udln45p" path="res://assets/spaceship/die_explosion_2.png" id="9_cex28"]
 [ext_resource type="Script" uid="uid://300q85tg61um" path="res://elements/tilt.gd" id="9_oyroy"]
 [ext_resource type="Script" uid="uid://23b6e4h7t2ub" path="res://elements/weapons/rocket/targeting.gd" id="15_pkaio"]
+[ext_resource type="Script" uid="uid://bbst7i3dgceq6" path="res://elements/flammable.gd" id="16_4xcav"]
 [ext_resource type="PackedScene" uid="uid://dqhb7b62o4nqb" path="res://elements/weapons/rocket/reticle.tscn" id="16_cbrmp"]
+[ext_resource type="PackedScene" uid="uid://c1pcxuxcj77iy" path="res://elements/weapons/fire.tscn" id="17_4xcav"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_cqau8"]
 shader = ExtResource("6_m3yu5")
@@ -447,3 +449,9 @@ texture = SubResource("AtlasTexture_1us10")
 script = ExtResource("15_pkaio")
 reticle_scene = ExtResource("16_cbrmp")
 reveal_interval = 0.25
+
+[node name="Flammable" type="Node" parent="." unique_id=2020581850 node_paths=PackedStringArray("hull")]
+script = ExtResource("16_4xcav")
+fire_scene = ExtResource("17_4xcav")
+hull = NodePath("../Ship")
+metadata/_custom_type_script = "uid://bbst7i3dgceq6"

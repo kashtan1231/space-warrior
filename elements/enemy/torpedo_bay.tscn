@@ -1,0 +1,71 @@
+[gd_scene format=3 uid="uid://d0bin6jn1ogpu"]
+
+[ext_resource type="Script" uid="uid://seiwsfbjnh5y" path="res://elements/enemy/torpedo_bay.gd" id="1_ia353"]
+[ext_resource type="Texture2D" uid="uid://di1wpgvlkunt" path="res://assets/enemy/torpedo_bomber/torpedo_launch.png" id="2_bf0t6"]
+[ext_resource type="Script" uid="uid://hrmurx847rbv" path="res://elements/weapons/rocket/rocket_launcher.gd" id="2_fm703"]
+[ext_resource type="PackedScene" uid="uid://cnu6gukynt22r" path="res://elements/enemy/torpedo.tscn" id="4_fbaw2"]
+[ext_resource type="Texture2D" uid="uid://vnlfg032rekt" path="res://assets/enemy/torpedo_bomber/torpedo_indicator.png" id="5_7dxja"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fbaw2"]
+atlas = ExtResource("2_bf0t6")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7dxja"]
+atlas = ExtResource("2_bf0t6")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tp2l4"]
+atlas = ExtResource("2_bf0t6")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ptyxg"]
+atlas = ExtResource("2_bf0t6")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7tte6"]
+atlas = ExtResource("2_bf0t6")
+region = Rect2(256, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_bf0t6"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fbaw2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7dxja")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tp2l4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ptyxg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7tte6")
+}],
+"loop": 0,
+"name": &"launch",
+"speed": 5.0
+}]
+
+[node name="TorpedoBay" type="Node2D" unique_id=566314668]
+script = ExtResource("1_ia353")
+
+[node name="Launcher" type="AnimatedSprite2D" parent="." unique_id=1251831015]
+sprite_frames = SubResource("SpriteFrames_bf0t6")
+animation = &"launch"
+flip_v = true
+script = ExtResource("2_fm703")
+rocket_scene = ExtResource("4_fbaw2")
+
+[node name="Muzzle" type="Marker2D" parent="Launcher" unique_id=1227292808]
+position = Vector2(8, 0)
+
+[node name="Indicator" type="Sprite2D" parent="." unique_id=2083859220]
+position = Vector2(9.5, -0.5)
+texture = ExtResource("5_7dxja")
+hframes = 2
+frame = 1
+region_enabled = true
+region_rect = Rect2(2, 4, 14, 3)

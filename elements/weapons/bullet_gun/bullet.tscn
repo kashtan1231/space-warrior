@@ -91,6 +91,7 @@ speed = 1200.0
 sprite_frames = SubResource("SpriteFrames_1us10")
 autoplay = "default"
 frame_progress = 0.36686182
+offset = Vector2(0, 8)
 
 [node name="Trail" type="AnimatedSprite2D" parent="Body" unique_id=1493623000]
 position = Vector2(0, 20)
@@ -98,9 +99,9 @@ sprite_frames = SubResource("SpriteFrames_rt8om")
 autoplay = "default"
 
 [node name="Hitbox" type="CollisionShape2D" parent="." unique_id=756399023]
-position = Vector2(0, -2)
+position = Vector2(0, 6)
 shape = SubResource("CapsuleShape2D_rt8om")
 
 [node name="ScreenExit" type="VisibleOnScreenEnabler2D" parent="." unique_id=902194011]
-position = Vector2(2, 0)
+position = Vector2(2, 9)
 rect = Rect2(-8, -10, 12, 16)

@@ -1,4 +1,5 @@
 extends CharacterBody2D
+class_name Spaceship
 
 ## Летит при каждом изменении здоровья. На него подписан индикатор хп, чтобы корабль
 ## ничего не знал про интерфейс и не лез в его узлы.
@@ -127,6 +128,7 @@ signal rocket_charge_changed(charge: float)
 @onready var blast: AnimatedSprite2D = $Explosion/Blast
 @onready var hitbox: CollisionPolygon2D = $Hitbox
 @onready var tilt: Tilt = $Tilt
+@onready var flammable: Flammable = $Flammable
 @onready var ship_material: ShaderMaterial = ship.material
 @onready var targeting: Targeting = $Targeting
 
@@ -278,6 +280,12 @@ func get_rocket_states() -> Array[bool]:
 	for index in mini(rocket_capacity, rocket_launchers.size()):
 		states.append(rocket_launchers[index].is_loaded())
 	return states
+
+
+## Идёт ли нырок прямо сейчас. Нырнувший корабль не только не получает урон: наводящиеся
+## снаряды перестают его видеть и летят мимо по прямой, см. torpedo.gd.
+func is_dodging() -> bool:
+	return _dodge_left > 0.0
 
 
 func _refresh_launchers() -> void:

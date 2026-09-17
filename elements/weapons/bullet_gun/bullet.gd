@@ -39,9 +39,9 @@ func get_velocity() -> Vector2:
 
 
 # Физика сообщает номер формы внутри тела, а не сам узел. Разворачиваем его здесь, чтобы
-# наследникам попадание досталось в готовом виде. У корабля игрока корпус собран из
-# CollisionPolygon2D, и там выйдет null: вражеским пулям форма не нужна, а ракеты,
-# которым она нужна, летают только по врагам.
+# наследникам попадание досталось в готовом виде. Тип узла зависит от корабля: у врагов
+# корпус собран из CollisionShape2D, у игрока — из CollisionPolygon2D, и огонь умеет
+# сесть на оба, см. flammable.gd.
 func _on_body_shape_entered(_body_rid: RID, body: Node2D, body_shape_index: int,
 		_local_shape_index: int) -> void:
 	if _spent:
@@ -49,12 +49,12 @@ func _on_body_shape_entered(_body_rid: RID, body: Node2D, body_shape_index: int,
 	_spent = true
 	var target := body as CollisionObject2D
 	var owner_id := target.shape_find_owner(body_shape_index)
-	_on_hit(body, target.shape_owner_get_owner(owner_id) as CollisionShape2D)
+	_on_hit(body, target.shape_owner_get_owner(owner_id) as Node2D)
 
 
 # Что снаряд делает с тем, во что попал. Наследник добавляет своё до super(), потому что
 # в конце снаряд удаляет себя.
-func _on_hit(body: Node2D, _shape: CollisionShape2D) -> void:
+func _on_hit(body: Node2D, _shape: Node2D) -> void:
 	if body.has_method("take_damage"):
 		body.take_damage(damage)
 	_spawn_impact()

@@ -43,6 +43,7 @@ class_name Rocket
 ## на второй заход.
 @export_range(30.0, 180.0, 5.0) var lose_angle := 90.0
 
+# Группа цели: пока цель в ней состоит, ракета считает её живой.
 const ENEMY_GROUP := &"enemies"
 # По этой группе враги находят летящие ракеты, чтобы уворачиваться от них.
 const ROCKET_GROUP := &"player_rockets"
@@ -66,9 +67,9 @@ func _ready() -> void:
 	# без super() ракета останется без обеих подписок Bullet — пролетит врагов насквозь
 	# и не удалится, уйдя за край экрана.
 	super()
-	# Группа выдаётся здесь, а не в сцене: сцена ракеты одна на всех, отдельной вражеской
-	# версии у неё нет, и так в группу попадает ракета, выпущенная любым способом.
-	add_to_group(ROCKET_GROUP)
+	# Группа выдаётся здесь, а не в сцене: так в неё попадает ракета, выпущенная любым
+	# способом, а наследник с другой стороны фронта подменяет имя одним методом.
+	add_to_group(_projectile_group())
 	_base_sprite_scale = sprite.scale
 	_base_sprite_modulate = sprite.modulate
 	# sqrt растягивает распределение к краю круга: без него точки кучковались бы
@@ -79,18 +80,20 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	if _turn_scale > 0.0 and target != null:
-		if _is_target_alive() and not _is_target_behind():
-			_steer(delta)
-		else:
+		if not _is_target_alive() or _is_target_behind():
 			# Цель потеряна насовсем: ракета держит текущий курс и не ищет новую.
 			target = null
+		# А спрятавшаяся цель ссылки не теряет: ракета идёт прямым курсом и продолжает
+		# доворот с того же места, как только цель снова покажется.
+		elif _is_target_visible():
+			_steer(delta)
 	super(delta)
 
 
 # Поджигает только ракета, поэтому вызов живёт здесь, а не в bullet.gd: пуль в бою
 # на порядок больше, и огонь от каждой превратил бы попадания в сплошной костёр.
 # Где именно загорится обшивка, решает сам корабль, см. flammable.gd.
-func _on_hit(body: Node2D, shape: CollisionShape2D) -> void:
+func _on_hit(body: Node2D, shape: Node2D) -> void:
 	body.flammable.ignite(shape, global_position)
 	super(body, shape)
 
@@ -148,7 +151,26 @@ func _is_target_behind() -> bool:
 
 
 func _is_target_alive() -> bool:
-	return is_instance_valid(target) and target.is_in_group(ENEMY_GROUP)
+	return is_instance_valid(target) and target.is_in_group(_target_group())
+
+
+# Видно ли цель прямо сейчас. Невидимую ракета не бросает, а только перестаёт доворачивать,
+# поэтому прятаться имеет смысл ровно столько, сколько ракета летит мимо. Врагам прятаться
+# нечем, а вот игрок умеет нырять, см. torpedo.gd.
+func _is_target_visible() -> bool:
+	return true
+
+
+# Группа, в которой ракета состоит, пока летит: по ней её замечают те, кто уворачивается.
+# Наследнику нужно своё имя, иначе торпеда врага попала бы к ракетам игрока.
+func _projectile_group() -> StringName:
+	return ROCKET_GROUP
+
+
+# Группа, по которой проверяется, жива ли цель. У ракеты игрока это враги,
+# у торпеды бомбардировщика — сам игрок, см. torpedo.gd.
+func _target_group() -> StringName:
+	return ENEMY_GROUP
 
 
 # phase: 0 — ракета в обычном виде, 1 — в нижней точке, сжатая и тёмная.

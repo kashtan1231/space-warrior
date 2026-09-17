@@ -27,7 +27,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_80765")
 }],
-"loop": 1,
+"loop": 2,
 "name": &"default",
 "speed": 5.0
 }]
@@ -56,10 +56,13 @@ damage = 3
 [node name="Body" type="AnimatedSprite2D" parent="." unique_id=1599215795]
 sprite_frames = SubResource("SpriteFrames_1us10")
 autoplay = "default"
+frame_progress = 0.27616125
+offset = Vector2(0, 6)
 
 [node name="Hitbox" type="CollisionShape2D" parent="." unique_id=1862007274]
-position = Vector2(-0.5, 1.5)
+position = Vector2(-0.5, 7)
 shape = SubResource("CapsuleShape2D_1us10")
 
 [node name="ScreenExit" type="VisibleOnScreenEnabler2D" parent="." unique_id=279648886]
+position = Vector2(0, 7)
 rect = Rect2(-3.5, -7, 6, 16)

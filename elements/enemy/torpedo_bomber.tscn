@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://300q85tg61um" path="res://elements/tilt.gd" id="5_qsmqy"]
 [ext_resource type="Script" uid="uid://bbst7i3dgceq6" path="res://elements/flammable.gd" id="6_plrx7"]
 [ext_resource type="PackedScene" uid="uid://c1pcxuxcj77iy" path="res://elements/weapons/fire.tscn" id="7_oflkl"]
+[ext_resource type="PackedScene" uid="uid://d0bin6jn1ogpu" path="res://elements/enemy/torpedo_bay.tscn" id="8_oflkl"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_mpiyb"]
 atlas = ExtResource("4_f63ur")
@@ -166,11 +167,13 @@ animations = [{
 "speed": 10.0
 }]
 
-[node name="TorpedoBomber" type="CharacterBody2D" unique_id=820988915 groups=["enemies"]]
+[node name="TorpedoBomber" type="CharacterBody2D" unique_id=820988915 node_paths=PackedStringArray("torpedo_bays") groups=["enemies"]]
 scale = Vector2(1.5, 1.5)
 collision_layer = 4
 collision_mask = 6
 script = ExtResource("1_hgqbp")
+torpedo_bays = [NodePath("Bays/BayLeftInner"), NodePath("Bays/BayRightInner"), NodePath("Bays/BayLeftMid"), NodePath("Bays/BayRightMid"), NodePath("Bays/BayLeftOuter"), NodePath("Bays/BayRightOuter")]
+torpedo_count = 4
 max_health = 10
 hit_texture = SubResource("AtlasTexture_mpiyb")
 speed = 70.0
@@ -218,7 +221,7 @@ flip_v = true
 
 [node name="Tilt" type="Node" parent="." unique_id=121360227 node_paths=PackedStringArray("targets")]
 script = ExtResource("5_qsmqy")
-targets = [NodePath("../Ship")]
+targets = [NodePath("../Ship"), NodePath("../Bays")]
 angle = 12.0
 step_time = 0.2
 nose_down = true
@@ -227,3 +230,22 @@ nose_down = true
 script = ExtResource("6_plrx7")
 fire_scene = ExtResource("7_oflkl")
 hull = NodePath("../Ship")
+
+[node name="Bays" type="Node2D" parent="." unique_id=186039854]
+
+[node name="BayLeftOuter" parent="Bays" unique_id=566314668 instance=ExtResource("8_oflkl")]
+position = Vector2(12.000001, 0)
+
+[node name="BayLeftMid" parent="Bays" unique_id=1910091019 instance=ExtResource("8_oflkl")]
+position = Vector2(6.000001, 0)
+
+[node name="BayLeftInner" parent="Bays" unique_id=1811614359 instance=ExtResource("8_oflkl")]
+
+[node name="BayRightInner" parent="Bays" unique_id=1315359663 instance=ExtResource("8_oflkl")]
+position = Vector2(-16, 0)
+
+[node name="BayRightMid" parent="Bays" unique_id=131975747 instance=ExtResource("8_oflkl")]
+position = Vector2(-23, 0)
+
+[node name="BayRightOuter" parent="Bays" unique_id=1213295314 instance=ExtResource("8_oflkl")]
+position = Vector2(-29, 0)

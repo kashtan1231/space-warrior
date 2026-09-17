@@ -8,6 +8,7 @@ script = ExtResource("1_w48ms")
 color = Color(0.29411766, 0.28235295, 0.21568628, 1)
 
 [node name="Face" type="Sprite2D" parent="." unique_id=1918783461]
+modulate = Color(0.6392157, 0.68235296, 1, 1)
 texture = ExtResource("2_umlja")
 centered = false
 region_enabled = true

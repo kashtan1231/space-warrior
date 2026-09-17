@@ -1,0 +1,68 @@
+[gd_scene format=3 uid="uid://cnu6gukynt22r"]
+
+[ext_resource type="Script" uid="uid://u7b8t7cfesnx" path="res://elements/enemy/torpedo.gd" id="1_kj8xf"]
+[ext_resource type="Texture2D" uid="uid://bqwro82806785" path="res://assets/enemy/torpedo_bomber/torpedo_projectile.png" id="2_h6xvf"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4qijw"]
+atlas = ExtResource("2_h6xvf")
+region = Rect2(0, 0, 11, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1af5f"]
+atlas = ExtResource("2_h6xvf")
+region = Rect2(11, 0, 11, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ccevb"]
+atlas = ExtResource("2_h6xvf")
+region = Rect2(22, 0, 11, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_1us10"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4qijw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1af5f")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ccevb")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_1us10"]
+radius = 2.0
+height = 18.0
+
+[node name="Torpedo" type="Area2D" unique_id=2115569129]
+z_index = -1
+rotation = 3.1415927
+scale = Vector2(1.5, 1.5)
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("1_kj8xf")
+drop_time = 1.0
+ignite_time = 2.0
+drop_speed = 10.0
+drop_steps = 3
+turn_rate = 90.0
+lead = 0.2
+homing_delay = 1.0
+homing_ramp = 3.0
+speed = 200.0
+damage = 3
+
+[node name="Body" type="AnimatedSprite2D" parent="." unique_id=682784763]
+sprite_frames = SubResource("SpriteFrames_1us10")
+autoplay = "default"
+offset = Vector2(0, 15)
+
+[node name="Hitbox" type="CollisionShape2D" parent="." unique_id=1496093304]
+position = Vector2(0, 10)
+shape = SubResource("CapsuleShape2D_1us10")
+
+[node name="ScreenExit" type="VisibleOnScreenEnabler2D" parent="." unique_id=1168870444]
+position = Vector2(0, 10)
+rect = Rect2(-2.553803, -10, 5.2677364, 19.759802)
