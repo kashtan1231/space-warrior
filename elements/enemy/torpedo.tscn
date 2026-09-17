@@ -1,7 +1,9 @@
 [gd_scene format=3 uid="uid://cnu6gukynt22r"]
 
 [ext_resource type="Script" uid="uid://u7b8t7cfesnx" path="res://elements/enemy/torpedo.gd" id="1_kj8xf"]
+[ext_resource type="PackedScene" uid="uid://cmpn3i4ca83rc" path="res://elements/weapons/rocket/rocket_flash.tscn" id="2_1af5f"]
 [ext_resource type="Texture2D" uid="uid://bqwro82806785" path="res://assets/enemy/torpedo_bomber/torpedo_projectile.png" id="2_h6xvf"]
+[ext_resource type="PackedScene" uid="uid://2u22o546uvbe" path="res://elements/weapons/rocket/rocket_impact.tscn" id="3_ccevb"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_4qijw"]
 atlas = ExtResource("2_h6xvf")
@@ -27,7 +29,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_ccevb")
 }],
-"loop": 1,
+"loop": 2,
 "name": &"default",
 "speed": 5.0
 }]
@@ -47,16 +49,19 @@ drop_time = 1.0
 ignite_time = 2.0
 drop_speed = 10.0
 drop_steps = 3
-turn_rate = 90.0
-lead = 0.2
+turn_rate = 60.0
+lead = 0.0
 homing_delay = 1.0
 homing_ramp = 3.0
 speed = 200.0
 damage = 3
+impact_scene = ExtResource("2_1af5f")
+hull_impact_scene = ExtResource("3_ccevb")
 
 [node name="Body" type="AnimatedSprite2D" parent="." unique_id=682784763]
 sprite_frames = SubResource("SpriteFrames_1us10")
 autoplay = "default"
+frame_progress = 0.75732654
 offset = Vector2(0, 15)
 
 [node name="Hitbox" type="CollisionShape2D" parent="." unique_id=1496093304]

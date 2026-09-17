@@ -2,6 +2,8 @@
 
 [ext_resource type="Script" uid="uid://ddb7okx3k5143" path="res://elements/weapons/rocket/rocket.gd" id="1_07kdo"]
 [ext_resource type="Texture2D" uid="uid://d1moho0o0w71v" path="res://assets/weapons/rocket_projectile.png" id="2_07kdo"]
+[ext_resource type="PackedScene" uid="uid://cmpn3i4ca83rc" path="res://elements/weapons/rocket/rocket_flash.tscn" id="2_dclgg"]
+[ext_resource type="PackedScene" uid="uid://2u22o546uvbe" path="res://elements/weapons/rocket/rocket_impact.tscn" id="3_80765"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_61xsf"]
 atlas = ExtResource("2_07kdo")
@@ -52,11 +54,13 @@ homing_delay = 1.0
 homing_ramp = 3.0
 speed = 200.0
 damage = 3
+impact_scene = ExtResource("2_dclgg")
+hull_impact_scene = ExtResource("3_80765")
 
 [node name="Body" type="AnimatedSprite2D" parent="." unique_id=1599215795]
 sprite_frames = SubResource("SpriteFrames_1us10")
 autoplay = "default"
-frame_progress = 0.27616125
+frame_progress = 0.6819647
 offset = Vector2(0, 6)
 
 [node name="Hitbox" type="CollisionShape2D" parent="." unique_id=1862007274]

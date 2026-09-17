@@ -2,7 +2,8 @@ extends AnimatedSprite2D
 class_name Impact
 
 ## Брызги попадания, прилипшие к корпусу. Лежат в корне уровня, как DodgeEffect, но каждый
-## кадр переставляют себя в точку попадания на корабле и поворачиваются вдоль оси корпуса.
+## кадр переставляют себя в точку попадания на корабле. Разлетаются обратно по курсу снаряда,
+## навстречу стрелку, и дальше поворачиваются вместе с корпусом.
 ## Будь импакт дочерним узлом корабля, он унаследовал бы его масштаб и мигание неуязвимости,
 ## которое включается как раз в момент попадания.
 ## Куда смотрит рисунок на спрайте, знает только сцена: поворот, выставленный узлу
@@ -14,7 +15,7 @@ class_name Impact
 var _target: Node2D
 var _tilt: Tilt
 var _local_offset := Vector2.ZERO
-var _outward := 0.0
+var _local_rotation := 0.0
 var _base_rotation := 0.0
 
 
@@ -34,16 +35,19 @@ func _process(_delta: float) -> void:
 
 
 ## Привязывает импакт к кораблю. Вызывается до добавления в дерево.
-## hit_position — глобальная точка, где пуля коснулась корпуса.
-func attach(target: Node2D, tilt: Tilt, hit_position: Vector2) -> void:
+## hit_position — глобальная точка, где снаряд коснулся корпуса.
+## hit_rotation — глобальный поворот снаряда в момент попадания.
+func attach(target: Node2D, tilt: Tilt, hit_position: Vector2, hit_rotation: float) -> void:
 	_target = target
 	_tilt = tilt
-	# Смещение хранится в системе ненаклонённого корпуса: тогда при любом наклоне
-	# достаточно повернуть его на текущий угол, и точка останется на том же месте обшивки.
+	# Смещение и угол хранятся в системе ненаклонённого корпуса: тогда при любом наклоне
+	# достаточно повернуть их на текущий угол, и брызги останутся на том же месте обшивки
+	# и будут смотреть туда же относительно неё.
 	_local_offset = (hit_position - target.global_position).rotated(-tilt.current_angle)
-	# Брызги торчат из носа наружу, к стрелку: у игрока нос вверху, у кораблей с
-	# nose_down — внизу, значит спрайт разворачивается на 180°.
-	_outward = PI if tilt.nose_down else 0.0
+	# Снаряд летит вдоль своего «верха» (см. bullet.gd), а брызги с учётом _base_rotation
+	# тоже смотрят вверх. Разворот на 180° отправляет их обратно по курсу, к стрелку:
+	# у ракеты, зашедшей сбоку, — вбок, а не вдоль оси корабля.
+	_local_rotation = hit_rotation + PI - tilt.current_angle
 
 
 func _follow_target() -> void:
@@ -53,4 +57,4 @@ func _follow_target() -> void:
 		return
 	var angle := _tilt.current_angle
 	global_position = _target.global_position + _local_offset.rotated(angle)
-	global_rotation = _base_rotation + _outward + angle
+	global_rotation = _base_rotation + _local_rotation + angle

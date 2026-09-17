@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://cmpn3i4ca83rc"]
+
+[ext_resource type="PackedScene" uid="uid://4feimhgi3xrg" path="res://elements/weapons/bullet_gun/projectile.tscn" id="1_cdkwb"]
+
+[node name="RocketFlash" unique_id=1592519739 instance=ExtResource("1_cdkwb")]
+scale = Vector2(0.5, 0.5)

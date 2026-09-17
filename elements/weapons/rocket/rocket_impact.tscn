@@ -1,0 +1,104 @@
+[gd_scene format=3 uid="uid://2u22o546uvbe"]
+
+[ext_resource type="PackedScene" uid="uid://cfiq2r1ytpj03" path="res://elements/weapons/bullet_gun/impact.tscn" id="1_gsswe"]
+[ext_resource type="Texture2D" uid="uid://bggnsco16fwgm" path="res://assets/weapons/rocket_impact/0001.png" id="2_2xlcc"]
+[ext_resource type="Texture2D" uid="uid://cv1rjtqpsgfv4" path="res://assets/weapons/rocket_impact/0002.png" id="3_x4hys"]
+[ext_resource type="Texture2D" uid="uid://dh7jmvxsuqst2" path="res://assets/weapons/rocket_impact/0003.png" id="4_26djm"]
+[ext_resource type="Texture2D" uid="uid://c2i80s8nvgb41" path="res://assets/weapons/rocket_impact/0004.png" id="5_ansxh"]
+[ext_resource type="Texture2D" uid="uid://cab0jxqccqmtn" path="res://assets/weapons/rocket_impact/0005.png" id="6_u2atq"]
+[ext_resource type="Texture2D" uid="uid://cymy8eacbrg6t" path="res://assets/weapons/rocket_impact/0006.png" id="7_d768m"]
+[ext_resource type="Texture2D" uid="uid://ymfdd8gysnm3" path="res://assets/weapons/rocket_impact/0007.png" id="8_lrrja"]
+[ext_resource type="Texture2D" uid="uid://cumpl6wratg3o" path="res://assets/weapons/rocket_impact/0008.png" id="9_7menr"]
+[ext_resource type="Texture2D" uid="uid://o7xofp873p6v" path="res://assets/weapons/rocket_impact/0009.png" id="10_2ylf8"]
+[ext_resource type="Texture2D" uid="uid://coy5l4lsqntoi" path="res://assets/weapons/rocket_impact/0010.png" id="11_evg11"]
+[ext_resource type="Texture2D" uid="uid://dn1kuos0wpqb8" path="res://assets/weapons/rocket_impact/0011.png" id="12_mnn5e"]
+[ext_resource type="Texture2D" uid="uid://wxwgm37n26xd" path="res://assets/weapons/rocket_impact/0012.png" id="13_d76fl"]
+[ext_resource type="Texture2D" uid="uid://doenyiyd0la13" path="res://assets/weapons/rocket_impact/0013.png" id="14_aop6d"]
+[ext_resource type="Texture2D" uid="uid://b0ba1ogdqhhqe" path="res://assets/weapons/rocket_impact/0014.png" id="15_yyi0d"]
+[ext_resource type="Texture2D" uid="uid://b3n1j5morwmuh" path="res://assets/weapons/rocket_impact/0015.png" id="16_yt2dd"]
+[ext_resource type="Texture2D" uid="uid://dc2yidgei511c" path="res://assets/weapons/rocket_impact/0016.png" id="17_4fmvn"]
+[ext_resource type="Texture2D" uid="uid://cposq5sgdeq8q" path="res://assets/weapons/rocket_impact/0017.png" id="18_erj23"]
+[ext_resource type="Texture2D" uid="uid://bxrmfnqehkirg" path="res://assets/weapons/rocket_impact/0018.png" id="19_bk7fj"]
+[ext_resource type="Texture2D" uid="uid://cru5r4lb6ph2h" path="res://assets/weapons/rocket_impact/0019.png" id="20_ff5nj"]
+[ext_resource type="Texture2D" uid="uid://ddx1rje73qucy" path="res://assets/weapons/rocket_impact/0020.png" id="21_fjv5s"]
+[ext_resource type="Texture2D" uid="uid://bu2exu8h7ngb4" path="res://assets/weapons/rocket_impact/0021.png" id="22_sb0a5"]
+[ext_resource type="Texture2D" uid="uid://bocyed8xpf40e" path="res://assets/weapons/rocket_impact/0022.png" id="23_uod6q"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_gsswe"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_2xlcc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_x4hys")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_26djm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_ansxh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_u2atq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_d768m")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_lrrja")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_7menr")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_2ylf8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_evg11")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_mnn5e")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_d76fl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_aop6d")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_yyi0d")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_yt2dd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_4fmvn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_erj23")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_bk7fj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_ff5nj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_fjv5s")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_sb0a5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_uod6q")
+}],
+"loop": 0,
+"name": &"default",
+"speed": 30.0
+}]
+
+[node name="RocketImpact" unique_id=1592519739 instance=ExtResource("1_gsswe")]
+scale = Vector2(1, 1)
+sprite_frames = SubResource("SpriteFrames_gsswe")
+offset = Vector2(32, 0)

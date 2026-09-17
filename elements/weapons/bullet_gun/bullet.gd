@@ -1,13 +1,20 @@
 extends Area2D
 class_name Bullet
 
-const IMPACT_SCENE = preload("res://elements/weapons/bullet_gun/projectile.tscn")
-const HULL_IMPACT_SCENE = preload("res://elements/weapons/bullet_gun/impact.tscn")
-
 ## Скорость полёта пули, пикселей в секунду. Должна быть заметно выше скорости корабля.
 @export var speed := 800.0
 ## Сколько здоровья снимает одно попадание.
 @export var damage := 1
+
+@export_group("Impact")
+## Вспышка в точке попадания. Остаётся там, где снаряд коснулся цели, и доигрывает на месте,
+## даже если корабль уже улетел. Рисунок в сцене должен смотреть вверх: при спавне он
+## разворачивается навстречу стрелку, а поворот корня сцены при этом перезаписывается.
+@export var impact_scene: PackedScene
+## Брызги на обшивке: прилипают к кораблю, едут и заваливаются вместе с ним, см. impact.gd.
+## У пули и у ракеты это разные сцены с одним скриптом, поэтому размер, кадры и направление
+## рисунка правятся в самой сцене эффекта.
+@export var hull_impact_scene: PackedScene
 
 # Хитбокс корабля собран из нескольких форм, и снаряд входит сразу в две, когда они
 # перекрываются: сигнал приходит по каждой, а queue_free снимает узел только в конце кадра.
@@ -63,7 +70,7 @@ func _on_hit(body: Node2D, _shape: Node2D) -> void:
 
 
 func _spawn_impact() -> void:
-	var impact := IMPACT_SCENE.instantiate()
+	var impact: Node2D = impact_scene.instantiate()
 	get_tree().current_scene.add_child(impact)
 	impact.global_position = global_position
 	# Брызги на спрайте нарисованы вверх, как и полёт пули при нулевом повороте.
@@ -74,8 +81,8 @@ func _spawn_impact() -> void:
 # Пуля попадает только в корабли (маски пуль не включают стены), а у каждого корабля
 # есть компонент Tilt, по которому брызги доворачиваются вместе с корпусом.
 func _spawn_hull_impact(body: Node2D) -> void:
-	var impact: Impact = HULL_IMPACT_SCENE.instantiate()
-	impact.attach(body, body.tilt, global_position)
+	var impact: Impact = hull_impact_scene.instantiate()
+	impact.attach(body, body.tilt, global_position, global_rotation)
 	get_tree().current_scene.add_child(impact)
 
 
