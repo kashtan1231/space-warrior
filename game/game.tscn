@@ -12,7 +12,9 @@
 [ext_resource type="PackedScene" uid="uid://d2255362rrmrv" path="res://elements/ui/meter.tscn" id="10_j8tme"]
 [ext_resource type="PackedScene" uid="uid://cprk84usxe0jw" path="res://elements/ui/rocket_panel.tscn" id="12_qf6n1"]
 [ext_resource type="PackedScene" uid="uid://bwwevqpwnhiix" path="res://elements/enemy/torpedo_bomber.tscn" id="13_b686c"]
+[ext_resource type="Script" uid="uid://jsmvqaukbqqb" path="res://elements/ui/smoke_counter.gd" id="13_hb504"]
 [ext_resource type="PackedScene" uid="uid://j8jry4aypusk" path="res://elements/ui/dashboard.tscn" id="13_vsp63"]
+[ext_resource type="PackedScene" uid="uid://cr4t7tgboh1hy" path="res://elements/smoke/smoke.tscn" id="14_b686c"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_u5opy"]
 atlas = ExtResource("1_dakft")
@@ -185,8 +187,23 @@ text = "modulate - a3aeff"
 position = Vector2(1034, 12)
 scale = Vector2(2, 2)
 
+[node name="SmokeCounter" type="Label" parent="UI" unique_id=985649971]
+offset_left = 12.0
+offset_top = 130.0
+offset_right = 52.0
+offset_bottom = 153.0
+script = ExtResource("13_hb504")
+
 [node name="TorpedoBomber" parent="." unique_id=820988915 instance=ExtResource("13_b686c")]
 position = Vector2(875, 56)
+torpedo_count = 6
 
 [node name="TorpedoBomber2" parent="." unique_id=1662898149 instance=ExtResource("13_b686c")]
 position = Vector2(323, 52)
+torpedo_count = 6
+
+[node name="Smoke" parent="." unique_id=1319370452 node_paths=PackedStringArray("background") instance=ExtResource("14_b686c")]
+background = NodePath("../Bg")
+wind_scale = 0.0
+eddy_size = 80.0
+max_puffs = 30000

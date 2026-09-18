@@ -17,6 +17,7 @@
 [ext_resource type="Script" uid="uid://bbst7i3dgceq6" path="res://elements/flammable.gd" id="16_4xcav"]
 [ext_resource type="PackedScene" uid="uid://dqhb7b62o4nqb" path="res://elements/weapons/rocket/reticle.tscn" id="16_cbrmp"]
 [ext_resource type="PackedScene" uid="uid://c1pcxuxcj77iy" path="res://elements/weapons/fire.tscn" id="17_4xcav"]
+[ext_resource type="Script" uid="uid://ya54vobqwyv3" path="res://elements/smoke/wake.gd" id="18_ab7tp"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_cqau8"]
 shader = ExtResource("6_m3yu5")
@@ -455,3 +456,9 @@ script = ExtResource("16_4xcav")
 fire_scene = ExtResource("17_4xcav")
 hull = NodePath("../Ship")
 metadata/_custom_type_script = "uid://bbst7i3dgceq6"
+
+[node name="Wake" type="Node2D" parent="." unique_id=1779669240]
+script = ExtResource("18_ab7tp")
+radius = 30.0
+drag = 30.0
+metadata/_custom_type_script = "uid://ya54vobqwyv3"

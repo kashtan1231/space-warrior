@@ -120,6 +120,13 @@ signal rocket_charge_changed(charge: float)
 ## большая задержка удлиняет гибель на столько же.
 @export var blast_delay := 0.3
 
+@export_group("Smoke")
+## Радиус, в котором гибель корабля расталкивает дым, пикселей.
+@export var smoke_blast_radius := 100.0
+## Скорость, с которой дым разлетается от взорвавшегося корабля, пикселей в секунду. Это
+## скорость в самом центре: к краю радиуса толчок слабеет до нуля.
+@export var smoke_blast_strength := 400.0
+
 @onready var muzzle: Marker2D = $Muzzle
 @onready var ship: Sprite2D = $Ship
 @onready var engine_left: AnimatedSprite2D = $Ship/Engine/EngineLeft
@@ -131,6 +138,7 @@ signal rocket_charge_changed(charge: float)
 @onready var flammable: Flammable = $Flammable
 @onready var ship_material: ShaderMaterial = ship.material
 @onready var targeting: Targeting = $Targeting
+@onready var wake: Wake = $Wake
 
 const BULLET_SCENE = preload("res://elements/weapons/bullet_gun/bullet.tscn")
 const DODGE_EFFECT_SCENE = preload("res://elements/dodge_effect.tscn")
@@ -152,6 +160,7 @@ var _base_ship_position := Vector2.ZERO
 var _recoil_tween: Tween
 var _dying := false
 var _base_ship_modulate := Color.WHITE
+var _smoke: Smoke
 
 
 func _ready() -> void:
@@ -159,6 +168,7 @@ func _ready() -> void:
 	_base_ship_scale = ship.scale
 	_base_ship_position = ship.position
 	_base_ship_modulate = ship.modulate
+	_smoke = get_tree().get_first_node_in_group(Smoke.GROUP) as Smoke
 	health = max_health
 	health_changed.emit(health, max_health)
 	_update_ship_texture()
@@ -229,6 +239,9 @@ func die() -> void:
 	died.emit()
 	targeting.deactivate()
 	hitbox.set_deferred("disabled", true)
+	# Взрыв один раз расталкивает дым, а обломки, висящие на месте, больше его не трогают.
+	_smoke.blast(global_position, smoke_blast_radius, smoke_blast_strength)
+	wake.disable()
 	# Взрыв не состоит в targets у Tilt и потому висит прямо, пока корпус накренён.
 	# Доворачивается он один раз, в момент гибели: управление кораблём уже отобрано,
 	# и обломки замирают под тем углом, на котором их застали.
@@ -385,6 +398,8 @@ func _set_dodge_phase(phase: float) -> void:
 	ship.scale = _base_ship_scale.lerp(_base_ship_scale * dodge_scale, phase)
 	var dark := Color(dodge_darkness, dodge_darkness, dodge_darkness)
 	ship.modulate = _base_ship_modulate.lerp(dark, phase)
+	# С первой ступеньки погружения корабль уже под дымом и до всплытия его не трогает.
+	wake.set_submerged(phase > 0.0)
 
 
 func _send_rocket_charge() -> void:

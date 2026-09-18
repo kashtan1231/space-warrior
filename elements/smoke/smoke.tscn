@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://cr4t7tgboh1hy"]
+
+[ext_resource type="Script" uid="uid://cnxxiuh5ycxgh" path="res://elements/smoke/smoke.gd" id="1_3q7um"]
+[ext_resource type="Shader" uid="uid://bxyaudtompy6s" path="res://elements/smoke/smoke.gdshader" id="1_g0d3y"]
+[ext_resource type="Shader" uid="uid://dyn168t1o3qbr" path="res://elements/smoke/smoke_puff.gdshader" id="3_d1qap"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_g0d3y"]
+shader = ExtResource("1_g0d3y")
+shader_parameter/pixel_size = 2.0
+shader_parameter/canvas_size = Vector2(1280, 720)
+shader_parameter/thin_threshold = 0.08
+shader_parameter/mid_threshold = 0.22
+shader_parameter/dense_threshold = 0.45
+shader_parameter/dither = 0.05
+shader_parameter/thin_color = Color(0.4118, 0.3098, 0.3843, 1)
+shader_parameter/mid_color = Color(0.498, 0.4392, 0.5412, 1)
+shader_parameter/dense_color = Color(0.6078, 0.6706, 0.698, 1)
+shader_parameter/hot_share = 0.5
+shader_parameter/rocket_flame_color = Color(0.9686, 0.5882, 0.0902, 1)
+shader_parameter/rocket_flame_core_color = Color(0.9765, 0.7608, 0.1686, 1)
+shader_parameter/torpedo_flame_color = Color(0.1882, 0.8824, 0.7255, 1)
+shader_parameter/torpedo_flame_core_color = Color(0.5608, 0.9725, 0.8863, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1us10"]
+shader = ExtResource("3_d1qap")
+
+[node name="Smoke" type="CanvasGroup" unique_id=1319370452 groups=["smoke"]]
+z_index = -5
+material = SubResource("ShaderMaterial_g0d3y")
+script = ExtResource("1_3q7um")
+
+[node name="Puffs" type="Node2D" parent="." unique_id=239856225]
+material = SubResource("ShaderMaterial_1us10")

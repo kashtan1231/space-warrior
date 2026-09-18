@@ -43,12 +43,21 @@ class_name Rocket
 ## на второй заход.
 @export_range(30.0, 180.0, 5.0) var lose_angle := 90.0
 
+@export_group("Smoke")
+## Радиус, в котором попадание расталкивает дым, пикселей.
+@export var smoke_blast_radius := 60.0
+## Скорость, с которой дым разлетается от точки попадания, пикселей в секунду. Это скорость
+## в самом центре: к краю радиуса толчок слабеет до нуля.
+@export var smoke_blast_strength := 300.0
+
 # Группа цели: пока цель в ней состоит, ракета считает её живой.
 const ENEMY_GROUP := &"enemies"
 # По этой группе враги находят летящие ракеты, чтобы уворачиваться от них.
 const ROCKET_GROUP := &"player_rockets"
 
 @onready var sprite: AnimatedSprite2D = $Body
+@onready var smoke_trail: SmokeTrail = $SmokeTrail
+@onready var wake: Wake = $Wake
 
 ## Враг, на которого наводится ракета. Выставляется до добавления в дерево;
 ## null — ракета летит прямо.
@@ -60,6 +69,7 @@ var _cruise_speed := 0.0
 # Доля от turn_rate, доступная ракете прямо сейчас: 0 — наведение ещё не включилось.
 var _turn_scale := 0.0
 var _aim_offset := Vector2.ZERO
+var _smoke: Smoke
 
 
 func _ready() -> void:
@@ -70,6 +80,7 @@ func _ready() -> void:
 	# Группа выдаётся здесь, а не в сцене: так в неё попадает ракета, выпущенная любым
 	# способом, а наследник с другой стороны фронта подменяет имя одним методом.
 	add_to_group(_projectile_group())
+	_smoke = get_tree().get_first_node_in_group(Smoke.GROUP) as Smoke
 	_base_sprite_scale = sprite.scale
 	_base_sprite_modulate = sprite.modulate
 	# sqrt растягивает распределение к краю круга: без него точки кучковались бы
@@ -95,10 +106,14 @@ func _physics_process(delta: float) -> void:
 # Где именно загорится обшивка, решает сам корабль, см. flammable.gd.
 func _on_hit(body: Node2D, shape: Node2D) -> void:
 	body.flammable.ignite(shape, global_position)
+	_smoke.blast(global_position, smoke_blast_radius, smoke_blast_strength)
 	super(body, shape)
 
 
 func _start_drop() -> void:
+	# На время падения ракета уходит с плоскости боя: в залпе она проваливается сквозь
+	# шлейф предыдущей ракеты, не разрывая его. Всплывает в момент зажигания, см. _ignite.
+	wake.set_submerged(true)
 	# Масштабируется только спрайт, а не весь узел: хитбокс остаётся прежним, а корень
 	# сохраняет масштаб из сцены, под который подогнан размер ракеты в шахте.
 	var look := create_tween()
@@ -118,6 +133,8 @@ func _start_drop() -> void:
 	speed = drop_speed
 	var thrust := create_tween()
 	thrust.tween_interval(drop_time)
+	# Двигатель зажигается в нижней точке падения: с этого кадра ракета и дымит.
+	thrust.tween_callback(_ignite)
 	thrust.tween_property(self, "speed", _cruise_speed, ignite_time) \
 		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	# Наведение живёт своим таймингом, а не концом разгона: так момент, когда ракета
@@ -139,6 +156,13 @@ func _steer(delta: float) -> void:
 	# угол между UP и направлением на точку прицеливания.
 	var desired := Vector2.UP.angle_to(aim_point - global_position)
 	rotation = rotate_toward(rotation, desired, deg_to_rad(turn_rate * _turn_scale) * delta)
+
+
+# Зажигание двигателя: ракета начинает дымить и в тот же кадр возвращается на плоскость боя.
+# Дальше её собственный шлейф идёт из сопла, и прятать ракету под чужим дымом незачем.
+func _ignite() -> void:
+	smoke_trail.ignite()
+	wake.set_submerged(false)
 
 
 # Цель считается пройденной, когда направление на неё ушло от курса ракеты дальше

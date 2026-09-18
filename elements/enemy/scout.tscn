@@ -9,6 +9,7 @@
 [ext_resource type="Script" uid="uid://300q85tg61um" path="res://elements/tilt.gd" id="7_cqau8"]
 [ext_resource type="Script" uid="uid://bbst7i3dgceq6" path="res://elements/flammable.gd" id="8_3igwr"]
 [ext_resource type="PackedScene" uid="uid://c1pcxuxcj77iy" path="res://elements/weapons/fire.tscn" id="9_bmrhp"]
+[ext_resource type="Script" uid="uid://ya54vobqwyv3" path="res://elements/smoke/wake.gd" id="10_bmrhp"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_uayi2"]
 atlas = ExtResource("2_5g2rt")
@@ -274,3 +275,8 @@ metadata/_custom_type_script = "uid://300q85tg61um"
 script = ExtResource("8_3igwr")
 fire_scene = ExtResource("9_bmrhp")
 hull = NodePath("../Ship")
+
+[node name="Wake" type="Node2D" parent="." unique_id=102853925]
+script = ExtResource("10_bmrhp")
+radius = 22.0
+metadata/_custom_type_script = "uid://ya54vobqwyv3"

@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://bbst7i3dgceq6" path="res://elements/flammable.gd" id="6_plrx7"]
 [ext_resource type="PackedScene" uid="uid://c1pcxuxcj77iy" path="res://elements/weapons/fire.tscn" id="7_oflkl"]
 [ext_resource type="PackedScene" uid="uid://d0bin6jn1ogpu" path="res://elements/enemy/torpedo_bay.tscn" id="8_oflkl"]
+[ext_resource type="Script" uid="uid://ya54vobqwyv3" path="res://elements/smoke/wake.gd" id="9_k4olt"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_mpiyb"]
 atlas = ExtResource("4_f63ur")
@@ -173,9 +174,8 @@ collision_layer = 4
 collision_mask = 6
 script = ExtResource("1_hgqbp")
 torpedo_bays = [NodePath("Bays/BayLeftInner"), NodePath("Bays/BayRightInner"), NodePath("Bays/BayLeftMid"), NodePath("Bays/BayRightMid"), NodePath("Bays/BayLeftOuter"), NodePath("Bays/BayRightOuter")]
-torpedo_count = 4
-launch_cooldown_min = 2.0
-launch_cooldown_max = 10.0
+torpedo_count = 0
+launch_cooldown_max = 1.0
 max_health = 10
 hit_texture = SubResource("AtlasTexture_mpiyb")
 speed = 70.0
@@ -251,3 +251,8 @@ position = Vector2(-23, 0)
 
 [node name="BayRightOuter" parent="Bays" unique_id=1213295314 instance=ExtResource("8_oflkl")]
 position = Vector2(-29, 0)
+
+[node name="Wake" type="Node2D" parent="." unique_id=994795662]
+script = ExtResource("9_k4olt")
+radius = 45.0
+metadata/_custom_type_script = "uid://ya54vobqwyv3"

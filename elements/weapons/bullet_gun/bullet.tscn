@@ -5,6 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://cqlpcysmeban4" path="res://assets/weapons/bullet.png" id="2_ha132"]
 [ext_resource type="PackedScene" uid="uid://cfiq2r1ytpj03" path="res://elements/weapons/bullet_gun/impact.tscn" id="3_d5ifq"]
 [ext_resource type="Texture2D" uid="uid://cegorwkletrek" path="res://assets/weapons/bullet_trail.png" id="3_eysog"]
+[ext_resource type="Script" uid="uid://ya54vobqwyv3" path="res://elements/smoke/wake.gd" id="6_d5ifq"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_0tiew"]
 atlas = ExtResource("2_ha132")
@@ -109,3 +110,10 @@ shape = SubResource("CapsuleShape2D_rt8om")
 [node name="ScreenExit" type="VisibleOnScreenEnabler2D" parent="." unique_id=902194011]
 position = Vector2(2, 9)
 rect = Rect2(-8, -10, 12, 16)
+
+[node name="Wake" type="Node2D" parent="." unique_id=1973433564]
+script = ExtResource("6_d5ifq")
+radius = 5.0
+push = 0.15
+drag = 20.0
+metadata/_custom_type_script = "uid://ya54vobqwyv3"

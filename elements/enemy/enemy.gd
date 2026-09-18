@@ -6,8 +6,8 @@ class_name Enemy
 ## чем враг занят между кадрами (_update_behaviour) и как именно он движется (_move).
 ##
 ## Сцена наследника обязана состоять в группе enemies и содержать узлы Ship, Explosion,
-## Tilt и Flammable: по группе врага находят прицел ракет и соседи, а узлы нужны гибели,
-## наклону корпуса и горению после попадания ракеты. Форм корпуса может быть сколько угодно
+## Tilt, Flammable и Wake: по группе врага находят прицел ракет и соседи, а узлы нужны гибели,
+## наклону корпуса, горению после попадания ракеты и следу в дыме. Форм корпуса может быть сколько угодно
 ## и называться они могут как угодно — гибель гасит физику целиком, а не отдельный узел,
 ## а место горения считается по той форме, в которую пришло попадание. Эффекты попадания
 ## лезут во врага снаружи и требуют от него полей tilt и flammable, см. impact.gd
@@ -45,6 +45,13 @@ class_name Enemy
 ## с курса к цели; меньше — плавнее, но могут ненадолго наехать друг на друга.
 @export var separation_strength := 120.0
 
+@export_group("Smoke")
+## Радиус, в котором взрыв корабля расталкивает дым, пикселей.
+@export var smoke_blast_radius := 90.0
+## Скорость, с которой дым разлетается от взорвавшегося корабля, пикселей в секунду. Это
+## скорость в самом центре: к краю радиуса толчок слабеет до нуля.
+@export var smoke_blast_strength := 350.0
+
 ## По этой группе врага находят прицел ракет, соседи и сам этот класс.
 const ENEMY_GROUP := &"enemies"
 # Во сколько раз скорость подлёта выше оставшегося расстояния. Тормозит врага у самой
@@ -55,6 +62,7 @@ const ARRIVE_GAIN := 3.0
 @onready var explosion: AnimatedSprite2D = $Explosion
 @onready var tilt: Tilt = $Tilt
 @onready var flammable: Flammable = $Flammable
+@onready var wake: Wake = $Wake
 
 var health := 0
 
@@ -63,6 +71,7 @@ var _target := Vector2.ZERO
 var _dying := false
 var _base_texture: Texture2D
 var _texture_tween: Tween
+var _smoke: Smoke
 
 
 func _ready() -> void:
@@ -72,6 +81,7 @@ func _ready() -> void:
 	# делил бы движение на «вдоль пола» и «вдоль стены» и гасил бы часть скорости.
 	motion_mode = MOTION_MODE_FLOATING
 	_player = _find_player()
+	_smoke = get_tree().get_first_node_in_group(Smoke.GROUP) as Smoke
 	# Пока поведение не выбрало точку, враг тянется к месту, где стоит, то есть никуда.
 	_target = global_position
 
@@ -104,6 +114,9 @@ func die() -> void:
 	# их поимённо пришлось бы в каждом наследнике.
 	set_deferred("collision_layer", 0)
 	set_deferred("collision_mask", 0)
+	# Взрыв один раз расталкивает дым, а обломки, висящие на месте, больше его не трогают.
+	_smoke.blast(global_position, smoke_blast_radius, smoke_blast_strength)
+	wake.disable()
 	sprite.hide()
 	# Взрыв не состоит в targets у Tilt и потому висит прямо, пока корпус накренён.
 	# Доворачивается он один раз, в момент гибели: дальше корабль уже никем не управляется,
