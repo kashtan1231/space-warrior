@@ -98,7 +98,7 @@ centered = false
 region_enabled = true
 region_rect = Rect2(0, 0, 1280, 720)
 script = ExtResource("2_u5opy")
-speed = 100.0
+speed = 50.0
 
 [node name="StarsParallax" type="Parallax2D" parent="." unique_id=1009437641]
 repeat_size = Vector2(0, 720)
@@ -195,15 +195,19 @@ offset_bottom = 153.0
 script = ExtResource("13_hb504")
 
 [node name="TorpedoBomber" parent="." unique_id=820988915 instance=ExtResource("13_b686c")]
+process_mode = 4
+visible = false
 position = Vector2(875, 56)
 torpedo_count = 6
 
 [node name="TorpedoBomber2" parent="." unique_id=1662898149 instance=ExtResource("13_b686c")]
+process_mode = 4
+visible = false
 position = Vector2(323, 52)
 torpedo_count = 6
 
 [node name="Smoke" parent="." unique_id=1319370452 node_paths=PackedStringArray("background") instance=ExtResource("14_b686c")]
 background = NodePath("../Bg")
-wind_scale = 0.0
+wind_scale = 0.5
 eddy_size = 80.0
 max_puffs = 30000

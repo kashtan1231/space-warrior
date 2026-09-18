@@ -81,6 +81,14 @@ signal rocket_charge_changed(charge: float)
 ## 0.5 — каждый вдвое короче, корабль проваливается с ускорением, 2 — с замедлением.
 ## Общая длительность перехода не меняется, меняется только её раскладка по шагам.
 @export_range(0.25, 4.0, 0.05) var dodge_step_falloff := 1.0
+## Радиус, в котором уход в нырок расталкивает уже висящий дым, пикселей. Само облако
+## нырка настраивается на узле DodgeSmoke, здесь — только то, как корабль раздвигает
+## дым, который был на этом месте до него.
+@export var dodge_blast_radius := 70.0
+## Скорость, с которой дым разлетается от нырнувшего корабля, пикселей в секунду. Это
+## скорость в самом центре: к краю радиуса толчок слабеет до нуля. Заметно меньше, чем
+## у гибели, — корабль проваливается, а не взрывается.
+@export var dodge_blast_strength := 120.0
 
 @export_group("Tilt")
 ## Сам наклон настраивается на дочернем узле Tilt, здесь — только его влияние на стрельбу.
@@ -129,8 +137,8 @@ signal rocket_charge_changed(charge: float)
 
 @onready var muzzle: Marker2D = $Muzzle
 @onready var ship: Sprite2D = $Ship
-@onready var engine_left: AnimatedSprite2D = $Ship/Engine/EngineLeft
-@onready var engine_right: AnimatedSprite2D = $Ship/Engine/EngineRight
+@onready var engine_left: ShipEngine = $Ship/Engine/EngineLeft
+@onready var engine_right: ShipEngine = $Ship/Engine/EngineRight
 @onready var explosion: AnimatedSprite2D = $Explosion
 @onready var blast: AnimatedSprite2D = $Explosion/Blast
 @onready var hitbox: CollisionPolygon2D = $Hitbox
@@ -139,6 +147,7 @@ signal rocket_charge_changed(charge: float)
 @onready var ship_material: ShaderMaterial = ship.material
 @onready var targeting: Targeting = $Targeting
 @onready var wake: Wake = $Wake
+@onready var dodge_smoke: SmokeTrail = $DodgeSmoke
 
 const BULLET_SCENE = preload("res://elements/weapons/bullet_gun/bullet.tscn")
 const DODGE_EFFECT_SCENE = preload("res://elements/dodge_effect.tscn")
@@ -242,6 +251,11 @@ func die() -> void:
 	# Взрыв один раз расталкивает дым, а обломки, висящие на месте, больше его не трогают.
 	_smoke.blast(global_position, smoke_blast_radius, smoke_blast_strength)
 	wake.disable()
+	# Двигатели глохнут насмерть: тянуть шлейф за обломками, висящими на месте, некому.
+	# Выключить их нужно здесь, а не в _physics_process: тот при _dying сразу выходит,
+	# а тайминги нырка доигрывают на твинах и могли бы запустить сопла обратно.
+	engine_left.disable()
+	engine_right.disable()
 	# Взрыв не состоит в targets у Tilt и потому висит прямо, пока корпус накренён.
 	# Доворачивается он один раз, в момент гибели: управление кораблём уже отобрано,
 	# и обломки замирают под тем углом, на котором их застали.
@@ -343,6 +357,7 @@ func _start_dodge() -> void:
 	_dodge_left = dodge_duration
 	_refresh_collision_layer()
 	_spawn_dodge_effect()
+	_spawn_dodge_smoke()
 	_send_dodge_charge()
 
 	# Погружение и всплытие вписываются в длительность нырка, поэтому корабль всплывает
@@ -375,6 +390,14 @@ func _spawn_dodge_effect() -> void:
 	get_tree().current_scene.add_child(effect)
 
 
+# Толчок идёт раньше облака: blast разгоняет только тот дым, что уже висел на этом месте.
+# В обратном порядке он растащил бы в кольцо и клубы, выброшенные в этом же кадре, —
+# они лежат ровно в его центре, где толчок сильнее всего.
+func _spawn_dodge_smoke() -> void:
+	_smoke.blast(global_position, dodge_blast_radius, dodge_blast_strength)
+	dodge_smoke.burst()
+
+
 # Раскладывает время перехода по шагам геометрической прогрессией со знаменателем
 # dodge_step_falloff, а затем подгоняет сумму обратно под total — так множитель
 # меняет ритм шагов, но не длительность нырка.
@@ -399,7 +422,11 @@ func _set_dodge_phase(phase: float) -> void:
 	var dark := Color(dodge_darkness, dodge_darkness, dodge_darkness)
 	ship.modulate = _base_ship_modulate.lerp(dark, phase)
 	# С первой ступеньки погружения корабль уже под дымом и до всплытия его не трогает.
-	wake.set_submerged(phase > 0.0)
+	# Двигатели там же глохнут: под облаком им нечего толкать.
+	var submerged := phase > 0.0
+	wake.set_submerged(submerged)
+	engine_left.set_submerged(submerged)
+	engine_right.set_submerged(submerged)
 
 
 func _send_rocket_charge() -> void:
@@ -514,16 +541,13 @@ func _has_rockets() -> bool:
 	return false
 
 
-# Разгоняется двигатель с той стороны, от которой корабль уходит: уводя машину влево,
+# Форсаж дают двигателю с той стороны, от которой корабль уходит: уводя машину влево,
 # толкается правое сопло. Поэтому направление и сторона двигателя здесь противоположны.
+# Что меняется на форсаже — анимация пламени и плотность выхлопа — решает сам двигатель,
+# см. ship_engine.gd.
 func _update_engines(direction: float) -> void:
-	_set_engine_animation(engine_left, &"boost" if direction > 0.0 else &"idle")
-	_set_engine_animation(engine_right, &"boost" if direction < 0.0 else &"idle")
-
-
-func _set_engine_animation(engine: AnimatedSprite2D, animation: StringName) -> void:
-	if engine.animation != animation or not engine.is_playing():
-		engine.play(animation)
+	engine_left.set_boosting(direction > 0.0)
+	engine_right.set_boosting(direction < 0.0)
 
 
 func _recoil() -> void:

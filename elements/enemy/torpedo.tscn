@@ -63,7 +63,7 @@ hull_impact_scene = ExtResource("3_ccevb")
 [node name="Body" type="AnimatedSprite2D" parent="." unique_id=682784763]
 sprite_frames = SubResource("SpriteFrames_1us10")
 autoplay = "default"
-frame_progress = 0.9661535
+frame_progress = 0.56049347
 offset = Vector2(0, 15)
 
 [node name="Hitbox" type="CollisionShape2D" parent="." unique_id=1496093304]
@@ -78,7 +78,7 @@ rect = Rect2(-2.553803, -10, 5.2677364, 19.759802)
 position = Vector2(-1.7484558e-07, 12)
 script = ExtResource("5_3hmj4")
 rate = 150.0
-ignition_burst = 64
+ignition_burst = 200
 start_size = 2.0
 end_size = 60.0
 lifetime = 20.0

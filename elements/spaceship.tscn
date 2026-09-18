@@ -13,6 +13,8 @@
 [ext_resource type="Texture2D" uid="uid://daixjmyw18p2r" path="res://assets/weapons/rocket_launch.png" id="9_8y7vu"]
 [ext_resource type="Texture2D" uid="uid://dum810udln45p" path="res://assets/spaceship/die_explosion_2.png" id="9_cex28"]
 [ext_resource type="Script" uid="uid://300q85tg61um" path="res://elements/tilt.gd" id="9_oyroy"]
+[ext_resource type="Script" uid="uid://c1mh1bobf5od3" path="res://elements/ship_engine.gd" id="9_q1hv7"]
+[ext_resource type="Script" uid="uid://dfh773jtb153n" path="res://elements/smoke/smoke_trail.gd" id="10_kan65"]
 [ext_resource type="Script" uid="uid://23b6e4h7t2ub" path="res://elements/weapons/rocket/targeting.gd" id="15_pkaio"]
 [ext_resource type="Script" uid="uid://bbst7i3dgceq6" path="res://elements/flammable.gd" id="16_4xcav"]
 [ext_resource type="PackedScene" uid="uid://dqhb7b62o4nqb" path="res://elements/weapons/rocket/reticle.tscn" id="16_cbrmp"]
@@ -382,6 +384,35 @@ position = Vector2(-3, 12)
 sprite_frames = SubResource("SpriteFrames_wnu1r")
 animation = &"idle"
 autoplay = "idle"
+script = ExtResource("9_q1hv7")
+
+[node name="SmokeIdle" type="Marker2D" parent="Ship/Engine/EngineLeft" unique_id=1341344579]
+position = Vector2(-4.5, -3.5)
+script = ExtResource("10_kan65")
+rate = 30.0
+ignition_burst = 0
+exhaust_speed = 100.0
+exhaust_spread = 8.0
+start_size = 2.0
+end_size = 30.0
+lifetime = 3.0
+density = 0.45
+hot_time = 0.1
+metadata/_custom_type_script = "uid://dfh773jtb153n"
+
+[node name="SmokeBoost" type="Marker2D" parent="Ship/Engine/EngineLeft" unique_id=1168851748]
+position = Vector2(-4.5, -3.5)
+script = ExtResource("10_kan65")
+rate = 40.0
+ignition_burst = 20
+exhaust_speed = 200.0
+exhaust_spread = 8.0
+start_size = 2.0
+end_size = 30.0
+lifetime = 2.0
+density = 2.0
+hot_time = 0.06
+metadata/_custom_type_script = "uid://dfh773jtb153n"
 
 [node name="EngineRight" type="AnimatedSprite2D" parent="Ship/Engine" unique_id=933274507]
 show_behind_parent = true
@@ -389,6 +420,35 @@ position = Vector2(3, 12)
 sprite_frames = SubResource("SpriteFrames_j7t53")
 animation = &"idle"
 autoplay = "idle"
+script = ExtResource("9_q1hv7")
+
+[node name="SmokeIdle" type="Marker2D" parent="Ship/Engine/EngineRight" unique_id=692021806]
+position = Vector2(4.5, -3.5)
+script = ExtResource("10_kan65")
+rate = 30.0
+ignition_burst = 0
+exhaust_speed = 100.0
+exhaust_spread = 8.0
+start_size = 2.0
+end_size = 30.0
+lifetime = 3.0
+density = 0.45
+hot_time = 0.1
+metadata/_custom_type_script = "uid://dfh773jtb153n"
+
+[node name="SmokeBoost" type="Marker2D" parent="Ship/Engine/EngineRight" unique_id=1487872150]
+position = Vector2(4.5, -3.5)
+script = ExtResource("10_kan65")
+rate = 40.0
+ignition_burst = 20
+exhaust_speed = 200.0
+exhaust_spread = 8.0
+start_size = 2.0
+end_size = 30.0
+lifetime = 2.0
+density = 2.0
+hot_time = 0.06
+metadata/_custom_type_script = "uid://dfh773jtb153n"
 
 [node name="LauncherInnerLeft" parent="Ship" unique_id=837675356 instance=ExtResource("9_4xcav")]
 position = Vector2(0, 1)
@@ -436,7 +496,7 @@ frame_progress = 1.0
 
 [node name="Tilt" type="Node" parent="." unique_id=581719391 node_paths=PackedStringArray("targets")]
 script = ExtResource("9_oyroy")
-targets = [NodePath("../Ship")]
+targets = [NodePath("../Ship"), NodePath("../DodgeSmoke")]
 angle = 20.0
 steps = 3
 step_time = 0.12
@@ -462,3 +522,17 @@ script = ExtResource("18_ab7tp")
 radius = 30.0
 drag = 30.0
 metadata/_custom_type_script = "uid://ya54vobqwyv3"
+
+[node name="DodgeSmoke" type="Marker2D" parent="." unique_id=770780582]
+position = Vector2(0, 14)
+script = ExtResource("10_kan65")
+rate = 0.0
+ignition_burst = 150
+burst_speed = 200.0
+exhaust_speed = 300.0
+exhaust_spread = 40.0
+start_size = 2.0
+end_size = 60.0
+density = 2.07
+hot_time = 0.02
+metadata/_custom_type_script = "uid://dfh773jtb153n"
