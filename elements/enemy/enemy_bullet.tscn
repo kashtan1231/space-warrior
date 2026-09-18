@@ -48,3 +48,9 @@ speed = 400.0
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." index="3" unique_id=1964991013]
 libraries/ = SubResource("AnimationLibrary_hp7p7")
 autoplay = &"blink"
+
+[node name="SmokeTrail" parent="." index="5" unique_id=1191632942]
+rate = 67.0
+ignition_burst = 30
+exhaust_speed = 400.0
+exhaust_spread = 0.6

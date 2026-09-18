@@ -125,9 +125,11 @@ func _can_fire() -> bool:
 
 func _fire() -> void:
 	_fire_cooldown = _next_cooldown()
-	var bullet := bullet_scene.instantiate()
+	var bullet: Bullet = bullet_scene.instantiate()
+	# Место назначается до добавления в дерево: в _ready пуля зажигает сопло, и пороховое
+	# облако должно лечь у дула. Родителя у неё ещё нет, поэтому position — мировая точка.
+	bullet.position = muzzle.global_position
 	get_tree().current_scene.add_child(bullet)
-	bullet.global_position = muzzle.global_position
 	# stop() перед play() перематывает на первый кадр: без него повторный выстрел
 	# во время ещё играющей анимации не перезапустил бы её.
 	weapons.stop()

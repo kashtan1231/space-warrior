@@ -56,7 +56,6 @@ const ENEMY_GROUP := &"enemies"
 const ROCKET_GROUP := &"player_rockets"
 
 @onready var sprite: AnimatedSprite2D = $Body
-@onready var smoke_trail: SmokeTrail = $SmokeTrail
 @onready var wake: Wake = $Wake
 
 ## Враг, на которого наводится ракета. Выставляется до добавления в дерево;
@@ -156,6 +155,13 @@ func _steer(delta: float) -> void:
 	# угол между UP и направлением на точку прицеливания.
 	var desired := Vector2.UP.angle_to(aim_point - global_position)
 	rotation = rotate_toward(rotation, desired, deg_to_rad(turn_rate * _turn_scale) * delta)
+
+
+# Пустой, в отличие от пули: ракета сходит с крыла холодной, и сопло зажигается не при
+# рождении, а в нижней точке падения — см. _ignite ниже и _start_drop, который его ставит
+# в тайминг пуска.
+func _ignite_smoke() -> void:
+	pass
 
 
 # Зажигание двигателя: ракета начинает дымить и в тот же кадр возвращается на плоскость боя.

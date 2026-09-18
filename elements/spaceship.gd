@@ -495,16 +495,19 @@ func _update_ship_texture() -> void:
 
 
 func fire():
-	var bullet := BULLET_SCENE.instantiate()
+	var bullet: Bullet = BULLET_SCENE.instantiate()
 	# Группа выдаётся здесь, а не в сцене пули: вражеская пуля унаследована от той же
 	# сцены и получила бы группу тоже. От этих пуль уворачиваются враги, см. scout.gd.
 	bullet.add_to_group("player_bullets")
-	get_tree().current_scene.add_child(bullet)
-	bullet.global_position = muzzle.global_position
+	# Место и курс назначаются до добавления в дерево: в _ready пуля зажигает своё сопло,
+	# и пороховое облако должно лечь у дула, а не там, где снаряд лежал до расстановки.
+	# Родителя у него ещё нет, поэтому position — это уже мировая точка.
+	bullet.position = muzzle.global_position
 	# Пуля летит туда, куда повёрнута (см. bullet.gd), поэтому наклон корпуса
 	# достаточно передать ей углом. Наклон уже ступенчатый, значит и разброс
 	# направлений выстрела получается дискретным, без промежуточных значений.
 	bullet.rotation = ship.rotation * bullet_tilt_influence
+	get_tree().current_scene.add_child(bullet)
 	_recoil()
 
 

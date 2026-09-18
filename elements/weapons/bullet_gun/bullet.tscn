@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://cfiq2r1ytpj03" path="res://elements/weapons/bullet_gun/impact.tscn" id="3_d5ifq"]
 [ext_resource type="Texture2D" uid="uid://cegorwkletrek" path="res://assets/weapons/bullet_trail.png" id="3_eysog"]
 [ext_resource type="Script" uid="uid://ya54vobqwyv3" path="res://elements/smoke/wake.gd" id="6_d5ifq"]
+[ext_resource type="Script" uid="uid://dfh773jtb153n" path="res://elements/smoke/smoke_trail.gd" id="7_ic5ng"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_0tiew"]
 atlas = ExtResource("2_ha132")
@@ -114,6 +115,21 @@ rect = Rect2(-8, -10, 12, 16)
 [node name="Wake" type="Node2D" parent="." unique_id=1973433564]
 script = ExtResource("6_d5ifq")
 radius = 5.0
-push = 0.15
+push = 0.2
 drag = 20.0
 metadata/_custom_type_script = "uid://ya54vobqwyv3"
+
+[node name="SmokeTrail" type="Marker2D" parent="." unique_id=1191632942]
+position = Vector2(0, 9.333335)
+script = ExtResource("7_ic5ng")
+rate = 200.0
+ignition_burst = 100
+burst_speed = 0.0
+exhaust_speed = 1200.0
+exhaust_spread = 0.2
+start_size = 1.0
+end_size = 10.0
+lifetime = 2.0
+density = 2.0
+hot_time = 0.0
+metadata/_custom_type_script = "uid://dfh773jtb153n"

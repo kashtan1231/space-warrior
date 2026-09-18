@@ -174,7 +174,6 @@ collision_layer = 4
 collision_mask = 6
 script = ExtResource("1_hgqbp")
 torpedo_bays = [NodePath("Bays/BayLeftInner"), NodePath("Bays/BayRightInner"), NodePath("Bays/BayLeftMid"), NodePath("Bays/BayRightMid"), NodePath("Bays/BayLeftOuter"), NodePath("Bays/BayRightOuter")]
-torpedo_count = 0
 launch_cooldown_max = 1.0
 max_health = 10
 hit_texture = SubResource("AtlasTexture_mpiyb")
@@ -236,21 +235,22 @@ hull = NodePath("../Ship")
 [node name="Bays" type="Node2D" parent="." unique_id=186039854]
 
 [node name="BayLeftOuter" parent="Bays" unique_id=566314668 instance=ExtResource("8_oflkl")]
-position = Vector2(12.000001, 0)
+position = Vector2(12, 2.666667)
 
 [node name="BayLeftMid" parent="Bays" unique_id=1910091019 instance=ExtResource("8_oflkl")]
-position = Vector2(6.000001, 0)
+position = Vector2(6, 2.666667)
 
 [node name="BayLeftInner" parent="Bays" unique_id=1811614359 instance=ExtResource("8_oflkl")]
+position = Vector2(0, 2.666667)
 
 [node name="BayRightInner" parent="Bays" unique_id=1315359663 instance=ExtResource("8_oflkl")]
-position = Vector2(-16, 0)
+position = Vector2(-16, 2.666667)
 
 [node name="BayRightMid" parent="Bays" unique_id=131975747 instance=ExtResource("8_oflkl")]
-position = Vector2(-23, 0)
+position = Vector2(-23, 2.666667)
 
 [node name="BayRightOuter" parent="Bays" unique_id=1213295314 instance=ExtResource("8_oflkl")]
-position = Vector2(-29, 0)
+position = Vector2(-29, 2.666667)
 
 [node name="Wake" type="Node2D" parent="." unique_id=994795662]
 script = ExtResource("9_k4olt")
